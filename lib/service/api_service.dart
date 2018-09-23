@@ -17,6 +17,7 @@ class ApiService {
     // go to login
   }
 
+  // Check Login Status
   Future<bool> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('userData') != null) {
@@ -24,5 +25,11 @@ class ApiService {
     } else {
       return false;
     }
+  }
+
+  // Get Qustion Details 
+  Future<http.Response> qustionDetails(data) async {
+    http.Response res = await http.post(_apiUrl + '/getUserTickets', body: data);
+    return res;
   }
 }
