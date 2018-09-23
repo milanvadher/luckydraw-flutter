@@ -28,9 +28,16 @@ class _LinkTextSpan extends TextSpan {
 }
 
 class _HomePageState extends State<HomePage> {
-  List _answer = ['A', 'N', 'S', 'W', 'E', 'R', 'A', 'N', 'S', 'W', 'E', 'R'];
-  List _imagesRow1 = [1, 2];
-  List _imagesRow2 = [1, 2];
+  // bool _twoWords;
+  // List _secondWord = [];
+  List _answer = [];
+  String _checkAnswer;
+  int _points;
+  int _questionState;
+  var _contactNumber;
+  List _randomString = [];
+  List _imagesRow1 = [];
+  List _imagesRow2 = [];
 
   List choise = [
     [Icons.monetization_on, 'Coupons'],
@@ -40,118 +47,293 @@ class _HomePageState extends State<HomePage> {
     [Icons.share, 'Share']
   ];
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   this._getQuestionDetails();
+  // }
+
   _HomePageState() {
-    // _getQuestionDetails();
+    SharedPreferences.getInstance().then((onValue) {
+      Map<String, dynamic> userData = json.decode(onValue.getString('userData'));
+      print(userData);
+      _questionState = userData['questionState'];
+      _points = userData['points'];
+      _contactNumber = userData['contactNumber'];
+      this._getQuestionDetails();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Lucky Draw JJ-111'),
-        actions: <Widget>[
-          PopupMenuButton(
-            onSelected: _actionChoise,
-            itemBuilder: (BuildContext context) {
-              return choise.map((item) {
-                return PopupMenuItem(
-                  value: item[1],
+        appBar: AppBar(
+          title: Text('Lucky Draw JJ-111'),
+          actions: <Widget>[
+            PopupMenuButton(
+              onSelected: _actionChoise,
+              itemBuilder: (BuildContext context) {
+                return choise.map((item) {
+                  return PopupMenuItem(
+                    value: item[1],
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          item[0],
+                        ),
+                        Text('  ' + item[1], textAlign: TextAlign.end)
+                      ],
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+          ],
+        ),
+        body: ListView(
+          children: <Widget>[
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
-                    children: <Widget>[
-                      Icon(
-                        item[0],
-                      ),
-                      Text('  ' + item[1], textAlign: TextAlign.end)
-                    ],
+                    children: _imagesRow1
+                        .map(
+                          (image) => Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.all(4.0),
+                                  child: Image.network(
+                                    image,
+                                  ),
+                                ),
+                              ),
+                        )
+                        .toList(),
                   ),
-                );
-              }).toList();
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              children: _imagesRow1
-                  .map(
-                    (image) => Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.all(4.0),
-                            child: Image.asset(
-                              'assets/demo.JPG',
-                            ),
-                          ),
-                        ),
-                  )
-                  .toList(),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    children: _imagesRow2
+                        .map(
+                          (image) => Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.all(4.0),
+                                  child: Image.network(
+                                    image,
+                                  ),
+                                ),
+                              ),
+                        )
+                        .toList(),
+                  ),
+                ),
+                SizedBox(height: 15.0),
+                Wrap(
+                  spacing: 0.0,
+                  alignment: WrapAlignment.center,
+                  children: _answer
+                      .map((element) => new MaterialButton(
+                            onPressed: () {},
+                            padding: EdgeInsets.all(0.0),
+                            minWidth: 40.0,
+                            height: 40.0,
+                            color: Colors.blueGrey,
+                            child: Text(element.toString().toUpperCase()),
+                          ))
+                      .toList(),
+                ),
+                // Wrap(
+                //   spacing: 0.0,
+                //   alignment: WrapAlignment.center,
+                //   children: _secondWord
+                //       .map((element) => new MaterialButton(
+                //             onPressed: () {},
+                //             padding: EdgeInsets.all(0.0),
+                //             minWidth: 40.0,
+                //             height: 40.0,
+                //             color: Colors.blueGrey,
+                //             child: Text(element.toString().toUpperCase()),
+                //           ))
+                //       .toList(),
+                // ),
+                SizedBox(height: 15.0),
+                Wrap(
+                  spacing: 0.0,
+                  alignment: WrapAlignment.center,
+                  children: _randomString
+                      .map((element) => new MaterialButton(
+                            onPressed: () {
+                              _pushToAns(element.toString());
+                            },
+                            padding: EdgeInsets.all(0.0),
+                            minWidth: 40.0,
+                            height: 40.0,
+                            color: Colors.amber,
+                            child: Text(element.toString().toUpperCase()),
+                          ))
+                      .toList(),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    _logOut();
+                  },
+                  child: Text('LogOut'),
+                )
+              ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              children: _imagesRow2
-                  .map(
-                    (image) => Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.all(4.0),
-                            child: Image.asset(
-                              'assets/demo.JPG',
-                            ),
-                          ),
-                        ),
-                  )
-                  .toList(),
-            ),
-          ),
-          SizedBox(height: 15.0),
-          Wrap(
-            spacing: 0.0,
-            alignment: WrapAlignment.center,
-            children: _answer
-                .map((element) => new MaterialButton(
-                      onPressed: () {},
-                      padding: EdgeInsets.all(0.0),
-                      minWidth: 40.0,
-                      height: 40.0,
-                      color: Colors.blueGrey,
-                      child: Text(element),
-                    ))
-                .toList(),
-          ),
-          SizedBox(height: 15.0),
-          RaisedButton(
-            onPressed: () {
-              _logOut();
-            },
-            child: Text('LogOut'),
-          )
-        ],
-      ),
-    );
+          ],
+        ));
   }
 
-  Future _getQuestionDetails() async {
-    print('In quesion details');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> userData = json.decode(prefs.getString('userData'));
-    print(userData['questionState']);
+  _getQuestionDetails() async {
     var data = {
-      // 'questionState': 75,
-      'contactNumber': userData['contactNumber']
+      'questionState': _questionState.toString(),
     };
     appAuth.qustionDetails(data).then((res) {
-      print(res.body);
-      if (res.statusCode == 200) {
-        print(res.body);
-      } else {
-        // _showError();
+      setState(() {
+        if (res.statusCode == 200) {
+          Map<String, dynamic> qustionDetails = json.decode(res.body);
+          _imagesRow1.add(qustionDetails['imageList'][0]);
+          _imagesRow1.add(qustionDetails['imageList'][1]);
+          _imagesRow2.add(qustionDetails['imageList'][2]);
+          _imagesRow2.add(qustionDetails['imageList'][3]);
+          _checkAnswer = qustionDetails['answer'];
+          _points = qustionDetails['points'];
+          for (var i = 0; i < qustionDetails['answer'].toString().length; i++) {
+            if (qustionDetails['answer'][i] == ' ') {
+              // _twoWords = true;
+              // secondWord(qustionDetails['answer'].toString());
+              break;
+            } else {
+              _answer.add(' ');
+            }
+          }
+          for (var i = 0;
+              i < qustionDetails['randomString'].toString().length;
+              i++) {
+            _randomString.add(qustionDetails['randomString'][i]);
+          }
+          print(qustionDetails);
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext build) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Check your Internet connection'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        }
+      });
+    });
+  }
+
+  void _pushToAns(rchar) {
+    setState(() {
+      for (var i = 0; i < _answer.length; i++) {
+        if (_answer[i] == ' ') {
+          _answer[i] = rchar;
+          print(i.toString() + ' ' + _answer.length.toString());
+          if (_answer.length - 1 == i) {
+            _checkAns();
+          }
+          break;
+        }
       }
     });
   }
+
+  void _checkAns() {
+    print(_answer.join() + ' ' + _checkAnswer.split(' ')[0]);
+    if (_checkAnswer.split(' ')[0].toLowerCase() ==
+        _answer.join().toLowerCase()) {
+      print('Correct' + ' ' +_questionState.toString() + ' ' + _points.toString());
+      _questionState = _questionState + 1;
+      print(_points.runtimeType);
+      // _points = _points + 100;
+      var data = {
+        'contactNumber': _contactNumber.toString(),
+        'questionState': _questionState.toString(),
+        'points': 4500.toString()
+      };
+      appAuth.saveUserData(data).then((res) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('userData', res.body);
+        showDialog(
+          context: context,
+          builder: (BuildContext build) {
+            return AlertDialog(
+              title: Text('Correct'),
+              content:
+                  Text('Congo! Your Answer is correct.\nYou got 100 coins.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Next Question'),
+                  onPressed: () {
+                    _answer = [];
+                    _randomString = [];
+                    _imagesRow1 = [];
+                    _imagesRow2 = [];
+                    _getQuestionDetails();
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      });
+    } else {
+      print('Incorrect');
+      showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text('Oops'),
+            content: Text('Your Answer is Incorrect.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Try Again'),
+                onPressed: () {
+                  setState(() {
+                    _answer = [];
+                    for (var i = 0; i < _checkAnswer.length; i++) {
+                      if (_checkAnswer[i] == ' ') {
+                        // _twoWords = true;
+                        // secondWord(qustionDetails['answer'].toString());
+                        break;
+                      } else {
+                        _answer.add(' ');
+                      }
+                    }
+                    Navigator.pop(context);
+                  });
+                },
+              )
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  // void secondWord(word) {
+  //   var d = word.split(' ');
+  //   for (var i = 0; i < d[2].length; i++) {
+  //     _secondWord.add(d[2][i]);
+  //   }
+  // }
 
   void _logOut() {
     Future<SharedPreferences> prefs = SharedPreferences.getInstance();
@@ -205,10 +387,10 @@ class _HomePageState extends State<HomePage> {
                     text:
                         'Dadashri\'s JanmaJayanti Celebrations are happening from 15th Nov to 25th November 2018 @ Adalaj Trimandir. To know more about our event visit '),
                 _LinkTextSpan(
-                    style: linkStyle,
-                    url: 'http://jjd.dadabhagwan.org/',
-                    // text: 'Jova Jevi Duniya.'
-                    ),
+                  style: linkStyle,
+                  url: 'http://jjd.dadabhagwan.org/',
+                  // text: 'Jova Jevi Duniya.'
+                ),
                 TextSpan(
                   style: aboutTextStyle,
                   text:

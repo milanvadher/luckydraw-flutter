@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   final _apiUrl = 'http://luckydrawapi.dadabhagwan.org';
+  // final _apiUrl = 'http://192.168.1.103:3000';
   // Login
   Future<http.Response> login(data) async {
     http.Response res = await http.post(_apiUrl + '/login', body: data);
@@ -29,7 +30,13 @@ class ApiService {
 
   // Get Qustion Details 
   Future<http.Response> qustionDetails(data) async {
-    http.Response res = await http.post(_apiUrl + '/getUserTickets', body: data);
+    http.Response res = await http.post(_apiUrl + '/questionDetails', body: data);
+    return res;
+  }
+
+  // Save User Data 
+  Future<http.Response> saveUserData(data) async {
+    http.Response res = await http.post(_apiUrl + '/saveUserData', body: data);
     return res;
   }
 }
