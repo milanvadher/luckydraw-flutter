@@ -55,10 +55,11 @@ class _HomePageState extends State<HomePage> {
 
   _HomePageState() {
     SharedPreferences.getInstance().then((onValue) {
-      Map<String, dynamic> userData = json.decode(onValue.getString('userData'));
+      Map<String, dynamic> userData =
+          json.decode(onValue.getString('userData'));
       print(userData);
-      _questionState = userData['questionState'];
-      _points = userData['points'];
+      _questionState = int.parse(userData['questionState']);
+      _points = int.parse(userData['points']);
       _contactNumber = userData['contactNumber'];
       this._getQuestionDetails();
     });
@@ -135,7 +136,9 @@ class _HomePageState extends State<HomePage> {
                   alignment: WrapAlignment.center,
                   children: _answer
                       .map((element) => new MaterialButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _backToAns(element);
+                            },
                             padding: EdgeInsets.all(0.0),
                             minWidth: 40.0,
                             height: 40.0,
@@ -201,6 +204,8 @@ class _HomePageState extends State<HomePage> {
           _imagesRow2.add(qustionDetails['imageList'][3]);
           _checkAnswer = qustionDetails['answer'];
           _points = qustionDetails['points'];
+          print('****************');
+          print(_points);
           for (var i = 0; i < qustionDetails['answer'].toString().length; i++) {
             if (qustionDetails['answer'][i] == ' ') {
               // _twoWords = true;
@@ -254,20 +259,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _backToAns(rchar) {
+    // setState(() {
+    //   for (var i = 0; i < count; i++) {
+        
+    //   }
+    // });
+  }
+
   void _checkAns() {
     print(_answer.join() + ' ' + _checkAnswer.split(' ')[0]);
     if (_checkAnswer.split(' ')[0].toLowerCase() ==
         _answer.join().toLowerCase()) {
-      print('Correct' + ' ' +_questionState.toString() + ' ' + _points.toString());
+      print('Correct');
       _questionState = _questionState + 1;
       print(_points.runtimeType);
       // _points = _points + 100;
       var data = {
-        'contactNumber': _contactNumber.toString(),
-        'questionState': _questionState.toString(),
-        'points': 4500.toString()
+        'contactNumber': _contactNumber,
+        'questionState': _questionState,
+        'points': 4500
       };
-      appAuth.saveUserData(data).then((res) async {
+      appAuth.saveUserData(json.encode(data)).then((res) async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('userData', res.body);
         showDialog(
