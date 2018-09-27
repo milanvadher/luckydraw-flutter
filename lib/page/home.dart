@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/gestures.dart';
-import 'package:learn/page/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:learn/service/api_service.dart';
@@ -35,8 +34,7 @@ class _HomePageState extends State<HomePage> {
   String _checkAnswer;
   int _points;
   int _questionState;
-  var _contactNumber;
-  var _userName;
+  String _contactNumber;
 
   List _randomString = [];
   List _imagesRow1 = [];
@@ -58,7 +56,6 @@ class _HomePageState extends State<HomePage> {
       _questionState = int.parse(userData['questionState']);
       _points = int.parse(userData['points']);
       _contactNumber = userData['contactNumber'];
-      _userName = userData['username'];
       this._getQuestionDetails();
     });
   }
@@ -271,14 +268,13 @@ class _HomePageState extends State<HomePage> {
         _answer.join().toLowerCase()) {
       print('Correct');
       _questionState = _questionState + 1;
-      print(_points.runtimeType);
-      // _points = _points + 100;
+      _points = _points + 100;
       var data = {
-        'contactNumber': _contactNumber,
-        'questionState': _questionState,
-        'points': 4500
+        'contactNumber': _contactNumber.toString(),
+        'questionState': _questionState.toString(),
+        'points': _points.toString()
       };
-      appAuth.saveUserData(json.encode(data)).then((res) {
+      appAuth.saveUserData(data).then((res) {
         if (res.statusCode == 200) {
           print('****************************************');
           print(res.body);
