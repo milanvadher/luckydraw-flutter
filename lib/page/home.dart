@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/gestures.dart';
+import 'package:learn/page/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:learn/service/api_service.dart';
@@ -35,6 +36,8 @@ class _HomePageState extends State<HomePage> {
   int _points;
   int _questionState;
   var _contactNumber;
+  var _userName;
+
   List _randomString = [];
   List _imagesRow1 = [];
   List _imagesRow2 = [];
@@ -47,12 +50,6 @@ class _HomePageState extends State<HomePage> {
     [Icons.share, 'Share']
   ];
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   this._getQuestionDetails();
-  // }
-
   _HomePageState() {
     SharedPreferences.getInstance().then((onValue) {
       Map<String, dynamic> userData =
@@ -61,6 +58,7 @@ class _HomePageState extends State<HomePage> {
       _questionState = int.parse(userData['questionState']);
       _points = int.parse(userData['points']);
       _contactNumber = userData['contactNumber'];
+      _userName = userData['username'];
       this._getQuestionDetails();
     });
   }
@@ -262,7 +260,7 @@ class _HomePageState extends State<HomePage> {
   void _backToAns(rchar) {
     // setState(() {
     //   for (var i = 0; i < count; i++) {
-        
+
     //   }
     // });
   }
@@ -280,32 +278,67 @@ class _HomePageState extends State<HomePage> {
         'questionState': _questionState,
         'points': 4500
       };
-      appAuth.saveUserData(json.encode(data)).then((res) async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('userData', res.body);
-        showDialog(
-          context: context,
-          builder: (BuildContext build) {
-            return AlertDialog(
-              title: Text('Correct'),
-              content:
-                  Text('Congo! Your Answer is correct.\nYou got 100 coins.'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Next Question'),
-                  onPressed: () {
-                    _answer = [];
-                    _randomString = [];
-                    _imagesRow1 = [];
-                    _imagesRow2 = [];
-                    _getQuestionDetails();
-                    Navigator.pop(context);
-                  },
-                )
-              ],
+      appAuth.saveUserData(json.encode(data)).then((res) {
+        if (res.statusCode == 200) {
+          print('****************************************');
+          print(res.body);
+          SharedPreferences.getInstance().then((onValue) {
+            onValue.setString('userData', res.body);
+            showDialog(
+              context: context,
+              builder: (BuildContext build) {
+                return AlertDialog(
+                  title: Text('Correct'),
+                  content: Text(
+                      'Congo! Your Answer is correct.\nYou got 100 coins.'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Next Question'),
+                      onPressed: () {
+                        _answer = [];
+                        _randomString = [];
+                        _imagesRow1 = [];
+                        _imagesRow2 = [];
+                        _getQuestionDetails();
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                );
+              },
             );
-          },
-        );
+          });
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext build) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Your Internet is not working.'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('okay'),
+                    onPressed: () {
+                      setState(() {
+                        _answer = [];
+                        for (var i = 0; i < _checkAnswer.length; i++) {
+                          if (_checkAnswer[i] == ' ') {
+                            // _twoWords = true;
+                            // secondWord(qustionDetails['answer'].toString());
+                            break;
+                          } else {
+                            _answer.add(' ');
+                          }
+                        }
+                        Navigator.pop(context);
+                      });
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        }
       });
     } else {
       print('Incorrect');
@@ -364,6 +397,9 @@ class _HomePageState extends State<HomePage> {
       Navigator.pushNamed(context, '/winners');
     }
     if (choise == 'Profile') {
+      // Navigator.push(context, MaterialPageRoute(
+      //   builder: (context) => ProfilePage(_questionState, _points, _userName, _contactNumber)
+      // ));
       Navigator.pushNamed(context, '/profile');
     }
     if (choise == 'About us') {

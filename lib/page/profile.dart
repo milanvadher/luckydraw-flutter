@@ -2,30 +2,34 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-int _questionState;
-var _contactNumber;
-int _points;
-
-var _userName;
-
 class ProfilePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    SharedPreferences.getInstance().then((onValue) {
-      Map<String, dynamic> userData =
-          json.decode(onValue.getString('userData'));
-      print(userData);
-      _userName = userData['username'];
-      _questionState = int.parse(userData['questionState']);
-      _points = int.parse(userData['points']);
-      _contactNumber = userData['contactNumber'];
-    });
     return new _ProfilePageState();
   }
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  int _questionState;
+  int _points;
+  String _userName;
+  String _contactNumber;
+
+  _ProfilePageState() {
+    SharedPreferences.getInstance().then((onValue) {
+      Map<String, dynamic> userData =
+          json.decode(onValue.getString('userData'));
+      print(userData);
+      setState(() {
+        _questionState = int.parse(userData['questionState']);
+        _points = int.parse(userData['points']);
+        _contactNumber = userData['contactNumber'];
+        _userName = userData['username'];
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -42,7 +46,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: CircleAvatar(
-                    child: Text(_userName.toString()[0].toUpperCase()),
+                    child: Text(_userName != null
+                        ? _userName.toString()[0].toUpperCase()
+                        : 'Loading ...'),
                   ),
                 ),
                 Column(
@@ -50,10 +56,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      _userName,
+                      _userName != null ? _userName.toString() : 'Loading ...',
                       textScaleFactor: 1.2,
                     ),
-                    Text(_contactNumber)
+                    Text(
+                        _contactNumber != null ? _contactNumber : 'Loading ...')
                   ],
                 )
               ],
@@ -69,7 +76,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      (_questionState - 1).toString(),
+                      _questionState != null
+                          ? (_questionState - 1).toString()
+                          : 'Loading ...',
                       textScaleFactor: 1.2,
                     ),
                   ),
@@ -87,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      (_points).toString(),
+                      _points != null ? _points.toString() : 'Loading ...',
                       textScaleFactor: 1.2,
                     ),
                   ),
