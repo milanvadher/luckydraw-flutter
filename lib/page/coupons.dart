@@ -9,13 +9,37 @@ class CouponsPage extends StatefulWidget {
 }
 
 class _CouponsPageState extends State<CouponsPage> {
+  List<int> _coupons = [1002, 1003, 1004, 1005];
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      body: Center(
-        child: Text('Your coupons come here'),
+      appBar: AppBar(
+        title: Text('Your Coupons'),
       ),
+      body: ListView(
+          padding: EdgeInsets.all(10.0),
+          children: _coupons
+              .map(
+                (element) => new Card(
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: CircleAvatar(
+                              child: Icon(Icons.monetization_on),
+                            ),
+                          ),
+                          Text(
+                            element.toString(),
+                            textScaleFactor: 1.5,
+                          )
+                        ],
+                      ),
+                    ),
+              )
+              .toList()),
     );
   }
 }
