@@ -49,28 +49,33 @@ class _CouponsPageState extends State<CouponsPage> {
         appBar: AppBar(
           title: Text('Your Coupons'),
         ),
-        body: ListView(
-            padding: EdgeInsets.all(10.0),
-            children: _earnedCoupons
-                .map(
-                  (element) => new Card(
-                        child: Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: CircleAvatar(
-                                child: Icon(Icons.monetization_on),
-                              ),
-                            ),
-                            Text(
-                              element.toString(),
-                              textScaleFactor: 1.5,
-                            )
-                          ],
-                        ),
+        body: ListView.builder(
+          itemCount: _earnedCoupons.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return ListTile(
+                title: Text('Earned Coupons:', textScaleFactor: 1.2,),
+              );
+            } else {
+              return Card(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: CircleAvatar(
+                        child: Icon(Icons.monetization_on),
                       ),
-                )
-                .toList()),
+                    ),
+                    Text(
+                      _earnedCoupons[index - 1].toString(),
+                      textScaleFactor: 1.5,
+                    )
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       );
     } else {
       return Scaffold(
@@ -84,3 +89,26 @@ class _CouponsPageState extends State<CouponsPage> {
     }
   }
 }
+
+// ListView(
+//             padding: EdgeInsets.all(10.0),
+//             children: _earnedCoupons
+//                 .map(
+//                   (element) => new Card(
+//                         child: Row(
+//                           children: <Widget>[
+//                             Padding(
+//                               padding: EdgeInsets.all(10.0),
+//                               child: CircleAvatar(
+//                                 child: Icon(Icons.monetization_on),
+//                               ),
+//                             ),
+//                             Text(
+//                               element.toString(),
+//                               textScaleFactor: 1.5,
+//                             )
+//                           ],
+//                         ),
+//                       ),
+//                 )
+//                 .toList())
