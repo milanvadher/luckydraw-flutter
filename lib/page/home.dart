@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
       _points = int.parse(userData['points']);
       _contactNumber = userData['contactNumber'];
       this._getQuestionDetails();
+      print(_points);
     });
   }
 
@@ -198,9 +199,6 @@ class _HomePageState extends State<HomePage> {
           _imagesRow2.add(qustionDetails['imageList'][2]);
           _imagesRow2.add(qustionDetails['imageList'][3]);
           _checkAnswer = qustionDetails['answer'];
-          _points = qustionDetails['points'];
-          print('****************');
-          print(_points);
           for (var i = 0; i < qustionDetails['answer'].toString().length; i++) {
             if (qustionDetails['answer'][i] == ' ') {
               // _twoWords = true;
