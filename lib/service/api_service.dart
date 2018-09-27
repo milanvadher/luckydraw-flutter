@@ -37,8 +37,13 @@ class ApiService {
   // Save User Data 
   Future<http.Response> saveUserData(data) async {
     http.Response res = await http.post(_apiUrl + '/saveUserData', body: data);
-    print('In service **************');
-    print(res.body);
     return res;
   }
+
+  // Save User Data 
+  Future<http.Response> getUserTickets(data) async {
+    http.Response res = await http.post(_apiUrl + '/getUserTickets', body: data);
+    return res;
+  }
+
 }

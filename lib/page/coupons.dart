@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:learn/service/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+ApiService appAuth = new ApiService();
 
 class CouponsPage extends StatefulWidget {
   @override
@@ -9,37 +15,72 @@ class CouponsPage extends StatefulWidget {
 }
 
 class _CouponsPageState extends State<CouponsPage> {
-  List<int> _coupons = [1002, 1003, 1004, 1005];
+  String _contactNumber;
+
+  List _earnedCoupons;
+  List _usedCoupons;
+
+  _CouponsPageState() {
+    SharedPreferences.getInstance().then((onValue) {
+      Map<String, dynamic> userData =
+          json.decode(onValue.getString('userData'));
+      print(userData);
+      _contactNumber = userData['contactNumber'];
+      var data = {"contactNumber": _contactNumber};
+      appAuth.getUserTickets(data).then((res) {
+        if (res.statusCode == 200) {
+          setState(() {
+            print(res.body);
+            _earnedCoupons = json.decode(res.body)['earnedTickets'];
+            print(_earnedCoupons);
+          });
+        } else {
+          print('Error Not connect to get user tickets');
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Your Coupons'),
-      ),
-      body: ListView(
-          padding: EdgeInsets.all(10.0),
-          children: _coupons
-              .map(
-                (element) => new Card(
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: CircleAvatar(
-                              child: Icon(Icons.monetization_on),
+    if (_earnedCoupons != null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Your Coupons'),
+        ),
+        body: ListView(
+            padding: EdgeInsets.all(10.0),
+            children: _earnedCoupons
+                .map(
+                  (element) => new Card(
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: CircleAvatar(
+                                child: Icon(Icons.monetization_on),
+                              ),
                             ),
-                          ),
-                          Text(
-                            element.toString(),
-                            textScaleFactor: 1.5,
-                          )
-                        ],
+                            Text(
+                              element.toString(),
+                              textScaleFactor: 1.5,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-              )
-              .toList()),
-    );
+                )
+                .toList()),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Your Coupons'),
+        ),
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
   }
 }
