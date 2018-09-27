@@ -2,22 +2,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+int _questionState;
+var _contactNumber;
+int _points;
+
+var _userName;
+
 class ProfilePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new _ProfilePageState();
-  }
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  int _questionState;
-  var _contactNumber;
-  int _points;
-
-  var _userName;
-
-  _ProfilePageState() {
     SharedPreferences.getInstance().then((onValue) {
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
@@ -27,8 +21,11 @@ class _ProfilePageState extends State<ProfilePage> {
       _points = int.parse(userData['points']);
       _contactNumber = userData['contactNumber'];
     });
+    return new _ProfilePageState();
   }
+}
 
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -71,7 +68,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text('Question solved: '),
                   Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                    child: Text((_questionState-1).toString(), textScaleFactor: 1.2,),
+                    child: Text(
+                      (_questionState - 1).toString(),
+                      textScaleFactor: 1.2,
+                    ),
                   ),
                 ],
               ),
@@ -86,7 +86,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text('Total Points: '),
                   Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                    child: Text((_points).toString(), textScaleFactor: 1.2,),
+                    child: Text(
+                      (_points).toString(),
+                      textScaleFactor: 1.2,
+                    ),
                   ),
                 ],
               ),
