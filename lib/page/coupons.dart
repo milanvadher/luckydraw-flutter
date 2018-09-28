@@ -193,7 +193,9 @@ class _CouponsPageState extends State<CouponsPage> {
                                 alignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   FlatButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      assignDate(element.toString());
+                                    },
                                     child: Text('Assign'),
                                   )
                                 ],
@@ -227,7 +229,10 @@ class _CouponsPageState extends State<CouponsPage> {
                                 padding: EdgeInsets.all(10.0),
                                 child: CircleAvatar(
                                   backgroundColor: Color.fromARGB(200, 3, 1, 1),
-                                  child: Icon(Icons.monetization_on, color: Colors.yellow,),
+                                  child: Icon(
+                                    Icons.monetization_on,
+                                    color: Colors.yellow,
+                                  ),
                                 ),
                               ),
                               Column(
@@ -262,48 +267,65 @@ class _CouponsPageState extends State<CouponsPage> {
     }
   }
 
-  Widget assignDate() {
-    return ListView(
-      children: <Widget>[
-        _DateTimePicker(
-          labelText: 'Select Date',
-          selectedDate: _fromDate,
-          selectedTime: _fromTime,
-          selectDate: (DateTime date) {
-            setState(() {
-              _fromDate = date;
-            });
-          },
-          selectTime: (TimeOfDay time) {
-            setState(() {
-              _fromTime = time;
-            });
-          },
-        ),
-        const SizedBox(height: 8.0),
-        InputDecorator(
-          decoration: const InputDecoration(
-            labelText: 'Select time:',
-            hintText: 'Choose any time',
-            contentPadding: EdgeInsets.zero,
-          ),
-          isEmpty: _activity == null,
-          child: DropdownButton<String>(
-            value: _activity,
-            onChanged: (String newValue) {
-              setState(() {
-                _activity = newValue;
-              });
-            },
-            items: _allActivities.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
-    );
+  void assignDate(coupon) {
+    print(coupon);
+    showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text('Assign you coupon: ' + coupon),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _DateTimePicker(
+                  labelText: 'Select Date',
+                  selectedDate: _fromDate,
+                  selectedTime: _fromTime,
+                  selectDate: (DateTime date) {
+                    setState(() {
+                      _fromDate = date;
+                    });
+                  },
+                  selectTime: (TimeOfDay time) {
+                    setState(() {
+                      _fromTime = time;
+                    });
+                  },
+                ),
+                const SizedBox(height: 8.0),
+                InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Select time:',
+                    hintText: 'Choose any time',
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  isEmpty: _activity == null,
+                  child: DropdownButton<String>(
+                    value: _activity,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        _activity = newValue;
+                      });
+                    },
+                    items: _allActivities.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Save'),
+              )
+            ],
+          );
+        });
   }
 }
