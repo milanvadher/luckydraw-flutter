@@ -262,7 +262,7 @@ class _CouponsPageState extends State<CouponsPage> {
         context: context,
         builder: (BuildContext build) {
           return AlertDialog(
-            title: Text('Assign you coupon: ' + coupon),
+            title: Text('Assign your coupon: ' + coupon),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -306,6 +306,12 @@ class _CouponsPageState extends State<CouponsPage> {
                   Navigator.pop(context);
                 },
                 child: Text('Save'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
               )
             ],
           );
