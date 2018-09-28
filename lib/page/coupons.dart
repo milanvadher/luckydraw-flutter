@@ -103,14 +103,6 @@ class CouponsPage extends StatefulWidget {
 }
 
 class _CouponsPageState extends State<CouponsPage> {
-  DateTime _fromDate = DateTime(2018, 11, 16, 18, 00);
-  final List<String> _allActivities = <String>[
-    '06 : 30 PM',
-    '08 : 00 PM',
-    '90 : 30 PM',
-  ];
-  String _activity = '06 : 30 PM';
-
   String _contactNumber;
   List _earnedCoupons;
   List _usedCoupons;
@@ -263,43 +255,7 @@ class _CouponsPageState extends State<CouponsPage> {
         builder: (BuildContext build) {
           return AlertDialog(
             title: Text('Assign your coupon: ' + coupon),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _DateTimePicker(
-                  labelText: 'Select Date',
-                  selectedDate: _fromDate,
-                  selectDate: (DateTime date) {
-                    setState(() {
-                      _fromDate = date;
-                    });
-                  },
-                ),
-                const SizedBox(height: 8.0),
-                InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Select time:',
-                    hintText: 'Choose any time',
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  isEmpty: _activity == null,
-                  child: DropdownButton<String>(
-                    value: _activity,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        _activity = newValue;
-                      });
-                    },
-                    items: _allActivities.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
+            content: MyDialogContnet(),
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
@@ -316,5 +272,61 @@ class _CouponsPageState extends State<CouponsPage> {
             ],
           );
         });
+  }
+}
+
+class MyDialogContnet extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _MyDialogContentState();
+}
+
+class _MyDialogContentState extends State<MyDialogContnet> {
+  DateTime _fromDate = DateTime(2018, 11, 16, 18, 00);
+  final List<String> _allActivities = <String>[
+    '06 : 30 PM',
+    '08 : 00 PM',
+    '09 : 30 PM',
+  ];
+  String _activity = '06 : 30 PM';
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        _DateTimePicker(
+          labelText: 'Select Date',
+          selectedDate: _fromDate,
+          selectDate: (DateTime date) {
+            setState(() {
+              _fromDate = date;
+            });
+          },
+        ),
+        const SizedBox(height: 8.0),
+        InputDecorator(
+          decoration: const InputDecoration(
+            labelText: 'Select time:',
+            hintText: 'Choose any time',
+            contentPadding: EdgeInsets.zero,
+          ),
+          isEmpty: _activity == null,
+          child: DropdownButton<String>(
+            value: _activity,
+            onChanged: (String newValue) {
+              setState(() {
+                _activity = newValue;
+              });
+            },
+            items: _allActivities.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
   }
 }
