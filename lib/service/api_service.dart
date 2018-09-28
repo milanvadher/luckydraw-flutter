@@ -46,4 +46,10 @@ class ApiService {
     return res;
   }
 
+  // Save User Data 
+  Future<http.Response> mapTickets(data) async {
+    http.Response res = await http.post(_apiUrl + '/mapTicket', body: data);
+    return res;
+  }
+
 }

@@ -13,6 +13,9 @@ final List<String> _allActivities = <String>[
   '09:30 PM',
 ];
 String _activity = '06:30 PM';
+String _contactNumber;
+List _earnedCoupons;
+List _usedCoupons;
 
 class _InputDropdown extends StatelessWidget {
   const _InputDropdown(
@@ -110,10 +113,6 @@ class CouponsPage extends StatefulWidget {
 }
 
 class _CouponsPageState extends State<CouponsPage> {
-  String _contactNumber;
-  List _earnedCoupons;
-  List _usedCoupons;
-
   _CouponsPageState() {
     SharedPreferences.getInstance().then((onValue) {
       Map<String, dynamic> userData =
@@ -266,7 +265,9 @@ class _CouponsPageState extends State<CouponsPage> {
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
-                  _assignCoupon(coupon);
+                  setState(() {
+                    _assignCoupon(coupon);
+                  });
                   Navigator.pop(context);
                 },
                 child: Text('Save'),
@@ -333,14 +334,27 @@ class _MyDialogContentState extends State<MyDialogContnet> {
 }
 
 _assignCoupon(coupon) {
-  SharedPreferences.getInstance().then((onValue) {
-    Map<String, dynamic> userData = json.decode(onValue.getString('userData'));
-    List tempDate = _fromDate.toString().split(' ')[0].split('-');
-    var data = {
-      "ticket": coupon.toString(),
-      "contactNumber": userData['contactNumber'],
-      "date": [int.parse(tempDate[0]), int.parse(tempDate[1]), int.parse(tempDate[2]), int.parse(_activity.split(':')[0]), int.parse(_activity.split(':')[1].split(' ')[0]), 0, 0].toString()
-    };
-    print(data);
-  });
+  List tempDate = _fromDate.toString().split(' ')[0].split('-');
+  var data = {
+    "ticket": coupon.toString(),
+    "contactNumber": _contactNumber,
+    "date": [
+      int.parse(tempDate[0]),
+      int.parse(tempDate[1]),
+      int.parse(tempDate[2]),
+      int.parse(_activity.split(':')[0]),
+      int.parse(_activity.split(':')[1].split(' ')[0]),
+      0,
+      0
+    ].toString()
+  };
+  print(data);
+  // appAuth.mapTickets(data).then((res) {
+  //   if (res.statusCode == 200) {
+  //     _earnedCoupons = json.decode(res.body)['earnedTickets'];
+  //     _usedCoupons = json.decode(res.body)['ticketMapping'];
+  //   } else {
+  //     print('error');
+  //   }
+  // });
 }
