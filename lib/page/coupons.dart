@@ -53,14 +53,12 @@ class _DateTimePicker extends StatelessWidget {
       {Key key,
       this.labelText,
       this.selectedDate,
-      this.selectedTime,
       this.selectDate,
       this.selectTime})
       : super(key: key);
 
   final String labelText;
   final DateTime selectedDate;
-  final TimeOfDay selectedTime;
   final ValueChanged<DateTime> selectDate;
   final ValueChanged<TimeOfDay> selectTime;
 
@@ -71,12 +69,6 @@ class _DateTimePicker extends StatelessWidget {
         firstDate: DateTime(2018, 11, 16),
         lastDate: DateTime(2018, 11, 25));
     if (picked != null && picked != selectedDate) selectDate(picked);
-  }
-
-  Future<Null> _selectTime(BuildContext context) async {
-    final TimeOfDay picked =
-        await showTimePicker(context: context, initialTime: selectedTime);
-    if (picked != null && picked != selectedTime) selectTime(picked);
   }
 
   @override
@@ -112,9 +104,6 @@ class CouponsPage extends StatefulWidget {
 
 class _CouponsPageState extends State<CouponsPage> {
   DateTime _fromDate = DateTime(2018, 11, 16, 18, 00);
-  TimeOfDay _fromTime = const TimeOfDay(hour: 7, minute: 28);
-  DateTime _toDate = DateTime.now();
-  TimeOfDay _toTime = const TimeOfDay(hour: 7, minute: 28);
   final List<String> _allActivities = <String>[
     '06 : 30 PM',
     '08 : 00 PM',
@@ -280,15 +269,9 @@ class _CouponsPageState extends State<CouponsPage> {
                 _DateTimePicker(
                   labelText: 'Select Date',
                   selectedDate: _fromDate,
-                  selectedTime: _fromTime,
                   selectDate: (DateTime date) {
                     setState(() {
                       _fromDate = date;
-                    });
-                  },
-                  selectTime: (TimeOfDay time) {
-                    setState(() {
-                      _fromTime = time;
                     });
                   },
                 ),
