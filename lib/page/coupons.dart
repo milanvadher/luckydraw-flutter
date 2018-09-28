@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:learn/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +32,7 @@ class _CouponsPageState extends State<CouponsPage> {
           setState(() {
             print(res.body);
             _earnedCoupons = json.decode(res.body)['earnedTickets'];
+            _usedCoupons = json.decode(res.body)['ticketMapping'];
             print(_earnedCoupons);
           });
         } else {
@@ -49,32 +50,82 @@ class _CouponsPageState extends State<CouponsPage> {
         appBar: AppBar(
           title: Text('Your Coupons'),
         ),
-        body: ListView.builder(
-          itemCount: _earnedCoupons.length + 1,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return ListTile(
-                title: Text('Earned Coupons:', textScaleFactor: 1.2,),
-              );
-            } else {
-              return Card(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: CircleAvatar(
-                        child: Icon(Icons.monetization_on),
-                      ),
-                    ),
-                    Text(
-                      _earnedCoupons[index - 1].toString(),
-                      textScaleFactor: 1.5,
-                    )
-                  ],
-                ),
-              );
-            }
-          },
+        body: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: 10.0,
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                'Your Earned Coupons:',
+                textScaleFactor: 1.5,
+              ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Column(
+              children: _earnedCoupons
+                  .map(
+                    (element) => new Card(
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: CircleAvatar(
+                                  child: Icon(Icons.monetization_on),
+                                ),
+                              ),
+                              Text(
+                                element.toString(),
+                                textScaleFactor: 1.3,
+                              )
+                            ],
+                          ),
+                        ),
+                  )
+                  .toList(),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                'Your Used Coupons:',
+                textScaleFactor: 1.5,
+              ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Column(
+              children: _usedCoupons
+                  .map(
+                    (element) => new Card(
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: CircleAvatar(
+                                  child: Icon(Icons.monetization_on),
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(element['ticketNo'].toString(), textScaleFactor: 1.3,),
+                                  Text(DateFormat.yMd().add_jm().format(DateTime.parse(element['assignDate']))),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                  )
+                  .toList(),
+            ),
+          ],
         ),
       );
     } else {
@@ -89,26 +140,3 @@ class _CouponsPageState extends State<CouponsPage> {
     }
   }
 }
-
-// ListView(
-//             padding: EdgeInsets.all(10.0),
-//             children: _earnedCoupons
-//                 .map(
-//                   (element) => new Card(
-//                         child: Row(
-//                           children: <Widget>[
-//                             Padding(
-//                               padding: EdgeInsets.all(10.0),
-//                               child: CircleAvatar(
-//                                 child: Icon(Icons.monetization_on),
-//                               ),
-//                             ),
-//                             Text(
-//                               element.toString(),
-//                               textScaleFactor: 1.5,
-//                             )
-//                           ],
-//                         ),
-//                       ),
-//                 )
-//                 .toList())
