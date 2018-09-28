@@ -59,18 +59,16 @@ class _InputDropdown extends StatelessWidget {
 }
 
 class _DateTimePicker extends StatelessWidget {
-  const _DateTimePicker(
-      {Key key,
-      this.labelText,
-      this.selectedDate,
-      this.selectDate,
-      this.selectTime})
-      : super(key: key);
+  const _DateTimePicker({
+    Key key,
+    this.labelText,
+    this.selectedDate,
+    this.selectDate,
+  }) : super(key: key);
 
   final String labelText;
   final DateTime selectedDate;
   final ValueChanged<DateTime> selectDate;
-  final ValueChanged<TimeOfDay> selectTime;
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
