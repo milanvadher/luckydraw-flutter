@@ -115,6 +115,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             _register();
                           }
                         },
+                        color: Colors.amber,
                         child: Text('SAVE'),
                       )
                     ],

@@ -13,14 +13,22 @@ List<int> temp = new List(6);
 ApiService appAuth = new ApiService();
 
 class RegisterPage extends StatefulWidget {
+  final String title;
+
+  const RegisterPage(this.title);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new _RegisterPageState();
+    return new _RegisterPageState(title);
   }
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  String title;
+
+  _RegisterPageState(this.title);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -34,7 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
             children: <Widget>[
               SizedBox(height: 10.0),
               Center(
-                child: Text('REGISTER', textScaleFactor: 2.0),
+                child: Text(title, textScaleFactor: 2.0),
               ),
               SizedBox(height: 10.0),
               Column(
@@ -73,6 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             _gererateOtp();
                           }
                         },
+                        color: Colors.amber,
                         child: Text('GET OTP'),
                       )
                     ],
@@ -87,6 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
+                      textColor: Colors.blueAccent,
                       child: Text('LOGIN NOW'),
                     ),
                   )
@@ -117,11 +127,13 @@ class _RegisterPageState extends State<RegisterPage> {
           if (json.decode(res.body)['isNewUser']) {
             onValue.setString('number', _contactController.text);
             onValue.setBool('isNewUser', true);
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => OtpVerifyPage()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => OtpVerifyPage()));
           } else {
             onValue.setBool('isNewUser', false);
             onValue.setString('user', res.body);
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => OtpVerifyPage()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => OtpVerifyPage()));
           }
         } else {
           print('Error');

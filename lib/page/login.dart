@@ -80,14 +80,28 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     obscureText: true,
                   ),
+                  SizedBox(height: 12.0),
                   ButtonBar(
                     children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      RegisterPage('FORGOT PASSWORD'),
+                                  fullscreenDialog: true));
+                        },
+                        textColor: Colors.blueAccent,
+                        child: Text('Forgot your Password ?'),
+                      ),
                       RaisedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
                             _login();
                           }
                         },
+                        color: Colors.amber,
                         child: Text('LOGIN'),
                       )
                     ],
@@ -104,9 +118,10 @@ class _LoginPageState extends State<LoginPage> {
                             context,
                             MaterialPageRoute<void>(
                                 builder: (BuildContext context) =>
-                                    RegisterPage(),
+                                    RegisterPage('REGISTER'),
                                 fullscreenDialog: true));
                       },
+                      textColor: Colors.blueAccent,
                       child: Text('REGISTER NOW'),
                     ),
                   )
