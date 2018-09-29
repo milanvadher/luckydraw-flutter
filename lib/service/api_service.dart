@@ -52,4 +52,16 @@ class ApiService {
     return res;
   }
 
+  // Send OTP 
+  Future<http.Response> sendOtp(data) async {
+    http.Response res = await http.post(_apiUrl + '/otp', body: data);
+    return res;
+  }
+
+  // Forgot Password 
+  Future<http.Response> forgotPassword(data) async {
+    http.Response res = await http.post(_apiUrl + '/forgotPassword', body: data);
+    return res;
+  }
+
 }

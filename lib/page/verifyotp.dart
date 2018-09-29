@@ -1,26 +1,22 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:learn/page/verifyotp.dart';
-import 'package:learn/service/api_service.dart';
-import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:learn/register.dart';
 
 final _formKey = GlobalKey<FormState>();
-final _contactController = TextEditingController();
-List<int> temp = new List(6);
+final _otpController = TextEditingController();
+// final _passwordController = TextEditingController();
 
-ApiService appAuth = new ApiService();
-
-class RegisterPage extends StatefulWidget {
+class OtpVerifyPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new _RegisterPageState();
+    return new _OtpVerifyPageState();
   }
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _OtpVerifyPageState extends State<OtpVerifyPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -34,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
             children: <Widget>[
               SizedBox(height: 10.0),
               Center(
-                child: Text('REGISTER', textScaleFactor: 2.0),
+                child: Text('Verify OTP', textScaleFactor: 2.0),
               ),
               SizedBox(height: 10.0),
               Column(
@@ -50,18 +46,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextFormField(
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Contact number is required !';
+                        return 'OTP is required !';
                       }
-                      if (value.isNotEmpty && value.length < 10.0) {
-                        return 'Enter Valid Contact number !';
+                      if (value.isNotEmpty && value.length < 6.0) {
+                        return 'Enter Valid OTP !';
                       }
                     },
-                    controller: _contactController,
+                    controller: _otpController,
                     decoration: InputDecoration(
                       filled: true,
-                      labelText: 'Contact Number',
+                      labelText: 'OTP',
                     ),
-                    maxLength: 10,
+                    maxLength: 6,
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(height: 12.0),
@@ -70,16 +66,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       RaisedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            _gererateOtp();
+                            _checkOtp();
                           }
                         },
-                        child: Text('GET OTP'),
+                        child: Text('VERIFY'),
                       )
                     ],
                   ),
                   SizedBox(height: 30.0),
                   Center(
-                    child: Text('Already Register?'),
+                    child: Text('Not Your Number?'),
                   ),
                   SizedBox(height: 12.0),
                   Center(
@@ -87,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('LOGIN NOW'),
+                      child: Text('GO BACK'),
                     ),
                   )
                 ],
@@ -99,34 +95,43 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _gererateOtp() {
-    SharedPreferences.getInstance().then((onValue) {
-      var otp = new Random();
-      for (var i = 0; i < 6; i++) {
-        temp[i] = otp.nextInt(9);
+  void _checkOtp() {
+    SharedPreferences.getInstance().then((prefs) {
+      if (prefs.getString('otp').toString() == _otpController.text.toString()) {
+        _showDialog('Success', 'Otp is verified.', prefs.getBool('isNewUser'));
+      } else {
+        _showDialog('Error', 'Oops!! Wrong OTP.', prefs.getBool('isNewUser'));
       }
-      onValue.setString('otp', temp.join());
-      print(temp.join());
-      var data = {
-        'contactNumber': _contactController.text,
-        'otp': temp.join().toString()
-      };
-      appAuth.sendOtp(data).then((res) {
-        if (res.statusCode == 200) {
-          print(res.body);
-          if (json.decode(res.body)['isNewUser']) {
-            onValue.setString('number', _contactController.text);
-            onValue.setBool('isNewUser', true);
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => OtpVerifyPage()));
-          } else {
-            onValue.setBool('isNewUser', false);
-            onValue.setString('user', res.body);
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => OtpVerifyPage()));
-          }
-        } else {
-          print('Error');
-        }
-      });
     });
+  }
+
+  void _showDialog(title, text, condition) {
+    showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(text),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(title == 'Error' ? 'Try Again' : condition ? 'Go to Profile' : 'Next'),
+                onPressed: () {
+                  if (title == 'Error') {
+                    _otpController.clear();
+                    Navigator.pop(context);
+                  } else {
+                    if (condition == true) {
+                      print('in edit');
+                      Navigator.of(context).pushReplacementNamed('/editprofile');
+                    } else {
+                      print('in reset');
+                      Navigator.of(context).pushReplacementNamed('/resetPassword');
+                    }
+                  }
+                },
+              )
+            ],
+          );
+        });
   }
 }

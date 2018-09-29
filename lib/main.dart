@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:learn/page/coupons.dart';
+import 'package:learn/page/editprofile.dart';
 import 'package:learn/page/profile.dart';
+import 'package:learn/page/resetPassword.dart';
+import 'package:learn/page/verifyotp.dart';
 import 'package:learn/page/winners.dart';
 import 'package:learn/service/api_service.dart';
 import './page/login.dart';
@@ -33,7 +36,10 @@ void main() async {
       '/register': (BuildContext context) => new RegisterPage(),
       '/coupons': (BuildContext context) => new CouponsPage(),
       '/profile': (BuildContext context) => new ProfilePage(),
-      '/winners': (BuildContext context) => new WinnerPage()
+      '/winners': (BuildContext context) => new WinnerPage(),
+      '/otp': (BuildContext context) => new OtpVerifyPage(),
+      '/editprofile': (BuildContext context) => new EditProfilePage(),
+      '/resetPassword': (BuildContext context) => new ResetPasswordPage(),
     },
   ));
 }

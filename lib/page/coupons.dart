@@ -344,10 +344,10 @@ _assignCoupon(coupon) {
       int.parse(_activity.split(':')[1].split(' ')[0]),
       0,
       0
-    ].toString()
+    ]
   };
-  print(data);
-  // appAuth.mapTickets(data).then((res) {
+  print(json.encode(data));
+  // appAuth.mapTickets(json.encode(data)).then((res) {
   //   if (res.statusCode == 200) {
   //     _earnedCoupons = json.decode(res.body)['earnedTickets'];
   //     _usedCoupons = json.decode(res.body)['ticketMapping'];
