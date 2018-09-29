@@ -27,7 +27,8 @@ void main() async {
     title: 'Demo App',
     home: _defaultHome,
     theme: ThemeData(
-      primaryColor: Colors.orangeAccent
+      primaryColor: Colors.orangeAccent,
+      fontFamily: 'GoogleSans'
     ),
     routes: <String, WidgetBuilder>{
       // Set routes for using the Navigator.

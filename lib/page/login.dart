@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fullscreenDialog: true));
                         },
                         textColor: Colors.blueAccent,
-                        child: Text('Forgot your Password ?'),
+                        child: Text('Forgot Password ?'),
                       ),
                       RaisedButton(
                         onPressed: () {

@@ -2,13 +2,10 @@ import 'package:learn/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import './register.dart';
 
 ApiService appAuth = new ApiService();
 
-var _contactnumber;
 final _formKey = GlobalKey<FormState>();
-final _contactNumberController = TextEditingController();
 final _userNameController = TextEditingController();
 final _passwordController = TextEditingController();
 final _repeatPasswordController = TextEditingController();
@@ -22,12 +19,6 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  _EditProfilePageState() {
-    SharedPreferences.getInstance().then((onValue) {
-        _contactnumber = onValue.getString('number');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

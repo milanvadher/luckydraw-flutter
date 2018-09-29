@@ -1,12 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:learn/register.dart';
 
 final _formKey = GlobalKey<FormState>();
 final _otpController = TextEditingController();
-// final _passwordController = TextEditingController();
 
 class OtpVerifyPage extends StatefulWidget {
   @override
@@ -69,6 +65,7 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                             _checkOtp();
                           }
                         },
+                        color: Colors.amber,
                         child: Text('VERIFY'),
                       )
                     ],
@@ -83,6 +80,7 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
+                      textColor: Colors.blueAccent,
                       child: Text('GO BACK'),
                     ),
                   )
