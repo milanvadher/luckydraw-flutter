@@ -28,6 +28,29 @@ class _LinkTextSpan extends TextSpan {
 }
 
 class _HomePageState extends State<HomePage> {
+  
+  Future<bool> _onWillPop() {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+                title: new Text('Are you sure?'),
+                content: new Text('Do you want to exit an App'),
+                actions: <Widget>[
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: new Text('No'),
+                  ),
+                  new FlatButton(
+                    textColor: Colors.red,
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: new Text('Yes'),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
+  }
+
   // bool _twoWords;
   // List _secondWord = [];
   List _answer = [];
@@ -64,127 +87,130 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Lucky Draw JJ-111'),
-          actions: <Widget>[
-            PopupMenuButton(
-              onSelected: _actionChoise,
-              itemBuilder: (BuildContext context) {
-                return choise.map((item) {
-                  return PopupMenuItem(
-                    value: item[1],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text('Lucky Draw JJ-111'),
+            actions: <Widget>[
+              PopupMenuButton(
+                onSelected: _actionChoise,
+                itemBuilder: (BuildContext context) {
+                  return choise.map((item) {
+                    return PopupMenuItem(
+                      value: item[1],
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            item[0],
+                          ),
+                          Text('  ' + item[1], textAlign: TextAlign.end)
+                        ],
+                      ),
+                    );
+                  }).toList();
+                },
+              ),
+            ],
+          ),
+          body: ListView(
+            children: <Widget>[
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
-                      children: <Widget>[
-                        Icon(
-                          item[0],
-                        ),
-                        Text('  ' + item[1], textAlign: TextAlign.end)
-                      ],
+                      children: _imagesRow1
+                          .map(
+                            (image) => Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.all(4.0),
+                                    child: Image.network(
+                                      image,
+                                    ),
+                                  ),
+                                ),
+                          )
+                          .toList(),
                     ),
-                  );
-                }).toList();
-              },
-            ),
-          ],
-        ),
-        body: ListView(
-          children: <Widget>[
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: _imagesRow1
-                        .map(
-                          (image) => Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.all(4.0),
-                                  child: Image.network(
-                                    image,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: _imagesRow2
+                          .map(
+                            (image) => Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.all(4.0),
+                                    child: Image.network(
+                                      image,
+                                    ),
                                   ),
                                 ),
-                              ),
-                        )
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  SizedBox(height: 15.0),
+                  Wrap(
+                    spacing: 0.0,
+                    alignment: WrapAlignment.center,
+                    children: _answer
+                        .map((element) => new MaterialButton(
+                              onPressed: () {
+                                _backToAns(element);
+                              },
+                              textColor: Colors.white,
+                              padding: EdgeInsets.all(0.0),
+                              minWidth: 40.0,
+                              height: 40.0,
+                              color: Colors.blueGrey,
+                              child: Text(element.toString().toUpperCase()),
+                            ))
                         .toList(),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: _imagesRow2
-                        .map(
-                          (image) => Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.all(4.0),
-                                  child: Image.network(
-                                    image,
-                                  ),
-                                ),
-                              ),
-                        )
+                  // Wrap(
+                  //   spacing: 0.0,
+                  //   alignment: WrapAlignment.center,
+                  //   children: _secondWord
+                  //       .map((element) => new MaterialButton(
+                  //             onPressed: () {},
+                  //             padding: EdgeInsets.all(0.0),
+                  //             minWidth: 40.0,
+                  //             height: 40.0,
+                  //             color: Colors.blueGrey,
+                  //             child: Text(element.toString().toUpperCase()),
+                  //           ))
+                  //       .toList(),
+                  // ),
+                  SizedBox(height: 15.0),
+                  Wrap(
+                    spacing: 0.0,
+                    alignment: WrapAlignment.center,
+                    children: _randomString
+                        .map((element) => new MaterialButton(
+                              onPressed: () {
+                                _pushToAns(element.toString());
+                              },
+                              padding: EdgeInsets.all(0.0),
+                              minWidth: 40.0,
+                              height: 40.0,
+                              color: Colors.amber,
+                              child: Text(element.toString().toUpperCase()),
+                            ))
                         .toList(),
                   ),
-                ),
-                SizedBox(height: 15.0),
-                Wrap(
-                  spacing: 0.0,
-                  alignment: WrapAlignment.center,
-                  children: _answer
-                      .map((element) => new MaterialButton(
-                            onPressed: () {
-                              _backToAns(element);
-                            },
-                            textColor: Colors.white,
-                            padding: EdgeInsets.all(0.0),
-                            minWidth: 40.0,
-                            height: 40.0,
-                            color: Colors.blueGrey,
-                            child: Text(element.toString().toUpperCase()),
-                          ))
-                      .toList(),
-                ),
-                // Wrap(
-                //   spacing: 0.0,
-                //   alignment: WrapAlignment.center,
-                //   children: _secondWord
-                //       .map((element) => new MaterialButton(
-                //             onPressed: () {},
-                //             padding: EdgeInsets.all(0.0),
-                //             minWidth: 40.0,
-                //             height: 40.0,
-                //             color: Colors.blueGrey,
-                //             child: Text(element.toString().toUpperCase()),
-                //           ))
-                //       .toList(),
-                // ),
-                SizedBox(height: 15.0),
-                Wrap(
-                  spacing: 0.0,
-                  alignment: WrapAlignment.center,
-                  children: _randomString
-                      .map((element) => new MaterialButton(
-                            onPressed: () {
-                              _pushToAns(element.toString());
-                            },
-                            padding: EdgeInsets.all(0.0),
-                            minWidth: 40.0,
-                            height: 40.0,
-                            color: Colors.amber,
-                            child: Text(element.toString().toUpperCase()),
-                          ))
-                      .toList(),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    _logOut();
-                  },
-                  child: Text('LogOut'),
-                )
-              ],
-            ),
-          ],
-        ));
+                  RaisedButton(
+                    onPressed: () {
+                      _logOut();
+                    },
+                    child: Text('LogOut'),
+                  )
+                ],
+              ),
+            ],
+          )),
+    );
   }
 
   _getQuestionDetails() async {
@@ -266,8 +292,33 @@ class _HomePageState extends State<HomePage> {
     if (_checkAnswer.split(' ')[0].toLowerCase() ==
         _answer.join().toLowerCase()) {
       print('Correct');
+      if (_questionState % 5 == 0) {
+        _generateTicket();
+      }
       _questionState = _questionState + 1;
       _points = _points + 100;
+      _answer = [];
+      _randomString = [];
+      _imagesRow1 = [];
+      _imagesRow2 = [];
+      _getQuestionDetails();
+      showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text('Correct'),
+            content: Text('Congo! Your Answer is correct.\nYou got 100 coins.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        },
+      );
       var data = {
         'contactNumber': _contactNumber.toString(),
         'questionState': _questionState.toString(),
@@ -279,31 +330,20 @@ class _HomePageState extends State<HomePage> {
           print(res.body);
           SharedPreferences.getInstance().then((onValue) {
             onValue.setString('userData', res.body);
-            showDialog(
-              context: context,
-              builder: (BuildContext build) {
-                return AlertDialog(
-                  title: Text('Correct'),
-                  content: Text(
-                      'Congo! Your Answer is correct.\nYou got 100 coins.'),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Next Question'),
-                      onPressed: () {
-                        _answer = [];
-                        _randomString = [];
-                        _imagesRow1 = [];
-                        _imagesRow2 = [];
-                        _getQuestionDetails();
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                );
-              },
-            );
           });
         } else {
+          setState(() {
+            _answer = [];
+            for (var i = 0; i < _checkAnswer.length; i++) {
+              if (_checkAnswer[i] == ' ') {
+                // _twoWords = true;
+                // secondWord(qustionDetails['answer'].toString());
+                break;
+              } else {
+                _answer.add(' ');
+              }
+            }
+          });
           showDialog(
             context: context,
             builder: (BuildContext build) {
@@ -314,19 +354,7 @@ class _HomePageState extends State<HomePage> {
                   FlatButton(
                     child: Text('okay'),
                     onPressed: () {
-                      setState(() {
-                        _answer = [];
-                        for (var i = 0; i < _checkAnswer.length; i++) {
-                          if (_checkAnswer[i] == ' ') {
-                            // _twoWords = true;
-                            // secondWord(qustionDetails['answer'].toString());
-                            break;
-                          } else {
-                            _answer.add(' ');
-                          }
-                        }
-                        Navigator.pop(context);
-                      });
+                      Navigator.pop(context);
                     },
                   )
                 ],
@@ -336,6 +364,18 @@ class _HomePageState extends State<HomePage> {
         }
       });
     } else {
+      setState(() {
+        _answer = [];
+        for (var i = 0; i < _checkAnswer.length; i++) {
+          if (_checkAnswer[i] == ' ') {
+            // _twoWords = true;
+            // secondWord(qustionDetails['answer'].toString());
+            break;
+          } else {
+            _answer.add(' ');
+          }
+        }
+      });
       print('Incorrect');
       showDialog(
         context: context,
@@ -347,19 +387,7 @@ class _HomePageState extends State<HomePage> {
               FlatButton(
                 child: Text('Try Again'),
                 onPressed: () {
-                  setState(() {
-                    _answer = [];
-                    for (var i = 0; i < _checkAnswer.length; i++) {
-                      if (_checkAnswer[i] == ' ') {
-                        // _twoWords = true;
-                        // secondWord(qustionDetails['answer'].toString());
-                        break;
-                      } else {
-                        _answer.add(' ');
-                      }
-                    }
-                    Navigator.pop(context);
-                  });
+                  Navigator.pop(context);
                 },
               )
             ],
@@ -375,6 +403,52 @@ class _HomePageState extends State<HomePage> {
   //     _secondWord.add(d[2][i]);
   //   }
   // }
+
+  void _generateTicket() {
+    var data = {
+      'contactNumber': _contactNumber,
+      'questionState': _questionState.toString()
+    };
+    appAuth.generateTicket(data).then((res) {
+      if (res.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (BuildContext build) {
+            return AlertDialog(
+              title: Text('Congratulation'),
+              content: Text('You got one Lucky draw Coupon.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext build) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Check your Internet connection'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
+    });
+  }
 
   void _logOut() {
     Future<SharedPreferences> prefs = SharedPreferences.getInstance();

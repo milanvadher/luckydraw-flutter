@@ -64,4 +64,10 @@ class ApiService {
     return res;
   }
 
+  // Generate Ticket 
+  Future<http.Response> generateTicket(data) async {
+    http.Response res = await http.post(_apiUrl + '/generateTicket', body: data);
+    return res;
+  }
+
 }

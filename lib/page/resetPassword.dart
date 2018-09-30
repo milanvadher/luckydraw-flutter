@@ -113,6 +113,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       appAuth.forgotPassword(data).then((response) {
         if (response.statusCode == 200) {
           prefs.setString('userData', response.body);
+          Navigator.pop(context);
+          Navigator.pop(context);
           Navigator.of(context).pushReplacementNamed('/home');
         } else {
           _showError();

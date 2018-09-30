@@ -158,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
         builder: (BuildContext build) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('User not available or wrong credentials'),
+            content: Text('User not available or Wrong credentials'),
             actions: <Widget>[
               FlatButton(
                 child: Text('Try Again'),

@@ -127,12 +127,12 @@ class _RegisterPageState extends State<RegisterPage> {
           if (json.decode(res.body)['isNewUser']) {
             onValue.setString('number', _contactController.text);
             onValue.setBool('isNewUser', true);
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (BuildContext context) => OtpVerifyPage()));
           } else {
             onValue.setBool('isNewUser', false);
             onValue.setString('user', res.body);
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (BuildContext context) => OtpVerifyPage()));
           }
         } else {

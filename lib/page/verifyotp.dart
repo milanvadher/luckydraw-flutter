@@ -70,20 +70,6 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                       )
                     ],
                   ),
-                  SizedBox(height: 30.0),
-                  Center(
-                    child: Text('Not Your Number?'),
-                  ),
-                  SizedBox(height: 12.0),
-                  Center(
-                    child: OutlineButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      textColor: Colors.blueAccent,
-                      child: Text('Go Back'),
-                    ),
-                  )
                 ],
               )
             ],
@@ -96,14 +82,25 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
   void _checkOtp() {
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getString('otp').toString() == _otpController.text.toString()) {
-        _showDialog('Success', 'Otp is verified.', prefs.getBool('isNewUser'));
+        if (prefs.getBool('isNewUser')) {
+          Navigator.of(context).pushNamed('/editprofile');
+          _otpController.clear();
+          _showDialog('Success', 'Otp is verified.');
+        } else {
+          Navigator.of(context).pushNamed('/resetPassword');
+          _otpController.clear();
+          _showDialog('Success', 'Otp is verified.');
+        }
       } else {
-        _showDialog('Error', 'Oops!! Wrong OTP.', prefs.getBool('isNewUser'));
+        _showDialog('Error', 'Oops!! Wrong OTP.');
       }
     });
   }
 
-  void _showDialog(title, text, condition) {
+  void _showDialog(
+    title,
+    text,
+  ) {
     showDialog(
         context: context,
         builder: (BuildContext build) {
@@ -112,19 +109,12 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
             content: Text(text),
             actions: <Widget>[
               FlatButton(
-                child: Text(title == 'Error' ? 'Try Again' : condition ? 'Go to Profile' : 'Next'),
+                child: Text(title == 'Error' ? 'Try Again' : 'Okay'),
                 onPressed: () {
                   if (title == 'Error') {
-                    _otpController.clear();
                     Navigator.pop(context);
                   } else {
-                    if (condition == true) {
-                      print('in edit');
-                      Navigator.of(context).pushReplacementNamed('/editprofile');
-                    } else {
-                      print('in reset');
-                      Navigator.of(context).pushReplacementNamed('/resetPassword');
-                    }
+                    Navigator.pop(context);
                   }
                 },
               )

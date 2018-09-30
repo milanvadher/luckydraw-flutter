@@ -132,6 +132,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     appAuth.login(data).then((response) {
       if (response.statusCode == 200) {
         prefs.setString('userData', response.body);
+        Navigator.pop(context);
+        Navigator.pop(context);
         Navigator.of(context).pushReplacementNamed('/home');
       } else {
         _showError();
