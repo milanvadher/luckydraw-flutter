@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
   List _randomString = [];
   List _imagesRow1 = [];
   List _imagesRow2 = [];
+  bool _isGameOver = true;
 
   List choise = [
     [Icons.monetization_on, 'Coupons'],
@@ -88,9 +89,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
+    if (_isGameOver) {
+      return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
           appBar: AppBar(
             title: Text('Lucky Draw JJ-111'),
             actions: <Widget>[
@@ -114,149 +116,206 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          body: ListView(
-            children: <Widget>[
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      children: _imagesRow1
-                          .map(
-                            (image) => Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.all(4.0),
-                                    child: Image.network(
-                                      image,
-                                    ),
-                                  ),
-                                ),
-                          )
-                          .toList(),
-                    ),
+          body: Center(
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(Icons.done_all, color: Colors.green, size: 60.0,),
+                  Text(
+                    'Congratulations! \n',
+                    textScaleFactor: 2.0,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      children: _imagesRow2
-                          .map(
-                            (image) => Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.all(4.0),
-                                    child: Image.network(
-                                      image,
-                                    ),
-                                  ),
-                                ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                  SizedBox(height: 15.0),
-                  Wrap(
-                    spacing: 0.0,
-                    alignment: WrapAlignment.center,
-                    children: _answer
-                        .map((element) => new MaterialButton(
-                              onPressed: () {
-                                _backToAns(element);
-                              },
-                              textColor: Colors.white,
-                              padding: EdgeInsets.all(0.0),
-                              minWidth: 40.0,
-                              height: 40.0,
-                              color: Colors.blueGrey,
-                              child: Text(element.toString().toUpperCase()),
-                            ))
-                        .toList(),
-                  ),
-                  // Wrap(
-                  //   spacing: 0.0,
-                  //   alignment: WrapAlignment.center,
-                  //   children: _secondWord
-                  //       .map((element) => new MaterialButton(
-                  //             onPressed: () {},
-                  //             padding: EdgeInsets.all(0.0),
-                  //             minWidth: 40.0,
-                  //             height: 40.0,
-                  //             color: Colors.blueGrey,
-                  //             child: Text(element.toString().toUpperCase()),
-                  //           ))
-                  //       .toList(),
-                  // ),
-                  SizedBox(height: 15.0),
-                  Wrap(
-                    spacing: 0.0,
-                    alignment: WrapAlignment.center,
-                    children: _randomString
-                        .map((element) => new MaterialButton(
-                              onPressed: () {
-                                _pushToAns(element.toString());
-                              },
-                              padding: EdgeInsets.all(0.0),
-                              minWidth: 40.0,
-                              height: 40.0,
-                              color: Colors.amber,
-                              child: Text(element.toString().toUpperCase()),
-                            ))
-                        .toList(),
-                  ),
+                  Text('You Solved all the questons.\nWait for Next Update.\n'),
                 ],
               ),
-            ],
-          )),
-    );
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text('Lucky Draw JJ-111'),
+              actions: <Widget>[
+                PopupMenuButton(
+                  onSelected: _actionChoise,
+                  itemBuilder: (BuildContext context) {
+                    return choise.map((item) {
+                      return PopupMenuItem(
+                        value: item[1],
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              item[0],
+                            ),
+                            Text('  ' + item[1], textAlign: TextAlign.end)
+                          ],
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+              ],
+            ),
+            body: ListView(
+              children: <Widget>[
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Row(
+                        children: _imagesRow1
+                            .map(
+                              (image) => Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.all(4.0),
+                                      child: Image.network(
+                                        image,
+                                      ),
+                                    ),
+                                  ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Row(
+                        children: _imagesRow2
+                            .map(
+                              (image) => Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.all(4.0),
+                                      child: Image.network(
+                                        image,
+                                      ),
+                                    ),
+                                  ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    SizedBox(height: 15.0),
+                    Wrap(
+                      spacing: 0.0,
+                      alignment: WrapAlignment.center,
+                      children: _answer
+                          .map((element) => new MaterialButton(
+                                onPressed: () {
+                                  _backToAns(element);
+                                },
+                                textColor: Colors.white,
+                                padding: EdgeInsets.all(0.0),
+                                minWidth: 40.0,
+                                height: 40.0,
+                                color: Colors.blueGrey,
+                                child: Text(element.toString().toUpperCase()),
+                              ))
+                          .toList(),
+                    ),
+                    // Wrap(
+                    //   spacing: 0.0,
+                    //   alignment: WrapAlignment.center,
+                    //   children: _secondWord
+                    //       .map((element) => new MaterialButton(
+                    //             onPressed: () {},
+                    //             padding: EdgeInsets.all(0.0),
+                    //             minWidth: 40.0,
+                    //             height: 40.0,
+                    //             color: Colors.blueGrey,
+                    //             child: Text(element.toString().toUpperCase()),
+                    //           ))
+                    //       .toList(),
+                    // ),
+                    SizedBox(height: 15.0),
+                    Wrap(
+                      spacing: 0.0,
+                      alignment: WrapAlignment.center,
+                      children: _randomString
+                          .map((element) => new MaterialButton(
+                                onPressed: () {
+                                  _pushToAns(element.toString());
+                                },
+                                padding: EdgeInsets.all(0.0),
+                                minWidth: 40.0,
+                                height: 40.0,
+                                color: Colors.amber,
+                                child: Text(element.toString().toUpperCase()),
+                              ))
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ],
+            )),
+      );
+    }
   }
 
   _getQuestionDetails() async {
-    var data = {
-      'questionState': _questionState.toString(),
-    };
-    appAuth.qustionDetails(data).then((res) {
-      setState(() {
-        if (res.statusCode == 200) {
-          Map<String, dynamic> qustionDetails = json.decode(res.body);
-          _imagesRow1.add(qustionDetails['imageList'][0]);
-          _imagesRow1.add(qustionDetails['imageList'][1]);
-          _imagesRow2.add(qustionDetails['imageList'][2]);
-          _imagesRow2.add(qustionDetails['imageList'][3]);
-          _checkAnswer = qustionDetails['answer'];
-          for (var i = 0; i < qustionDetails['answer'].toString().length; i++) {
-            if (qustionDetails['answer'][i] == ' ') {
-              // _twoWords = true;
-              // secondWord(qustionDetails['answer'].toString());
-              break;
-            } else {
-              _answer.add(' ');
+    if (_questionState < 100) {
+      _isGameOver = false;
+      var data = {
+        'questionState': _questionState.toString(),
+      };
+      appAuth.qustionDetails(data).then((res) {
+        setState(() {
+          if (res.statusCode == 200) {
+            Map<String, dynamic> qustionDetails = json.decode(res.body);
+            _imagesRow1.add(qustionDetails['imageList'][0]);
+            _imagesRow1.add(qustionDetails['imageList'][1]);
+            _imagesRow2.add(qustionDetails['imageList'][2]);
+            _imagesRow2.add(qustionDetails['imageList'][3]);
+            _checkAnswer = qustionDetails['answer'];
+            for (var i = 0;
+                i < qustionDetails['answer'].toString().length;
+                i++) {
+              if (qustionDetails['answer'][i] == ' ') {
+                // _twoWords = true;
+                // secondWord(qustionDetails['answer'].toString());
+                break;
+              } else {
+                _answer.add(' ');
+              }
             }
+            for (var i = 0;
+                i < qustionDetails['randomString'].toString().length;
+                i++) {
+              _randomString.add(qustionDetails['randomString'][i]);
+            }
+            print(qustionDetails);
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext build) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Check your Internet connection'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Okay'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                );
+              },
+            );
           }
-          for (var i = 0;
-              i < qustionDetails['randomString'].toString().length;
-              i++) {
-            _randomString.add(qustionDetails['randomString'][i]);
-          }
-          print(qustionDetails);
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext build) {
-              return AlertDialog(
-                title: Text('Error'),
-                content: Text('Check your Internet connection'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              );
-            },
-          );
-        }
+        });
       });
-    });
+    } else {
+      setState(() {
+        _isGameOver = true;
+      });
+    }
   }
 
   void _pushToAns(rchar) {
@@ -295,23 +354,6 @@ class _HomePageState extends State<HomePage> {
       _imagesRow1 = [];
       _imagesRow2 = [];
       _getQuestionDetails();
-      showDialog(
-        context: context,
-        builder: (BuildContext build) {
-          return AlertDialog(
-            title: Text('Correct'),
-            content: Text('Congo! Your Answer is correct.\nYou got 100 coins.'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Okay'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          );
-        },
-      );
       var data = {
         'contactNumber': _contactNumber.toString(),
         'questionState': _questionState.toString(),
@@ -356,6 +398,23 @@ class _HomePageState extends State<HomePage> {
           );
         }
       });
+      showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text('Correct'),
+            content: Text('Congo! Your Answer is correct.\nYou got 100 coins.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        },
+      );
     } else {
       setState(() {
         _answer = [];
