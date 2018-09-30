@@ -53,8 +53,8 @@ class _HomePageState extends State<HomePage> {
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
       print(userData);
-      _questionState = int.parse(userData['questionState']);
-      _points = int.parse(userData['points']);
+      _questionState = int.parse(userData['questionState'].toString());
+      _points = int.parse(userData['points'].toString());
       _contactNumber = userData['contactNumber'];
       this._getQuestionDetails();
       print(_points);

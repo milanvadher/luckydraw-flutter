@@ -22,8 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
           json.decode(onValue.getString('userData'));
       print(userData);
       setState(() {
-        _questionState = int.parse(userData['questionState']);
-        _points = int.parse(userData['points']);
+        _questionState = int.parse(userData['questionState'].toString());
+        _points = int.parse(userData['points'].toString());
         _contactNumber = userData['contactNumber'];
         _userName = userData['username'];
       });
