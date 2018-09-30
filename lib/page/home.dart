@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:learn/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share/share.dart';
 
 ApiService appAuth = new ApiService();
 
@@ -28,7 +29,6 @@ class _LinkTextSpan extends TextSpan {
 }
 
 class _HomePageState extends State<HomePage> {
-  
   Future<bool> _onWillPop() {
     return showDialog(
           context: context,
@@ -534,5 +534,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _shareApp() {}
+  void _shareApp() {
+    String messege =
+        'Congratulations ! Today is your LUCKY DAY, Go check out this Amazing App and WIN Lucky Draw Coupon and WIN prices in JJ-111 ! https://goo.gl/XTjjnn';
+    final RenderBox box = context.findRenderObject();
+    Share.share(messege,
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+  }
 }
