@@ -66,7 +66,7 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                           }
                         },
                         color: Colors.amber,
-                        child: Text('VERIFY'),
+                        child: Text('Verify'),
                       )
                     ],
                   ),
@@ -76,12 +76,12 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                   ),
                   SizedBox(height: 12.0),
                   Center(
-                    child: FlatButton(
+                    child: OutlineButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
                       textColor: Colors.blueAccent,
-                      child: Text('GO BACK'),
+                      child: Text('Go Back'),
                     ),
                   )
                 ],

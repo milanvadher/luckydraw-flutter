@@ -89,7 +89,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           }
                         },
                         color: Colors.amber,
-                        child: Text('UPDATE'),
+                        child: Text('Update'),
                       )
                     ],
                   ),

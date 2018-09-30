@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               SizedBox(height: 10.0),
               Center(
-                child: Text('LOGIN', textScaleFactor: 2.0),
+                child: Text('Login', textScaleFactor: 2.0),
               ),
               SizedBox(height: 10.0),
               Column(
@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                               context,
                               MaterialPageRoute<void>(
                                   builder: (BuildContext context) =>
-                                      RegisterPage('FORGOT PASSWORD'),
+                                      RegisterPage('Forgot Password'),
                                   fullscreenDialog: true));
                         },
                         textColor: Colors.blueAccent,
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         color: Colors.amber,
-                        child: Text('LOGIN'),
+                        child: Text('Login'),
                       )
                     ],
                   ),
@@ -112,17 +112,17 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 12.0),
                   Center(
-                    child: FlatButton(
+                    child: OutlineButton(
                       onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute<void>(
                                 builder: (BuildContext context) =>
-                                    RegisterPage('REGISTER'),
+                                    RegisterPage('Register'),
                                 fullscreenDialog: true));
                       },
                       textColor: Colors.blueAccent,
-                      child: Text('REGISTER NOW'),
+                      child: Text('Register Now'),
                     ),
                   )
                 ],
@@ -144,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
     appAuth.login(data).then((response) {
       if (response.statusCode == 200) {
         prefs.setString('userData', response.body);
+        _formKey.currentState.reset();
         Navigator.of(context).pushReplacementNamed('/home');
       } else {
         _showError();

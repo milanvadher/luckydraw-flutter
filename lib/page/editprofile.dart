@@ -107,7 +107,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           }
                         },
                         color: Colors.amber,
-                        child: Text('SAVE'),
+                        child: Text('Save'),
                       )
                     ],
                   ),

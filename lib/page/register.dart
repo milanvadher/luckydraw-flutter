@@ -82,22 +82,22 @@ class _RegisterPageState extends State<RegisterPage> {
                           }
                         },
                         color: Colors.amber,
-                        child: Text('GET OTP'),
+                        child: Text('Get OTP'),
                       )
                     ],
                   ),
                   SizedBox(height: 30.0),
                   Center(
-                    child: Text('Already Register?'),
+                    child: Text(title == 'Forgot Password' ? 'Or' : 'Already Register?'),
                   ),
                   SizedBox(height: 12.0),
                   Center(
-                    child: FlatButton(
+                    child: OutlineButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
                       textColor: Colors.blueAccent,
-                      child: Text('LOGIN NOW'),
+                      child: Text('Login Now'),
                     ),
                   )
                 ],
