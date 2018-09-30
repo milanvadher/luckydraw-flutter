@@ -68,7 +68,8 @@ class _HomePageState extends State<HomePage> {
     [Icons.flag, 'Winners'],
     [Icons.person, 'Profile'],
     [Icons.details, 'About us'],
-    [Icons.share, 'Share']
+    [Icons.share, 'Share'],
+    [Icons.exit_to_app, 'Logout']
   ];
 
   _HomePageState() {
@@ -200,12 +201,6 @@ class _HomePageState extends State<HomePage> {
                             ))
                         .toList(),
                   ),
-                  RaisedButton(
-                    onPressed: () {
-                      _logOut();
-                    },
-                    child: Text('LogOut'),
-                  )
                 ],
               ),
             ],
@@ -476,6 +471,9 @@ class _HomePageState extends State<HomePage> {
     }
     if (choise == 'Share') {
       _shareApp();
+    }
+    if (choise == 'Logout') {
+      _logOut();
     }
   }
 
