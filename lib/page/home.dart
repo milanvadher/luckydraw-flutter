@@ -275,11 +275,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _backToAns(rchar) {
-    // setState(() {
-    //   for (var i = 0; i < count; i++) {
-
-    //   }
-    // });
+    setState(() {
+      _answer[_answer.indexOf(rchar)] = ' ';
+    });
   }
 
   void _checkAns() {
