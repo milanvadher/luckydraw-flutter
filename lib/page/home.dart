@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -121,16 +122,21 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: EdgeInsets.all(20.0),
                 child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Icon(Icons.done_all, color: Colors.green, size: 60.0,),
-                  Text(
-                    'Congratulations! \n',
-                    textScaleFactor: 2.0,
-                  ),
-                  Text('You Solved all the questons.\nWait for Next Update.\n'),
-                ],
-              ),
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.done_all,
+                      color: Colors.green,
+                      size: 60.0,
+                    ),
+                    Text(
+                      'Congratulations! \n',
+                      textScaleFactor: 2.0,
+                    ),
+                    Text(
+                        'You Solved all the questons.\nWait for Next Update.\n'),
+                  ],
+                ),
               ),
             ),
           ),
@@ -250,12 +256,65 @@ class _HomePageState extends State<HomePage> {
                               ))
                           .toList(),
                     ),
+                    // Padding(
+                    //     padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
+                    //     child: Row(
+                    //       children: <Widget>[
+                    //         FloatingActionButton(
+                    //           onPressed: () {
+                    //             _getOneHint();
+                    //           },
+                    //           child: Icon(Icons.help),
+                    //         ),
+                    //         Expanded(
+                    //           child: Container(),
+                    //         ),
+                    //         FloatingActionButton(
+                    //           onPressed: () {
+                    //             _getFullHint();
+                    //           },
+                    //           child: Icon(Icons.done_all),
+                    //         )
+                    //       ],
+                    //     )),
                   ],
                 ),
               ],
             )),
       );
     }
+  }
+
+  _getOneHint() {
+    var leftIndices = [];
+    for (var i = 0; i < _answer.length; i++) {
+      if (_answer[i] == ' ') {
+        leftIndices.add(i);
+      }
+    }
+
+    if (leftIndices.length != 0) {
+      var no = new Random().nextInt(leftIndices.length);
+      setState(() {
+        _answer[leftIndices[no]] = _checkAnswer[leftIndices[no]];
+      });
+      if (leftIndices.length == 1) {
+        Future.delayed(Duration(seconds: 1), () {
+          _checkAns();
+        });
+      }
+    }
+  }
+
+  _getFullHint() {
+    setState(() {
+      for (var i = 0; i < _answer.length; i++) {
+        _answer[i] = _checkAnswer[i];
+      }
+    });
+    Future.delayed(Duration(seconds: 2), () {
+      _checkAns();
+    });
   }
 
   _getQuestionDetails() async {
@@ -344,7 +403,7 @@ class _HomePageState extends State<HomePage> {
     if (_checkAnswer.split(' ')[0].toLowerCase() ==
         _answer.join().toLowerCase()) {
       print('Correct');
-      if (_questionState % 5 == 0) {
+      if (_questionState % 5 == 0 && _questionState != 0) {
         _generateTicket();
       }
       _questionState = _questionState + 1;

@@ -3,8 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final _apiUrl = 'http://luckydrawapi.dadabhagwan.org';
+  // final _apiUrl = 'http://luckydrawapi.dadabhagwan.org';
   // final _apiUrl = 'http://192.168.1.103:3000';
+  final _apiUrl = 'http://192.168.43.23:3000';
 
   var headers = {
     'content-type': 'application/json'
@@ -13,6 +14,12 @@ class ApiService {
   // Login
   Future<http.Response> login(data) async {
     http.Response res = await http.post(_apiUrl + '/login', body: data, headers: headers);
+    return res;
+  }
+
+  // Register
+  Future<http.Response> register(data) async {
+    http.Response res = await http.post(_apiUrl + '/register', body: data, headers: headers);
     return res;
   }
 

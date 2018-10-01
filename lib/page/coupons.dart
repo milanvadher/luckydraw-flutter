@@ -136,120 +136,125 @@ class _CouponsPageState extends State<CouponsPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    if (_earnedCoupons != null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Your Coupons'),
-        ),
-        body: ListView(
-          children: <Widget>[
-            SizedBox(
-              height: 10.0,
+    // if (_earnedCoupons != null) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Your Coupons'),
+      ),
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 10.0,
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              'Your Earned Coupons:',
+              textScaleFactor: 1.5,
             ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                'Your Earned Coupons:',
-                textScaleFactor: 1.5,
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Column(
-              children: _earnedCoupons
-                  .map(
-                    (element) => new Card(
-                          child: Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: CircleAvatar(
-                                  child: Icon(Icons.monetization_on),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  element.toString(),
-                                  textScaleFactor: 1.3,
-                                ),
-                              ),
-                              ButtonBar(
-                                alignment: MainAxisAlignment.end,
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          _earnedCoupons != null
+              ? Column(
+                  children: _earnedCoupons
+                      .map(
+                        (element) => new Card(
+                              child: Row(
                                 children: <Widget>[
-                                  FlatButton(
-                                    onPressed: () {
-                                      assignDate(element.toString());
-                                    },
-                                    child: Text('Assign'),
+                                  Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: CircleAvatar(
+                                      child: Icon(Icons.monetization_on),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      element.toString(),
+                                      textScaleFactor: 1.3,
+                                    ),
+                                  ),
+                                  ButtonBar(
+                                    alignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      FlatButton(
+                                        onPressed: () {
+                                          assignDate(element.toString());
+                                        },
+                                        child: Text('Assign'),
+                                      )
+                                    ],
                                   )
                                 ],
-                              )
-                            ],
-                          ),
-                        ),
-                  )
-                  .toList(),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                'Your Used Coupons:',
-                textScaleFactor: 1.5,
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Column(
-              children: _usedCoupons
-                  .map(
-                    (element) => new Card(
-                          child: Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: CircleAvatar(
-                                  backgroundColor: Color.fromARGB(200, 3, 1, 1),
-                                  child: Icon(
-                                    Icons.monetization_on,
-                                    color: Colors.yellow,
-                                  ),
-                                ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    element['ticketNo'].toString(),
-                                    textScaleFactor: 1.3,
-                                  ),
-                                  Text(DateFormat.yMd().add_jm().format(
-                                      DateTime.parse(element['assignDate']))),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                  )
-                  .toList(),
+                            ),
+                      )
+                      .toList(),
+                )
+              : Container(),
+          SizedBox(
+            height: 10.0,
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              'Your Used Coupons:',
+              textScaleFactor: 1.5,
             ),
-          ],
-        ),
-      );
-    } else {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Your Coupons'),
-        ),
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          _usedCoupons != null
+              ? Column(
+                  children: _usedCoupons
+                      .map(
+                        (element) => new Card(
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: CircleAvatar(
+                                      backgroundColor:
+                                          Color.fromARGB(200, 3, 1, 1),
+                                      child: Icon(
+                                        Icons.monetization_on,
+                                        color: Colors.yellow,
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        element['ticketNo'].toString(),
+                                        textScaleFactor: 1.3,
+                                      ),
+                                      Text(DateFormat.yMd().add_jm().format(
+                                          DateTime.parse(
+                                              element['assignDate']))),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                      )
+                      .toList(),
+                )
+              : Container(),
+        ],
+      ),
+    );
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text('Your Coupons'),
+    //   ),
+    //   body: Center(
+    //     child: CircularProgressIndicator(),
+    //   ),
+    // );
   }
 
   void assignDate(coupon) {
@@ -263,9 +268,7 @@ class _CouponsPageState extends State<CouponsPage> {
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
-                  setState(() {
-                    _assignCoupon(coupon);
-                  });
+                  _assignCoupon(coupon);
                   Navigator.pop(context);
                 },
                 child: Text('Save'),
@@ -279,6 +282,34 @@ class _CouponsPageState extends State<CouponsPage> {
             ],
           );
         });
+  }
+
+  void _assignCoupon(coupon) {
+    List tempDate = _fromDate.toString().split(' ')[0].split('-');
+    var data = {
+      "ticket": int.parse(coupon),
+      "contactNumber": _contactNumber,
+      "date": [
+        int.parse(tempDate[0]),
+        int.parse(tempDate[1]),
+        int.parse(tempDate[2]),
+        int.parse(_activity.split(':')[0]),
+        int.parse(_activity.split(':')[1].split(' ')[0]),
+        0,
+        0
+      ]
+    };
+    print(json.encode(data));
+    appAuth.mapTickets(json.encode(data)).then((res) {
+      if (res.statusCode == 200) {
+        setState(() {
+          _earnedCoupons = json.decode(res.body)['earnedTickets'];
+          _usedCoupons = json.decode(res.body)['ticketMapping'];
+        });
+      } else {
+        print('error');
+      }
+    });
   }
 }
 
@@ -329,30 +360,4 @@ class _MyDialogContentState extends State<MyDialogContnet> {
       ],
     );
   }
-}
-
-_assignCoupon(coupon) {
-  List tempDate = _fromDate.toString().split(' ')[0].split('-');
-  var data = {
-    "ticket": coupon.toString(),
-    "contactNumber": _contactNumber,
-    "date": [
-      int.parse(tempDate[0]),
-      int.parse(tempDate[1]),
-      int.parse(tempDate[2]),
-      int.parse(_activity.split(':')[0]),
-      int.parse(_activity.split(':')[1].split(' ')[0]),
-      0,
-      0
-    ]
-  };
-  print(json.encode(data));
-  // appAuth.mapTickets(json.encode(data)).then((res) {
-  //   if (res.statusCode == 200) {
-  //     _earnedCoupons = json.decode(res.body)['earnedTickets'];
-  //     _usedCoupons = json.decode(res.body)['ticketMapping'];
-  //   } else {
-  //     print('error');
-  //   }
-  // });
 }

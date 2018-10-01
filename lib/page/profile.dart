@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                     child: Text(
                       _questionState != null
-                          ? (_questionState - 1).toString()
+                          ? (_questionState == 0 ? 0 : _questionState -1).toString()
                           : 'Loading ...',
                       textScaleFactor: 1.2,
                     ),

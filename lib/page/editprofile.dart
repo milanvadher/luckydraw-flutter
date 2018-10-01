@@ -131,7 +131,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       'password': _passwordController.text
     };
     print(data);
-    appAuth.login(json.encode(data)).then((response) {
+    appAuth.register(json.encode(data)).then((response) {
+      print(response.body);
       if (response.statusCode == 200) {
         prefs.setString('userData', response.body);
         Navigator.pop(context);
