@@ -30,6 +30,8 @@ class _LinkTextSpan extends TextSpan {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _comeFromHint = false;
+
   Future<bool> _onWillPop() {
     return showDialog(
           context: context,
@@ -147,7 +149,15 @@ class _HomePageState extends State<HomePage> {
         onWillPop: _onWillPop,
         child: Scaffold(
             appBar: AppBar(
-              title: Text('Lucky Draw JJ-111'),
+              title: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text('Lucky Draw JJ-111'),
+                  ),
+                  Icon(Icons.monetization_on),
+                  Text(_points.toString())
+                ],
+              ),
               actions: <Widget>[
                 PopupMenuButton(
                   onSelected: _actionChoise,
@@ -256,27 +266,35 @@ class _HomePageState extends State<HomePage> {
                               ))
                           .toList(),
                     ),
-                    // Padding(
-                    //     padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
-                    //     child: Row(
-                    //       children: <Widget>[
-                    //         FloatingActionButton(
-                    //           onPressed: () {
-                    //             _getOneHint();
-                    //           },
-                    //           child: Icon(Icons.help),
-                    //         ),
-                    //         Expanded(
-                    //           child: Container(),
-                    //         ),
-                    //         FloatingActionButton(
-                    //           onPressed: () {
-                    //             _getFullHint();
-                    //           },
-                    //           child: Icon(Icons.done_all),
-                    //         )
-                    //       ],
-                    //     )),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
+                        child: Row(
+                          children: <Widget>[
+                            MaterialButton(
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              height: 50.0,
+                              minWidth: 50.0,
+                              onPressed: () {
+                                _getOneHint();
+                              },
+                              child: Icon(Icons.help),
+                            ),
+                            Expanded(
+                              child: Container(),
+                            ),
+                            MaterialButton(
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              height: 50.0,
+                              minWidth: 50.0,
+                              onPressed: () {
+                                _getFullHint();
+                              },
+                              child: Icon(Icons.done_all),
+                            )
+                          ],
+                        )),
                   ],
                 ),
               ],
@@ -286,35 +304,80 @@ class _HomePageState extends State<HomePage> {
   }
 
   _getOneHint() {
-    var leftIndices = [];
-    for (var i = 0; i < _answer.length; i++) {
-      if (_answer[i] == ' ') {
-        leftIndices.add(i);
+    if (_points < 50) {
+      showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text('Oops'),
+            content: Text('You do not have enough poins.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        },
+      );
+    } else {
+      var leftIndices = [];
+      for (var i = 0; i < _answer.length; i++) {
+        if (_answer[i] == ' ') {
+          leftIndices.add(i);
+        }
       }
-    }
-
-    if (leftIndices.length != 0) {
-      var no = new Random().nextInt(leftIndices.length);
-      setState(() {
-        _answer[leftIndices[no]] = _checkAnswer[leftIndices[no]];
-      });
-      if (leftIndices.length == 1) {
-        Future.delayed(Duration(seconds: 1), () {
-          _checkAns();
+      if (leftIndices.length != 0) {
+        var no = new Random().nextInt(leftIndices.length);
+        setState(() {
+          _answer[leftIndices[no]] = _checkAnswer[leftIndices[no]];
         });
+        _points = _points - 50;
+        _saveUserData();
+        if (leftIndices.length == 1) {
+          Future.delayed(Duration(seconds: 1), () {
+            _comeFromHint = true;
+            _checkAns();
+          });
+        }
       }
     }
   }
 
   _getFullHint() {
-    setState(() {
-      for (var i = 0; i < _answer.length; i++) {
-        _answer[i] = _checkAnswer[i];
-      }
-    });
-    Future.delayed(Duration(seconds: 2), () {
-      _checkAns();
-    });
+    if (_points < 200) {
+      showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text('Oops'),
+            content: Text('You do not have enough poins.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        },
+      );
+    } else {
+      setState(() {
+        for (var i = 0; i < _answer.length; i++) {
+          _answer[i] = _checkAnswer[i];
+        }
+      });
+      _points = _points - 200;
+      _saveUserData();
+      Future.delayed(Duration(seconds: 2), () {
+        _comeFromHint = true;
+        _checkAns();
+      });
+    }
   }
 
   _getQuestionDetails() async {
@@ -383,11 +446,14 @@ class _HomePageState extends State<HomePage> {
         if (_answer[i] == ' ') {
           _answer[i] = rchar;
           print(i.toString() + ' ' + _answer.length.toString());
-          if (_answer.length - 1 == i) {
-            _checkAns();
-          }
+          // if (_answer.length - 1 == i) {
+          //   _checkAns();
+          // }
           break;
         }
+      }
+      if (_answer.indexOf(' ') == -1) {
+        _checkAns();
       }
     });
   }
@@ -413,67 +479,46 @@ class _HomePageState extends State<HomePage> {
       _imagesRow1 = [];
       _imagesRow2 = [];
       _getQuestionDetails();
-      var data = {
-        'contactNumber': _contactNumber,
-        'questionState': _questionState,
-        'points': _points
-      };
-      appAuth.saveUserData(json.encode(data)).then((res) {
-        if (res.statusCode == 200) {
-          print('****************************************');
-          print(res.body);
-          SharedPreferences.getInstance().then((onValue) {
-            onValue.setString('userData', res.body);
-          });
-        } else {
-          setState(() {
-            _answer = [];
-            for (var i = 0; i < _checkAnswer.length; i++) {
-              if (_checkAnswer[i] == ' ') {
-                // _twoWords = true;
-                // secondWord(qustionDetails['answer'].toString());
-                break;
-              } else {
-                _answer.add(' ');
-              }
-            }
-          });
-          showDialog(
-            context: context,
-            builder: (BuildContext build) {
-              return AlertDialog(
-                title: Text('Error'),
-                content: Text('Your Internet is not working.'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('okay'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              );
-            },
-          );
-        }
-      });
-      showDialog(
-        context: context,
-        builder: (BuildContext build) {
-          return AlertDialog(
-            title: Text('Correct'),
-            content: Text('Congo! Your Answer is correct.\nYou got 100 coins.'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Okay'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          );
-        },
-      );
+      _saveUserData();
+      if (_comeFromHint) {
+        _comeFromHint = false;
+        showDialog(
+          context: context,
+          builder: (BuildContext build) {
+            return AlertDialog(
+              title: Text('LoL'),
+              content: Text('You can\'t get point. Bcz you use Hint.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext build) {
+            return AlertDialog(
+              title: Text('Correct'),
+              content:
+                  Text('Congo! Your Answer is correct.\nYou got 100 coins.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
     } else {
       setState(() {
         _answer = [];
@@ -514,6 +559,53 @@ class _HomePageState extends State<HomePage> {
   //     _secondWord.add(d[2][i]);
   //   }
   // }
+
+  void _saveUserData() {
+    var data = {
+      'contactNumber': _contactNumber,
+      'questionState': _questionState,
+      'points': _points
+    };
+    appAuth.saveUserData(json.encode(data)).then((res) {
+      if (res.statusCode == 200) {
+        print('saveUserData');
+        print(res.body);
+        SharedPreferences.getInstance().then((onValue) {
+          onValue.setString('userData', res.body);
+        });
+      } else {
+        setState(() {
+          _answer = [];
+          for (var i = 0; i < _checkAnswer.length; i++) {
+            if (_checkAnswer[i] == ' ') {
+              // _twoWords = true;
+              // secondWord(qustionDetails['answer'].toString());
+              break;
+            } else {
+              _answer.add(' ');
+            }
+          }
+        });
+        showDialog(
+          context: context,
+          builder: (BuildContext build) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Your Internet is not working.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
+    });
+  }
 
   void _generateTicket() {
     var data = {
