@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:learn/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -141,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
       'contactNumber': _contactController.text,
       'password': _passwordController.text
     };
-    appAuth.login(data).then((response) {
+    appAuth.login(json.encode(data)).then((response) {
       if (response.statusCode == 200) {
         prefs.setString('userData', response.body);
         _formKey.currentState.reset();

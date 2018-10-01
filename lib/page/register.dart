@@ -119,9 +119,9 @@ class _RegisterPageState extends State<RegisterPage> {
       print(temp.join());
       var data = {
         'contactNumber': _contactController.text,
-        'otp': temp.join().toString()
+        'otp': int.parse(temp.join())
       };
-      appAuth.sendOtp(data).then((res) {
+      appAuth.sendOtp(json.encode(data)).then((res) {
         if (res.statusCode == 200) {
           print(res.body);
           if (json.decode(res.body)['isNewUser']) {

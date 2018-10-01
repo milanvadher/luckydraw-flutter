@@ -106,11 +106,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     SharedPreferences.getInstance().then((prefs) {
       var data;
       data = {
-        'contactNumber': json.decode(prefs.getString('user'))['contactNumber'].toString(),
-        'password': _passwordController.text.toString()
+        'contactNumber': json.decode(prefs.getString('user'))['contactNumber'],
+        'password': _passwordController.text
       };
-      print(data);
-      appAuth.forgotPassword(data).then((response) {
+      appAuth.forgotPassword(json.encode(data)).then((response) {
         if (response.statusCode == 200) {
           prefs.setString('userData', response.body);
           Navigator.pop(context);

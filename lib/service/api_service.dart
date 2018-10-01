@@ -5,9 +5,14 @@ import 'package:http/http.dart' as http;
 class ApiService {
   final _apiUrl = 'http://luckydrawapi.dadabhagwan.org';
   // final _apiUrl = 'http://192.168.1.103:3000';
+
+  var headers = {
+    'content-type': 'application/json'
+  };
+
   // Login
   Future<http.Response> login(data) async {
-    http.Response res = await http.post(_apiUrl + '/login', body: data);
+    http.Response res = await http.post(_apiUrl + '/login', body: data, headers: headers);
     return res;
   }
 
@@ -30,43 +35,43 @@ class ApiService {
 
   // Get Qustion Details 
   Future<http.Response> qustionDetails(data) async {
-    http.Response res = await http.post(_apiUrl + '/questionDetails', body: data);
+    http.Response res = await http.post(_apiUrl + '/questionDetails', body: data, headers: headers);
     return res;
   }
 
   // Save User Data 
   Future<http.Response> saveUserData(data) async {
-    http.Response res = await http.post(_apiUrl + '/saveUserData', body: data);
+    http.Response res = await http.post(_apiUrl + '/saveUserData', body: data, headers: headers);
     return res;
   }
 
-  // Save User Data 
+  // Get User Tickets 
   Future<http.Response> getUserTickets(data) async {
-    http.Response res = await http.post(_apiUrl + '/getUserTickets', body: data);
+    http.Response res = await http.post(_apiUrl + '/getUserTickets', body: data, headers: headers);
     return res;
   }
 
-  // Save User Data 
+  // Map User Tickets 
   Future<http.Response> mapTickets(data) async {
-    http.Response res = await http.post(_apiUrl + '/mapTicket', body: data);
+    http.Response res = await http.post(_apiUrl + '/mapTicket', body: data, headers: headers);
     return res;
   }
 
   // Send OTP 
   Future<http.Response> sendOtp(data) async {
-    http.Response res = await http.post(_apiUrl + '/otp', body: data);
+    http.Response res = await http.post(_apiUrl + '/otp', body: data, headers: headers);
     return res;
   }
 
   // Forgot Password 
   Future<http.Response> forgotPassword(data) async {
-    http.Response res = await http.post(_apiUrl + '/forgotPassword', body: data);
+    http.Response res = await http.post(_apiUrl + '/forgotPassword', body: data, headers: headers);
     return res;
   }
 
   // Generate Ticket 
   Future<http.Response> generateTicket(data) async {
-    http.Response res = await http.post(_apiUrl + '/generateTicket', body: data);
+    http.Response res = await http.post(_apiUrl + '/generateTicket', body: data, headers: headers);
     return res;
   }
 

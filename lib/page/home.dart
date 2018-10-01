@@ -262,9 +262,9 @@ class _HomePageState extends State<HomePage> {
     if (_questionState < 100) {
       _isGameOver = false;
       var data = {
-        'questionState': _questionState.toString(),
+        'questionState': _questionState,
       };
-      appAuth.qustionDetails(data).then((res) {
+      appAuth.qustionDetails(json.encode(data)).then((res) {
         setState(() {
           if (res.statusCode == 200) {
             Map<String, dynamic> qustionDetails = json.decode(res.body);
@@ -355,11 +355,11 @@ class _HomePageState extends State<HomePage> {
       _imagesRow2 = [];
       _getQuestionDetails();
       var data = {
-        'contactNumber': _contactNumber.toString(),
-        'questionState': _questionState.toString(),
-        'points': _points.toString()
+        'contactNumber': _contactNumber,
+        'questionState': _questionState,
+        'points': _points
       };
-      appAuth.saveUserData(data).then((res) {
+      appAuth.saveUserData(json.encode(data)).then((res) {
         if (res.statusCode == 200) {
           print('****************************************');
           print(res.body);
@@ -459,9 +459,9 @@ class _HomePageState extends State<HomePage> {
   void _generateTicket() {
     var data = {
       'contactNumber': _contactNumber,
-      'questionState': _questionState.toString()
+      'questionState': _questionState
     };
-    appAuth.generateTicket(data).then((res) {
+    appAuth.generateTicket(json.encode(data)).then((res) {
       if (res.statusCode == 200) {
         showDialog(
           context: context,

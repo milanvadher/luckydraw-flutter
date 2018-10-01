@@ -118,7 +118,7 @@ class _CouponsPageState extends State<CouponsPage> {
       print(userData);
       _contactNumber = userData['contactNumber'];
       var data = {"contactNumber": _contactNumber};
-      appAuth.getUserTickets(data).then((res) {
+      appAuth.getUserTickets(json.encode(data)).then((res) {
         if (res.statusCode == 200) {
           setState(() {
             print(res.body);

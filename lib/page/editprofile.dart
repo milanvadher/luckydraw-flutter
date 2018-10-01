@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:learn/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -129,7 +131,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       'password': _passwordController.text
     };
     print(data);
-    appAuth.login(data).then((response) {
+    appAuth.login(json.encode(data)).then((response) {
       if (response.statusCode == 200) {
         prefs.setString('userData', response.body);
         Navigator.pop(context);
