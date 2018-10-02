@@ -211,7 +211,7 @@ class _StartPageState extends State<StartPage> {
                                 padding: EdgeInsets.all(0.0),
                                 minWidth: 40.0,
                                 height: 40.0,
-                                color: Colors.amber,
+                                color: Theme.of(context).primaryColor,
                                 child:
                                     Text(element[0].toString().toUpperCase()),
                               ))

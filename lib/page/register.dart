@@ -81,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             _gererateOtp();
                           }
                         },
-                        color: Colors.amber,
+                        color: Theme.of(context).primaryColor,
                         child: Text('Get OTP'),
                       )
                     ],

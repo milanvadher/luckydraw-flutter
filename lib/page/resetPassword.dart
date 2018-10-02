@@ -88,7 +88,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             _forgotPassword();
                           }
                         },
-                        color: Colors.amber,
+                        color: Theme.of(context).primaryColor,
                         child: Text('Update'),
                       )
                     ],

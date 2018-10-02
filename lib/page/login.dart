@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                             _login();
                           }
                         },
-                        color: Colors.amber,
+                        color: Theme.of(context).primaryColor,
                         child: Text('Login'),
                       )
                     ],

@@ -19,6 +19,7 @@ void main() async {
 
   // Get result of the login function.
   bool _result = await appAuth.checkLoginStatus();
+  bool _theme = await appAuth.checkTheme();
   if (_result) {
     _defaultHome = new HomePage();
   }
@@ -27,8 +28,15 @@ void main() async {
   runApp(new MaterialApp(
     title: 'Demo App',
     home: _defaultHome,
-    theme: ThemeData(
+    theme: _theme ? ThemeData(
+      brightness: Brightness.dark,
       primaryColor: Colors.orangeAccent,
+      accentColor: Colors.black,
+      fontFamily: 'GoogleSans'
+    ) : ThemeData(
+      brightness: Brightness.light,
+      primaryColor: Colors.orangeAccent,
+      accentColor: Colors.orangeAccent,
       fontFamily: 'GoogleSans'
     ),
     routes: <String, WidgetBuilder>{

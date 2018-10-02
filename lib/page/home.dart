@@ -8,6 +8,7 @@ import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 ApiService appAuth = new ApiService();
+bool switchValue = false;
 
 class HomePage extends StatefulWidget {
   @override
@@ -70,6 +71,9 @@ class _BackdropPageState extends State<HomePage>
 
   _BackdropPageState() {
     SharedPreferences.getInstance().then((onValue) {
+      if (onValue.getBool('isDarkTheme') != null) {
+        switchValue = onValue.getBool('isDarkTheme');
+      }
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
       print(userData);
@@ -136,7 +140,7 @@ class _BackdropPageState extends State<HomePage>
       child: new Stack(
         children: <Widget>[
           new Card(
-            color: Colors.orangeAccent,
+            color: Theme.of(context).accentColor,
             child: ListView(
               children: <Widget>[
                 Padding(
@@ -268,6 +272,41 @@ class _BackdropPageState extends State<HomePage>
                           ),
                         ),
                       ),
+                      SizedBox(height: 10.0),
+                      Card(
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Dark theme',
+                                textScaleFactor: 1.2,
+                              ),
+                            ),
+                            Align(
+                              alignment: const Alignment(0.0, -0.2),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Switch(
+                                      value: switchValue,
+                                      onChanged: (bool value) {
+                                        SharedPreferences.getInstance()
+                                            .then((prefs) {
+                                          setState(() {
+                                            switchValue = value;
+                                            prefs.setBool('isDarkTheme', value);
+                                          });
+                                        });
+                                      }),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 30.0),
                     ],
                   ),
@@ -279,8 +318,8 @@ class _BackdropPageState extends State<HomePage>
             rect: animation,
             child: new Material(
               borderRadius: const BorderRadius.only(
-                  topLeft: const Radius.circular(20.0),
-                  topRight: const Radius.circular(20.0)),
+                  topLeft: const Radius.circular(16.0),
+                  topRight: const Radius.circular(16.0)),
               elevation: 12.0,
               child: new Column(children: <Widget>[
                 new Expanded(
@@ -300,7 +339,7 @@ class _BackdropPageState extends State<HomePage>
                               Text('LUCKY DRAW', textScaleFactor: 2.0),
                               SizedBox(height: 30.0),
                               MaterialButton(
-                                color: Colors.amber,
+                                color: Theme.of(context).primaryColor,
                                 onPressed: () {
                                   Navigator.pushNamed(context, '/start');
                                 },

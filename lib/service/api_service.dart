@@ -40,6 +40,16 @@ class ApiService {
     }
   }
 
+  // Check Theme
+  Future<bool> checkTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isDarkTheme') != null) {
+      return prefs.getBool('isDarkTheme');
+    } else {
+      return false;
+    }
+  }
+
   // Get Qustion Details 
   Future<http.Response> qustionDetails(data) async {
     http.Response res = await http.post(_apiUrl + '/questionDetails', body: data, headers: headers);
