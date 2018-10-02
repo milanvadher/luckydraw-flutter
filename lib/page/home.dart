@@ -152,6 +152,7 @@ class _BackdropPageState extends State<HomePage>
                         onPressed: () {
                           _actionChoise('Coupons');
                         },
+                        textColor: Colors.black,
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
@@ -173,6 +174,7 @@ class _BackdropPageState extends State<HomePage>
                         onPressed: () {
                           _actionChoise('Winners');
                         },
+                        textColor: Colors.black,
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
@@ -194,6 +196,7 @@ class _BackdropPageState extends State<HomePage>
                         onPressed: () {
                           _actionChoise('Profile');
                         },
+                        textColor: Colors.black,
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
@@ -215,6 +218,7 @@ class _BackdropPageState extends State<HomePage>
                         onPressed: () {
                           _actionChoise('About us');
                         },
+                        textColor: Colors.black,
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
@@ -236,6 +240,7 @@ class _BackdropPageState extends State<HomePage>
                         onPressed: () {
                           _actionChoise('Share');
                         },
+                        textColor: Colors.black,
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
@@ -257,6 +262,7 @@ class _BackdropPageState extends State<HomePage>
                         onPressed: () {
                           _actionChoise('Logout');
                         },
+                        textColor: Colors.black,
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
@@ -340,6 +346,7 @@ class _BackdropPageState extends State<HomePage>
                               SizedBox(height: 30.0),
                               MaterialButton(
                                 color: Theme.of(context).primaryColor,
+                                textColor: Colors.black,
                                 onPressed: () {
                                   Navigator.pushNamed(context, '/start');
                                 },
