@@ -323,26 +323,50 @@ class _HomePageState extends State<HomePage> {
         },
       );
     } else {
-      var leftIndices = [];
-      for (var i = 0; i < _answer.length; i++) {
-        if (_answer[i] == ' ') {
-          leftIndices.add(i);
-        }
-      }
-      if (leftIndices.length != 0) {
-        var no = new Random().nextInt(leftIndices.length);
-        setState(() {
-          _answer[leftIndices[no]] = _checkAnswer[leftIndices[no]];
-        });
-        _points = _points - 50;
-        _saveUserData();
-        if (leftIndices.length == 1) {
-          Future.delayed(Duration(seconds: 1), () {
-            _comeFromHint = true;
-            _checkAns();
-          });
-        }
-      }
+      showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you wat to spend 50 \$ ?'),
+            actions: <Widget>[
+              FlatButton(
+                textColor: Colors.red,
+                child: Text('Yes'),
+                onPressed: () {
+                  var leftIndices = [];
+                  for (var i = 0; i < _answer.length; i++) {
+                    if (_answer[i] == ' ') {
+                      leftIndices.add(i);
+                    }
+                  }
+                  if (leftIndices.length != 0) {
+                    var no = new Random().nextInt(leftIndices.length);
+                    setState(() {
+                      _answer[leftIndices[no]] = _checkAnswer[leftIndices[no]];
+                    });
+                    _points = _points - 50;
+                    _saveUserData();
+                    if (leftIndices.length == 1) {
+                      Future.delayed(Duration(seconds: 1), () {
+                        _comeFromHint = true;
+                        _checkAns();
+                      });
+                    }
+                  }
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -366,17 +390,41 @@ class _HomePageState extends State<HomePage> {
         },
       );
     } else {
-      setState(() {
-        for (var i = 0; i < _answer.length; i++) {
-          _answer[i] = _checkAnswer[i];
-        }
-      });
-      _points = _points - 200;
-      _saveUserData();
-      Future.delayed(Duration(seconds: 2), () {
-        _comeFromHint = true;
-        _checkAns();
-      });
+      showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you wat to spend 200 \$ ?'),
+            actions: <Widget>[
+              FlatButton(
+                textColor: Colors.red,
+                child: Text('Yes'),
+                onPressed: () {
+                  setState(() {
+                    for (var i = 0; i < _answer.length; i++) {
+                      _answer[i] = _checkAnswer[i];
+                    }
+                  });
+                  _points = _points - 200;
+                  _saveUserData();
+                  Future.delayed(Duration(seconds: 2), () {
+                    _comeFromHint = true;
+                    _checkAns();
+                  });
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        },
+      );
     }
   }
 
