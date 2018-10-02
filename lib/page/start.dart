@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter/gestures.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import 'package:flutter/material.dart';
 import 'package:learn/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:share/share.dart';
 
 ApiService appAuth = new ApiService();
 
@@ -16,17 +14,6 @@ class StartPage extends StatefulWidget {
     // TODO: implement createState
     return new _StartPageState();
   }
-}
-
-class _LinkTextSpan extends TextSpan {
-  _LinkTextSpan({TextStyle style, String url, String text})
-      : super(
-            style: style,
-            text: text ?? url,
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                launch(url, forceWebView: true);
-              });
 }
 
 class _StartPageState extends State<StartPage> {
@@ -98,26 +85,6 @@ class _StartPageState extends State<StartPage> {
         child: Scaffold(
           appBar: AppBar(
             title: Text('Lucky Draw JJ-111'),
-            actions: <Widget>[
-              PopupMenuButton(
-                onSelected: _actionChoise,
-                itemBuilder: (BuildContext context) {
-                  return choise.map((item) {
-                    return PopupMenuItem(
-                      value: item[1],
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            item[0],
-                          ),
-                          Text('  ' + item[1], textAlign: TextAlign.end)
-                        ],
-                      ),
-                    );
-                  }).toList();
-                },
-              ),
-            ],
           ),
           body: Center(
             child: Card(
@@ -158,26 +125,6 @@ class _StartPageState extends State<StartPage> {
                   Text(_points.toString())
                 ],
               ),
-              actions: <Widget>[
-                PopupMenuButton(
-                  onSelected: _actionChoise,
-                  itemBuilder: (BuildContext context) {
-                    return choise.map((item) {
-                      return PopupMenuItem(
-                        value: item[1],
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              item[0],
-                            ),
-                            Text('  ' + item[1], textAlign: TextAlign.end)
-                          ],
-                        ),
-                      );
-                    }).toList();
-                  },
-                ),
-              ],
             ),
             body: ListView(
               children: <Widget>[
@@ -715,100 +662,5 @@ class _StartPageState extends State<StartPage> {
     });
   }
 
-  void _logOut() {
-    Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-    prefs.then((onValue) {
-      onValue.remove('userData');
-      Navigator.of(context).pushReplacementNamed('/login');
-    });
-  }
-
-  void _actionChoise(choise) {
-    if (choise == 'Coupons') {
-      Navigator.pushNamed(context, '/coupons');
-    }
-    if (choise == 'Winners') {
-      Navigator.pushNamed(context, '/winners');
-    }
-    if (choise == 'Profile') {
-      // Navigator.push(context, MaterialPageRoute(
-      //   builder: (context) => ProfilePage(_questionState, _points, _userName, _contactNumber)
-      // ));
-      Navigator.pushNamed(context, '/profile');
-    }
-    if (choise == 'About us') {
-      _aboutDialog(context);
-    }
-    if (choise == 'Share') {
-      _shareApp();
-    }
-    if (choise == 'Logout') {
-      _logOut();
-    }
-  }
-
-  void _aboutDialog(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-    final TextStyle aboutTextStyle = themeData.textTheme.body2;
-    final TextStyle linkStyle =
-        themeData.textTheme.body2.copyWith(color: themeData.accentColor);
-
-    return showAboutDialog(
-      context: context,
-      applicationName: 'Lucky Draw',
-      applicationVersion: 'Win coupons for JJ-111',
-      applicationIcon: Image.asset(
-        'assets/logo.png',
-        height: 50.0,
-      ),
-      applicationLegalese: '© 2018 GNC Bhaio.',
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 24.0),
-          child: RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                    style: aboutTextStyle,
-                    text:
-                        'Dadashri\'s JanmaJayanti Celebrations are happening from 15th Nov to 25th November 2018 @ Adalaj Trimandir. To know more about our event visit '),
-                _LinkTextSpan(
-                  style: linkStyle,
-                  url: 'http://jjd.dadabhagwan.org/',
-                  // text: 'Jova Jevi Duniya.'
-                ),
-                TextSpan(
-                  style: aboutTextStyle,
-                  text:
-                      '\n\nThere will be 3 Lucky Draws everyday during this period.',
-                ),
-                TextSpan(
-                  style: aboutTextStyle,
-                  text:
-                      '\nWin Lucky Draw Coupons by answering the puzzles. Once you win the coupons, assign them to the draws.',
-                ),
-                TextSpan(
-                  style: aboutTextStyle,
-                  text:
-                      '\nAll the best to you\'ll. May the best Puzzelier win.',
-                ),
-                TextSpan(
-                  style: aboutTextStyle,
-                  text: '\n\nRegards,\nLucky Draw Team',
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _shareApp() {
-    String messege =
-        'Congratulations ! Today is your LUCKY DAY, Go check out this Amazing App and WIN Lucky Draw Coupon and WIN prices in JJ-111 ! https://goo.gl/XTjjnn';
-    final RenderBox box = context.findRenderObject();
-    Share.share(messege,
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-  }
+  
 }
