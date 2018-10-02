@@ -23,6 +23,12 @@ class ApiService {
     return res;
   }
 
+  // Edit Profile
+  Future<http.Response> profileUpdate(data) async {
+    http.Response res = await http.post(_apiUrl + '/profileUpdate', body: data, headers: headers);
+    return res;
+  }
+
   // Logout
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

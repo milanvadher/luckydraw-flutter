@@ -36,6 +36,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/editusername');
+            },
+          )
+        ],
       ),
       body: ListView(
         children: <Widget>[
@@ -77,7 +86,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                     child: Text(
                       _questionState != null
-                          ? (_questionState == 0 ? 0 : _questionState -1).toString()
+                          ? (_questionState == 0 ? 0 : _questionState - 1)
+                              .toString()
                           : 'Loading ...',
                       textScaleFactor: 1.2,
                     ),
@@ -103,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

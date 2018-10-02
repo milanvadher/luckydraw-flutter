@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn/page/coupons.dart';
 import 'package:learn/page/editprofile.dart';
+import 'package:learn/page/editusername.dart';
 import 'package:learn/page/profile.dart';
 import 'package:learn/page/resetPassword.dart';
 import 'package:learn/page/start.dart';
@@ -56,6 +57,7 @@ void main() async {
       '/otp': (BuildContext context) => new OtpVerifyPage(),
       '/editprofile': (BuildContext context) => new EditProfilePage(),
       '/resetPassword': (BuildContext context) => new ResetPasswordPage(),
+      '/editusername': (BuildContext context) => new EditUserPage(),
     },
   ));
 }
