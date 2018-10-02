@@ -231,7 +231,8 @@ class _HomePageState extends State<HomePage> {
                                 minWidth: 40.0,
                                 height: 40.0,
                                 color: Colors.blueGrey,
-                                child: Text(element.toString().toUpperCase()),
+                                child:
+                                    Text(element[0].toString().toUpperCase()),
                               ))
                           .toList(),
                     ),
@@ -255,14 +256,17 @@ class _HomePageState extends State<HomePage> {
                       alignment: WrapAlignment.center,
                       children: _randomString
                           .map((element) => new MaterialButton(
-                                onPressed: () {
-                                  _pushToAns(element.toString());
-                                },
+                                onPressed: element[1] == true
+                                    ? null
+                                    : () {
+                                        _pushToAns(element);
+                                      },
                                 padding: EdgeInsets.all(0.0),
                                 minWidth: 40.0,
                                 height: 40.0,
                                 color: Colors.amber,
-                                child: Text(element.toString().toUpperCase()),
+                                child:
+                                    Text(element[0].toString().toUpperCase()),
                               ))
                           .toList(),
                     ),
@@ -451,13 +455,13 @@ class _HomePageState extends State<HomePage> {
                 // secondWord(qustionDetails['answer'].toString());
                 break;
               } else {
-                _answer.add(' ');
+                _answer.add([' ', i]);
               }
             }
             for (var i = 0;
                 i < qustionDetails['randomString'].toString().length;
                 i++) {
-              _randomString.add(qustionDetails['randomString'][i]);
+              _randomString.add([qustionDetails['randomString'][i], false, i]);
             }
             print(qustionDetails);
           } else {
@@ -490,25 +494,35 @@ class _HomePageState extends State<HomePage> {
 
   void _pushToAns(rchar) {
     setState(() {
+      _randomString[rchar[2]] = [rchar[0], true, rchar[2]];
       for (var i = 0; i < _answer.length; i++) {
-        if (_answer[i] == ' ') {
-          _answer[i] = rchar;
-          print(i.toString() + ' ' + _answer.length.toString());
-          // if (_answer.length - 1 == i) {
+        if (_answer[i][0] == ' ') {
+          _answer[i] = [rchar[0], i];
+          if (_answer.length - 1 == i) {
+            _checkAns();
+          }
+          // if (_answer[i][0].indexOf(' ') == -1) {
           //   _checkAns();
           // }
           break;
         }
       }
-      if (_answer.indexOf(' ') == -1) {
-        _checkAns();
-      }
     });
   }
 
   void _backToAns(rchar) {
+    print(rchar);
     setState(() {
-      _answer[_answer.indexOf(rchar)] = ' ';
+      print(_answer[rchar[1]]);
+      for (var i = 0; i < _randomString.length; i++) {
+        print(_answer[rchar[1]][0] + '==' + _randomString[i][0]);
+        if (_answer[rchar[1]][0] == _randomString[i][0] && _randomString[i][1]) {
+          print(_randomString[i][1]);
+          _randomString[i][1] = false;
+          break;
+        }
+      }
+      _answer[rchar[1]][0] = ' ';
     });
   }
 
@@ -576,7 +590,7 @@ class _HomePageState extends State<HomePage> {
             // secondWord(qustionDetails['answer'].toString());
             break;
           } else {
-            _answer.add(' ');
+            _answer.add([' ', i]);
           }
         }
       });
@@ -630,7 +644,7 @@ class _HomePageState extends State<HomePage> {
               // secondWord(qustionDetails['answer'].toString());
               break;
             } else {
-              _answer.add(' ');
+              _answer.add([' ', i]);
             }
           }
         });
