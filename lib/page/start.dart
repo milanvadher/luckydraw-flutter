@@ -152,7 +152,7 @@ class _StartPageState extends State<StartPage> {
               title: Row(
                 children: <Widget>[
                   Expanded(
-                    child: Text('Lucky Draw JJ-111'),
+                    child: Text(''),
                   ),
                   Icon(Icons.monetization_on),
                   Text(_points.toString())
