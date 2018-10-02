@@ -3,6 +3,7 @@ import 'package:learn/page/coupons.dart';
 import 'package:learn/page/editprofile.dart';
 import 'package:learn/page/profile.dart';
 import 'package:learn/page/resetPassword.dart';
+import 'package:learn/page/start.dart';
 import 'package:learn/page/verifyotp.dart';
 import 'package:learn/page/winners.dart';
 import 'package:learn/service/api_service.dart';
@@ -33,6 +34,7 @@ void main() async {
     routes: <String, WidgetBuilder>{
       // Set routes for using the Navigator.
       '/home': (BuildContext context) => new HomePage(),
+      '/start': (BuildContext context) => new StartPage(),
       '/login': (BuildContext context) => new LoginPage(),
       '/register': (BuildContext context) => new RegisterPage('Register'),
       '/coupons': (BuildContext context) => new CouponsPage(),
