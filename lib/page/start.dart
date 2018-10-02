@@ -287,14 +287,15 @@ class _StartPageState extends State<StartPage> {
                 onPressed: () {
                   var leftIndices = [];
                   for (var i = 0; i < _answer.length; i++) {
-                    if (_answer[i] == ' ') {
+                    if (_answer[i][0] == ' ') {
                       leftIndices.add(i);
                     }
                   }
                   if (leftIndices.length != 0) {
                     var no = new Random().nextInt(leftIndices.length);
                     setState(() {
-                      _answer[leftIndices[no]] = _checkAnswer[leftIndices[no]];
+                      _answer[leftIndices[no]][0] =
+                          _checkAnswer[leftIndices[no]];
                     });
                     _points = _points - 50;
                     _saveUserData();
@@ -354,7 +355,7 @@ class _StartPageState extends State<StartPage> {
                 onPressed: () {
                   setState(() {
                     for (var i = 0; i < _answer.length; i++) {
-                      _answer[i] = _checkAnswer[i];
+                      _answer[i][0] = _checkAnswer[i];
                     }
                   });
                   _points = _points - 200;
@@ -463,7 +464,8 @@ class _StartPageState extends State<StartPage> {
       print(_answer[rchar[1]]);
       for (var i = 0; i < _randomString.length; i++) {
         print(_answer[rchar[1]][0] + '==' + _randomString[i][0]);
-        if (_answer[rchar[1]][0] == _randomString[i][0] && _randomString[i][1]) {
+        if (_answer[rchar[1]][0] == _randomString[i][0] &&
+            _randomString[i][1]) {
           print(_randomString[i][1]);
           _randomString[i][1] = false;
           break;
@@ -474,9 +476,12 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _checkAns() {
-    print(_answer.join() + ' ' + _checkAnswer.split(' ')[0]);
-    if (_checkAnswer.split(' ')[0].toLowerCase() ==
-        _answer.join().toLowerCase()) {
+    var temp = [];
+    for (var i = 0; i < _answer.length; i++) {
+      temp.add(_answer[i][0]);
+    }
+    print(temp.join() + ' ' + _checkAnswer.split(' ')[0]);
+    if (_checkAnswer.split(' ')[0].toLowerCase() == temp.join().toLowerCase()) {
       print('Correct');
       if (_questionState % 5 == 0 && _questionState != 0) {
         _generateTicket();
@@ -533,12 +538,15 @@ class _StartPageState extends State<StartPage> {
         _answer = [];
         for (var i = 0; i < _checkAnswer.length; i++) {
           if (_checkAnswer[i] == ' ') {
-            // _twoWords = true;
-            // secondWord(qustionDetails['answer'].toString());
             break;
           } else {
             _answer.add([' ', i]);
           }
+        }
+        var abc =_randomString;
+        _randomString = [];
+        for (var i = 0; i < abc.length; i++) {
+          _randomString.add([abc[i][0], false, i]);
         }
       });
       print('Incorrect');
@@ -661,6 +669,4 @@ class _StartPageState extends State<StartPage> {
       }
     });
   }
-
-  
 }
