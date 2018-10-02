@@ -12,6 +12,11 @@ import './page/register.dart';
 import './page/home.dart';
 
 ApiService appAuth = new ApiService();
+bool _theme = false;
+void setTheme(value) {
+  _theme = value;
+  main();
+}
 
 void main() async {
   // Set default home.
@@ -19,7 +24,7 @@ void main() async {
 
   // Get result of the login function.
   bool _result = await appAuth.checkLoginStatus();
-  bool _theme = await appAuth.checkTheme();
+  _theme = await appAuth.checkTheme();
   if (_result) {
     _defaultHome = new HomePage();
   }
@@ -28,17 +33,17 @@ void main() async {
   runApp(new MaterialApp(
     title: 'Demo App',
     home: _defaultHome,
-    theme: _theme ? ThemeData(
-      brightness: Brightness.dark,
-      primaryColor: Colors.orangeAccent,
-      accentColor: Colors.black,
-      fontFamily: 'GoogleSans'
-    ) : ThemeData(
-      brightness: Brightness.light,
-      primaryColor: Colors.orangeAccent,
-      accentColor: Colors.orangeAccent,
-      fontFamily: 'GoogleSans'
-    ),
+    theme: _theme
+        ? ThemeData(
+            brightness: Brightness.dark,
+            primaryColor: Colors.orangeAccent,
+            accentColor: Colors.black,
+            fontFamily: 'GoogleSans')
+        : ThemeData(
+            brightness: Brightness.light,
+            primaryColor: Colors.orangeAccent,
+            accentColor: Colors.orangeAccent,
+            fontFamily: 'GoogleSans'),
     routes: <String, WidgetBuilder>{
       // Set routes for using the Navigator.
       '/home': (BuildContext context) => new HomePage(),

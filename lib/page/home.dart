@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../main.dart';
 
 ApiService appAuth = new ApiService();
 bool switchValue = false;
@@ -298,6 +299,7 @@ class _BackdropPageState extends State<HomePage>
                                           setState(() {
                                             switchValue = value;
                                             prefs.setBool('isDarkTheme', value);
+                                            setTheme(value);
                                           });
                                         });
                                       }),
