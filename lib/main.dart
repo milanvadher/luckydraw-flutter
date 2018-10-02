@@ -37,13 +37,11 @@ void main() async {
     theme: _theme
         ? ThemeData(
             brightness: Brightness.dark,
-            primaryColor: Colors.orangeAccent,
-            accentColor: Colors.black,
+            primaryColor: Colors.cyan,
             fontFamily: 'GoogleSans')
         : ThemeData(
             brightness: Brightness.light,
             primaryColor: Colors.orangeAccent,
-            accentColor: Colors.orangeAccent,
             fontFamily: 'GoogleSans'),
     routes: <String, WidgetBuilder>{
       // Set routes for using the Navigator.

@@ -140,22 +140,22 @@ class _BackdropPageState extends State<HomePage>
       color: theme.primaryColor,
       child: new Stack(
         children: <Widget>[
-          new Card(
-            color: Theme.of(context).accentColor,
+          new Container(
+            // color: Theme.of(context).accentColor,
             child: ListView(
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
                     children: <Widget>[
-                      RaisedButton(
+                      MaterialButton(
                         onPressed: () {
                           _actionChoise('Coupons');
                         },
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.monetization_on),
                               SizedBox(width: 10.0),
@@ -169,14 +169,14 @@ class _BackdropPageState extends State<HomePage>
                         ),
                       ),
                       SizedBox(height: 10.0),
-                      RaisedButton(
+                      MaterialButton(
                         onPressed: () {
                           _actionChoise('Winners');
                         },
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.flag),
                               SizedBox(width: 10.0),
@@ -190,14 +190,14 @@ class _BackdropPageState extends State<HomePage>
                         ),
                       ),
                       SizedBox(height: 10.0),
-                      RaisedButton(
+                      MaterialButton(
                         onPressed: () {
                           _actionChoise('Profile');
                         },
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.person),
                               SizedBox(width: 10.0),
@@ -211,14 +211,14 @@ class _BackdropPageState extends State<HomePage>
                         ),
                       ),
                       SizedBox(height: 10.0),
-                      RaisedButton(
+                      MaterialButton(
                         onPressed: () {
                           _actionChoise('About us');
                         },
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.details),
                               SizedBox(width: 10.0),
@@ -232,14 +232,14 @@ class _BackdropPageState extends State<HomePage>
                         ),
                       ),
                       SizedBox(height: 10.0),
-                      RaisedButton(
+                      MaterialButton(
                         onPressed: () {
                           _actionChoise('Share');
                         },
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.share),
                               SizedBox(width: 10.0),
@@ -253,14 +253,14 @@ class _BackdropPageState extends State<HomePage>
                         ),
                       ),
                       SizedBox(height: 10.0),
-                      RaisedButton(
+                      MaterialButton(
                         onPressed: () {
                           _actionChoise('Logout');
                         },
                         child: Padding(
                           padding: EdgeInsets.all(12.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.exit_to_app),
                               SizedBox(width: 10.0),
@@ -274,11 +274,10 @@ class _BackdropPageState extends State<HomePage>
                         ),
                       ),
                       SizedBox(height: 10.0),
-                      Card(
-                        child: Row(
+                        Row(
                           children: <Widget>[
                             SizedBox(
-                              width: 10.0,
+                              width: 30.0,
                             ),
                             Expanded(
                               child: Text(
@@ -308,7 +307,6 @@ class _BackdropPageState extends State<HomePage>
                             )
                           ],
                         ),
-                      ),
                       SizedBox(height: 30.0),
                     ],
                   ),
