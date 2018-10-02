@@ -98,4 +98,10 @@ class ApiService {
     return res;
   }
 
+  // Get AK Question Detail 
+  Future<http.Response> getAkQuestions(data) async {
+    http.Response res = await http.post(_apiUrl + '/ak_questionDetails', body: data, headers: headers);
+    return res;
+  }
+
 }

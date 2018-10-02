@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn/page/ak_game.dart';
 import 'package:learn/page/coupons.dart';
 import 'package:learn/page/editprofile.dart';
 import 'package:learn/page/editusername.dart';
@@ -56,6 +57,7 @@ void main() async {
       '/editprofile': (BuildContext context) => new EditProfilePage(),
       '/resetPassword': (BuildContext context) => new ResetPasswordPage(),
       '/editusername': (BuildContext context) => new EditUserPage(),
+      '/ak_game': (BuildContext context) => new AkGamePage(),
     },
   ));
 }

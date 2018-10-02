@@ -367,6 +367,28 @@ class _BackdropPageState extends State<HomePage>
                                 ),
                               ),
                               SizedBox(height: 10.0),
+                              MaterialButton(
+                                color: Theme.of(context).primaryColor,
+                                textColor: Colors.black,
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/ak_game');
+                                },
+                                height: 50.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          0.0, 0.0, 10.0, 0.0),
+                                      child: Icon(Icons.play_arrow),
+                                    ),
+                                    Text(
+                                      'Start Akram Youth Game',
+                                      textScaleFactor: 1.5,
+                                    )
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         ),
