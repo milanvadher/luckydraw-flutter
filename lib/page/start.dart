@@ -115,141 +115,136 @@ class _StartPageState extends State<StartPage> {
       return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-            appBar: AppBar(
-              title: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(''),
+          appBar: AppBar(
+            title: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(''),
+                ),
+                Icon(Icons.monetization_on),
+                Text(_points.toString())
+              ],
+            ),
+          ),
+          body: ListView(
+            children: <Widget>[
+              Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: _imagesRow1
+                          .map(
+                            (image) => Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.all(4.0),
+                                    child: Image.network(
+                                      image,
+                                    ),
+                                  ),
+                                ),
+                          )
+                          .toList(),
+                    ),
                   ),
-                  Icon(Icons.monetization_on),
-                  Text(_points.toString())
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: _imagesRow2
+                          .map(
+                            (image) => Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.all(4.0),
+                                    child: Image.network(
+                                      image,
+                                    ),
+                                  ),
+                                ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  SizedBox(height: 15.0),
+                  Wrap(
+                    spacing: 0.0,
+                    alignment: WrapAlignment.center,
+                    children: _answer
+                        .map((element) => new MaterialButton(
+                              onPressed: () {
+                                _backToAns(element);
+                              },
+                              textColor: Colors.white,
+                              padding: EdgeInsets.all(0.0),
+                              minWidth: 40.0,
+                              height: 40.0,
+                              color: Colors.blueGrey,
+                              child: Text(element[0].toString().toUpperCase()),
+                            ))
+                        .toList(),
+                  ),
+                  // Wrap(
+                  //   spacing: 0.0,
+                  //   alignment: WrapAlignment.center,
+                  //   children: _secondWord
+                  //       .map((element) => new MaterialButton(
+                  //             onPressed: () {},
+                  //             padding: EdgeInsets.all(0.0),
+                  //             minWidth: 40.0,
+                  //             height: 40.0,
+                  //             color: Colors.blueGrey,
+                  //             child: Text(element.toString().toUpperCase()),
+                  //           ))
+                  //       .toList(),
+                  // ),
+                  SizedBox(height: 15.0),
+                  Wrap(
+                    spacing: 0.0,
+                    alignment: WrapAlignment.center,
+                    children: _randomString
+                        .map((element) => new MaterialButton(
+                              onPressed: element[1] == true
+                                  ? null
+                                  : () {
+                                      _pushToAns(element);
+                                    },
+                              padding: EdgeInsets.all(0.0),
+                              minWidth: 40.0,
+                              height: 40.0,
+                              color: Theme.of(context).primaryColor,
+                              child: Text(element[0].toString().toUpperCase()),
+                            ))
+                        .toList(),
+                  ),
+                  SizedBox(
+                    height: 80.0,
+                  ),
                 ],
               ),
-            ),
-            body: ListView(
-              children: <Widget>[
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Row(
-                        children: _imagesRow1
-                            .map(
-                              (image) => Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.all(4.0),
-                                      child: Image.network(
-                                        image,
-                                      ),
-                                    ),
-                                  ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Row(
-                        children: _imagesRow2
-                            .map(
-                              (image) => Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.all(4.0),
-                                      child: Image.network(
-                                        image,
-                                      ),
-                                    ),
-                                  ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    SizedBox(height: 15.0),
-                    Wrap(
-                      spacing: 0.0,
-                      alignment: WrapAlignment.center,
-                      children: _answer
-                          .map((element) => new MaterialButton(
-                                onPressed: () {
-                                  _backToAns(element);
-                                },
-                                textColor: Colors.white,
-                                padding: EdgeInsets.all(0.0),
-                                minWidth: 40.0,
-                                height: 40.0,
-                                color: Colors.blueGrey,
-                                child:
-                                    Text(element[0].toString().toUpperCase()),
-                              ))
-                          .toList(),
-                    ),
-                    // Wrap(
-                    //   spacing: 0.0,
-                    //   alignment: WrapAlignment.center,
-                    //   children: _secondWord
-                    //       .map((element) => new MaterialButton(
-                    //             onPressed: () {},
-                    //             padding: EdgeInsets.all(0.0),
-                    //             minWidth: 40.0,
-                    //             height: 40.0,
-                    //             color: Colors.blueGrey,
-                    //             child: Text(element.toString().toUpperCase()),
-                    //           ))
-                    //       .toList(),
-                    // ),
-                    SizedBox(height: 15.0),
-                    Wrap(
-                      spacing: 0.0,
-                      alignment: WrapAlignment.center,
-                      children: _randomString
-                          .map((element) => new MaterialButton(
-                                onPressed: element[1] == true
-                                    ? null
-                                    : () {
-                                        _pushToAns(element);
-                                      },
-                                padding: EdgeInsets.all(0.0),
-                                minWidth: 40.0,
-                                height: 40.0,
-                                color: Theme.of(context).primaryColor,
-                                child:
-                                    Text(element[0].toString().toUpperCase()),
-                              ))
-                          .toList(),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
-                        child: Row(
-                          children: <Widget>[
-                            MaterialButton(
-                              color: Colors.blue,
-                              textColor: Colors.white,
-                              height: 50.0,
-                              minWidth: 50.0,
-                              onPressed: () {
-                                _getOneHint();
-                              },
-                              child: Icon(Icons.help),
-                            ),
-                            Expanded(
-                              child: Container(),
-                            ),
-                            MaterialButton(
-                              color: Colors.blue,
-                              textColor: Colors.white,
-                              height: 50.0,
-                              minWidth: 50.0,
-                              onPressed: () {
-                                _getFullHint();
-                              },
-                              child: Icon(Icons.done_all),
-                            )
-                          ],
-                        )),
-                  ],
-                ),
-              ],
-            )),
+            ],
+          ),
+          floatingActionButton: Row(
+            children: <Widget>[
+              SizedBox(
+                width: 30.0,
+              ),
+              FloatingActionButton(
+                child: Icon(Icons.help),
+                onPressed: () {
+                  _getOneHint();
+                },
+              ),
+              Expanded(
+                child: Text(''),
+              ),
+              FloatingActionButton(
+                child: Icon(Icons.done_all),
+                onPressed: () {
+                  _getFullHint();
+                },
+              )
+            ],
+          ),
+        ),
       );
     }
   }
@@ -543,7 +538,7 @@ class _StartPageState extends State<StartPage> {
             _answer.add([' ', i]);
           }
         }
-        var abc =_randomString;
+        var abc = _randomString;
         _randomString = [];
         for (var i = 0; i < abc.length; i++) {
           _randomString.add([abc[i][0], false, i]);
