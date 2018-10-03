@@ -16,6 +16,8 @@ class AkGamePage extends StatefulWidget {
 }
 
 class _AkGamePageState extends State<AkGamePage> {
+  double _value = 0.1;
+
   Future<bool> _onWillPop() {
     return showDialog(
           context: context,
@@ -128,6 +130,9 @@ class _AkGamePageState extends State<AkGamePage> {
                     children: <Widget>[
                       new Column(
                         children: <Widget>[
+                          Container(
+                            child: _progressIndicator(),
+                          ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 25.0),
                             child: Image.asset(
@@ -175,6 +180,17 @@ class _AkGamePageState extends State<AkGamePage> {
         ),
       );
     }
+  }
+
+  Widget _progressIndicator() {
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.all(5.0),
+        child: new LinearProgressIndicator(
+          value: _completedPercentage / 100,
+        ),
+      ),
+    );
   }
 
   Widget _buildTextComposer() {
