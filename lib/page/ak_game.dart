@@ -151,6 +151,7 @@ class _AkGamePageState extends State<AkGamePage> {
                                   .map((words) => (new Chip(
                                       label: Text(words),
                                       deleteIcon: Icon(Icons.cancel),
+                                      backgroundColor: isTrue(words) ? Colors.lightGreen : Colors.redAccent,
                                       onDeleted: () {
                                         setState(() {
                                           _userWords.removeAt(
@@ -180,6 +181,16 @@ class _AkGamePageState extends State<AkGamePage> {
         ),
       );
     }
+  }
+
+  bool isTrue(words) {
+    bool isAvailable = false;
+    for (var i = 0; i < _answers.length; i++) {
+      if (_answers[i] == words.toString().toUpperCase()) {
+        isAvailable = true;
+      }
+    }
+    return isAvailable;
   }
 
   Widget _progressIndicator() {
