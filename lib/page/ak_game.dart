@@ -46,7 +46,7 @@ class _AkGamePageState extends State<AkGamePage> {
 
   final TextEditingController _textController = new TextEditingController();
   List _userWords = [];
-  List _answers = ['FIRST', 'SECOND', 'THIRD'];
+  List _answers = ['FIRST', 'SECOND', 'THIRD', 'FORTH'];
   bool _isTyping = false;
   int _completedPercentage = 0;
 
@@ -236,9 +236,9 @@ class _AkGamePageState extends State<AkGamePage> {
         }
       }
     }
-    print((33.33 * rightAns));
+    print((25 * rightAns));
     setState(() {
-      _completedPercentage = 33 * rightAns;
+      _completedPercentage = 25 * rightAns;
     });
   }
 
