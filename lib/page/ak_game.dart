@@ -16,7 +16,6 @@ class AkGamePage extends StatefulWidget {
 }
 
 class _AkGamePageState extends State<AkGamePage> {
-
   Future<bool> _onWillPop() {
     return showDialog(
           context: context,
@@ -43,16 +42,24 @@ class _AkGamePageState extends State<AkGamePage> {
   int _ak_questionState;
   String _contactNumber;
 
-  bool _isGameOver = true;
+  bool _isGameOver = false;
+
+  List _userWords = [];
+  final TextEditingController _textController = new TextEditingController();
+  bool _isTyping = false;
 
   _AkGamePageState() {
     SharedPreferences.getInstance().then((onValue) {
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
       print(userData);
-      _points = int.parse(userData['points'].toString());
-      _ak_questionState = int.parse(userData['ak_ques_st'] != null ? userData['ak_ques_st'].toString() : '1');
-      this._getAkQuestionDetails();
+      setState(() {
+        _points = int.parse(userData['points'].toString());
+      });
+      _ak_questionState = int.parse(userData['ak_ques_st'] != null
+          ? userData['ak_ques_st'].toString()
+          : '1');
+      // _getAkQuestionDetails();
       print(_points);
     });
   }
@@ -96,34 +103,117 @@ class _AkGamePageState extends State<AkGamePage> {
       return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-            appBar: AppBar(
-              title: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(''),
-                  ),
-                  Icon(Icons.monetization_on),
-                  Text(_points.toString())
-                ],
-              ),
-            ),
-            body: ListView(
+          appBar: AppBar(
+            title: Row(
               children: <Widget>[
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Row(
-                        children: <Widget>[],
+                Expanded(
+                  child: Text(''),
+                ),
+                Icon(Icons.monetization_on),
+                Text(_points.toString())
+              ],
+            ),
+          ),
+          body: new Container(
+            child: new Column(
+              children: <Widget>[
+                new Flexible(
+                  child: new ListView(
+                    children: <Widget>[
+                      new Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 25.0),
+                            child: Image.asset(
+                              'assets/cover_235003.jpg',
+                              width: 250.0,
+                            ),
+                          )
+                        ],
                       ),
-                    ),
-                    SizedBox(height: 15.0),
-                  ],
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: new Wrap(
+                          alignment: WrapAlignment.center,
+                          children: _userWords != null
+                              ? _userWords
+                                  .map((words) => (new Chip(
+                                      label: Text(words),
+                                      deleteIcon: Icon(Icons.cancel),
+                                      onDeleted: () {
+                                        setState(() {
+                                          _userWords.removeAt(
+                                              _userWords.indexOf(words));
+                                        });
+                                      })))
+                                  .toList()
+                              : new Container(
+                                  width: 0.0,
+                                  height: 0.0,
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                new Divider(height: 1.0),
+                new Container(
+                  decoration:
+                      new BoxDecoration(color: Theme.of(context).cardColor),
+                  child: _buildTextComposer(),
                 ),
               ],
-            )),
+            ),
+          ),
+        ),
       );
     }
+  }
+
+  Widget _buildTextComposer() {
+    return new IconTheme(
+      data: new IconThemeData(color: Theme.of(context).accentColor),
+      child: new Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: new Row(
+          children: <Widget>[
+            new Flexible(
+              child: new TextField(
+                controller: _textController,
+                onChanged: (String text) {
+                  setState(() {
+                    _isTyping = text.length > 0;
+                  });
+                },
+                onSubmitted: _handleSubmitted,
+                decoration:
+                    new InputDecoration.collapsed(hintText: "Guess the word"),
+              ),
+            ),
+            new Container(
+              margin: new EdgeInsets.symmetric(horizontal: 4.0),
+              child: new IconButton(
+                icon: new Icon(Icons.add),
+                onPressed: _isTyping
+                    ? () => _handleSubmitted(_textController.text)
+                    : null,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _handleSubmitted(String text) {
+    _textController.clear();
+    // For hide keyboard
+    FocusScope.of(context).requestFocus(new FocusNode());
+    setState(() {
+      _isTyping = false;
+      _userWords.add(text);
+    });
+    print(_userWords);
   }
 
   _getAkQuestionDetails() async {
@@ -179,8 +269,7 @@ class _AkGamePageState extends State<AkGamePage> {
           onValue.setString('userData', res.body);
         });
       } else {
-        setState(() {
-        });
+        setState(() {});
         showDialog(
           context: context,
           builder: (BuildContext build) {
