@@ -280,39 +280,40 @@ class _BackdropPageState extends State<HomePage>
                         ),
                       ),
                       SizedBox(height: 10.0),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 30.0,
+                      Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: 30.0,
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Dark theme',
+                              style: new TextStyle(color: Colors.black),
+                              textScaleFactor: 1.2,
                             ),
-                            Expanded(
-                              child: Text(
-                                'Dark theme',
-                                textScaleFactor: 1.2,
-                              ),
-                            ),
-                            Align(
-                              alignment: const Alignment(0.0, -0.2),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Switch(
-                                      value: switchValue,
-                                      onChanged: (bool value) {
-                                        SharedPreferences.getInstance()
-                                            .then((prefs) {
-                                          setState(() {
-                                            switchValue = value;
-                                            prefs.setBool('isDarkTheme', value);
-                                            setTheme(value);
-                                          });
+                          ),
+                          Align(
+                            alignment: const Alignment(0.0, -0.2),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Switch(
+                                    value: switchValue,
+                                    onChanged: (bool value) {
+                                      SharedPreferences.getInstance()
+                                          .then((prefs) {
+                                        setState(() {
+                                          switchValue = value;
+                                          prefs.setBool('isDarkTheme', value);
+                                          setTheme(value);
                                         });
-                                      }),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                                      });
+                                    }),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                       SizedBox(height: 30.0),
                     ],
                   ),
