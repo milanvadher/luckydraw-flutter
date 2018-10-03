@@ -16,8 +16,6 @@ class AkGamePage extends StatefulWidget {
 }
 
 class _AkGamePageState extends State<AkGamePage> {
-  double _value = 0.1;
-
   Future<bool> _onWillPop() {
     return showDialog(
           context: context,
@@ -43,14 +41,16 @@ class _AkGamePageState extends State<AkGamePage> {
   int _points;
   int _ak_questionState;
   String _contactNumber;
+  String _imgUrl;
 
   bool _isGameOver = false;
 
   final TextEditingController _textController = new TextEditingController();
   List _userWords = [];
-  List _answers = ['FIRST', 'SECOND', 'THIRD', 'FORTH'];
+  List _answers = [];
   bool _isTyping = false;
-  int _completedPercentage = 0;
+  double _completedPercentage = 0.0;
+  double _perQuestionPoint = 1.0;
 
   _AkGamePageState() {
     SharedPreferences.getInstance().then((onValue) {
@@ -60,10 +60,11 @@ class _AkGamePageState extends State<AkGamePage> {
       setState(() {
         _points = int.parse(userData['points'].toString());
       });
+      _contactNumber = userData['contactNumber'];
       _ak_questionState = int.parse(userData['ak_ques_st'] != null
           ? userData['ak_ques_st'].toString()
           : '1');
-      // _getAkQuestionDetails();
+      _getAkQuestionDetails();
       print(_points);
     });
   }
@@ -113,7 +114,7 @@ class _AkGamePageState extends State<AkGamePage> {
                 Expanded(
                   child: Text(''),
                 ),
-                Text(_completedPercentage.toString() + ' %'),
+                Text(_completedPercentage.toStringAsFixed(2).toString() + ' %'),
                 SizedBox(
                   width: 20.0,
                 ),
@@ -135,10 +136,10 @@ class _AkGamePageState extends State<AkGamePage> {
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 25.0),
-                            child: Image.asset(
-                              'assets/cover_235003.jpg',
+                            child: _imgUrl != null ? Image.network(
+                              _imgUrl,
                               width: 250.0,
-                            ),
+                            ) : new Container(width: 0.0, height: 0.0,),
                           )
                         ],
                       ),
@@ -151,7 +152,9 @@ class _AkGamePageState extends State<AkGamePage> {
                                   .map((words) => (new Chip(
                                       label: Text(words),
                                       deleteIcon: Icon(Icons.cancel),
-                                      backgroundColor: isTrue(words) ? Colors.lightGreen : Colors.redAccent,
+                                      backgroundColor: isTrue(words)
+                                          ? Colors.lightGreen
+                                          : Colors.redAccent,
                                       onDeleted: () {
                                         setState(() {
                                           _userWords.removeAt(
@@ -263,23 +266,42 @@ class _AkGamePageState extends State<AkGamePage> {
         }
       }
     }
-    print((25 * rightAns));
     setState(() {
-      _completedPercentage = 25 * rightAns;
+      _completedPercentage = _perQuestionPoint * rightAns;
     });
+    print(_completedPercentage.toStringAsFixed(2));
+    print(100.00.toString());
+    if (_completedPercentage.toStringAsFixed(1) == 100.0.toString()) {
+      _rightAns();
+    }
   }
 
   _getAkQuestionDetails() async {
+    _imgUrl = null;
+    _answers = [];
+    _completedPercentage = 0.0;
+    _perQuestionPoint = 1.0;
+    _userWords = [];
     if (_ak_questionState < 5) {
       _isGameOver = false;
       var data = {
         'ak_ques_st': _ak_questionState,
       };
       appAuth.getAkQuestions(json.encode(data)).then((res) {
-        setState(() {
           if (res.statusCode == 200) {
             Map<String, dynamic> qustionDetails = json.decode(res.body);
             print(qustionDetails);
+            for (var i = 0; i < qustionDetails['answers'].length; i++) {
+              for (var j = 0; j < qustionDetails['answers'][i].length; j++) {
+                _answers.add(decodeString(qustionDetails['answers'][i][j]));
+              }
+            }
+            print(qustionDetails['answers'].length);
+            _perQuestionPoint = 100 / qustionDetails['answers'].length;
+            print(qustionDetails['answers']);
+            setState(() {
+              _imgUrl = qustionDetails['url'];
+            });
           } else {
             showDialog(
               context: context,
@@ -299,13 +321,37 @@ class _AkGamePageState extends State<AkGamePage> {
               },
             );
           }
-        });
       });
     } else {
       setState(() {
         _isGameOver = true;
       });
     }
+  }
+
+  _rightAns() {
+    showDialog(
+          context: context,
+          builder: (BuildContext build) {
+            return AlertDialog(
+              title: Text('Congo'),
+              content: Text('Your answer is correct.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
+        );
+        _points = _points + 200;
+        _ak_questionState = _ak_questionState + 1;
+        _getAkQuestionDetails();
+        _saveUserData();
+        _generateTicket();
   }
 
   void _saveUserData() {
@@ -342,6 +388,13 @@ class _AkGamePageState extends State<AkGamePage> {
         );
       }
     });
+  }
+
+  decodeString(word) {
+    Base64Decoder b = new Base64Decoder();
+    Utf8Decoder u = new Utf8Decoder();
+    print(u.convert(b.convert(word)));
+    return u.convert(b.convert(word)).toUpperCase();
   }
 
   void _generateTicket() {
