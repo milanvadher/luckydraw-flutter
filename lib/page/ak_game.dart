@@ -44,9 +44,11 @@ class _AkGamePageState extends State<AkGamePage> {
 
   bool _isGameOver = false;
 
-  List _userWords = [];
   final TextEditingController _textController = new TextEditingController();
+  List _userWords = [];
+  List _answers = ['FIRST', 'SECOND', 'THIRD'];
   bool _isTyping = false;
+  int _completedPercentage = 0;
 
   _AkGamePageState() {
     SharedPreferences.getInstance().then((onValue) {
@@ -72,7 +74,7 @@ class _AkGamePageState extends State<AkGamePage> {
         onWillPop: _onWillPop,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Lucky Draw JJ-111'),
+            title: Text('Akram Youth'),
           ),
           body: Center(
             child: Card(
@@ -108,6 +110,10 @@ class _AkGamePageState extends State<AkGamePage> {
               children: <Widget>[
                 Expanded(
                   child: Text(''),
+                ),
+                Text(_completedPercentage.toString() + ' %'),
+                SizedBox(
+                  width: 20.0,
                 ),
                 Icon(Icons.monetization_on),
                 Text(_points.toString())
@@ -145,6 +151,7 @@ class _AkGamePageState extends State<AkGamePage> {
                                           _userWords.removeAt(
                                               _userWords.indexOf(words));
                                         });
+                                        _checkAns();
                                       })))
                                   .toList()
                               : new Container(
@@ -211,9 +218,28 @@ class _AkGamePageState extends State<AkGamePage> {
     FocusScope.of(context).requestFocus(new FocusNode());
     setState(() {
       _isTyping = false;
-      _userWords.add(text);
+      _userWords.add(text.toUpperCase());
+      _userWords = _userWords.toSet().toList();
     });
-    print(_userWords);
+    _checkAns();
+  }
+
+  void _checkAns() {
+    int rightAns = 0;
+    print(_answers);
+    for (var i = 0; i < _userWords.length; i++) {
+      for (var j = 0; j < _answers.length; j++) {
+        if (_answers[j].toString().toUpperCase() ==
+            _userWords[i].toString().toUpperCase()) {
+          print(_userWords[i]);
+          rightAns = rightAns + 1;
+        }
+      }
+    }
+    print((33.33 * rightAns));
+    setState(() {
+      _completedPercentage = 33 * rightAns;
+    });
   }
 
   _getAkQuestionDetails() async {
