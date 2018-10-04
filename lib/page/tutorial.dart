@@ -19,33 +19,40 @@ class _TutorialPageState extends State<TutorialPage> {
 
     slides.add(
       new Slide(
-        title: "ERASER",
-        description: "Allow miles wound place the leave had. To sitting subject no improve studied limited",
+        title: "Jay Sachchidanand",
+        description:
+            "Welcome to Lucky Draw Game.\n Here you can win Lucky draw Coupons\n and win exiting Prizes.",
         pathImage: "assets/logo.png",
-        backgroundColor: 0xfff5a623,
-      ),
-    );
-    slides.add(
-      new Slide(
-        title: "PENCIL",
-        description: "Ye indulgence unreserved connection alteration appearance",
-        pathImage: "assets/logo.png",
+        widthImage: 250.0,
+        heightImage: 300.0,
         backgroundColor: 0xff203152,
       ),
     );
     slides.add(
       new Slide(
-        title: "RULER",
+        title: "Earn Lucky Draw Coupon",
+        description: "Guess the Correct word \n and Earn Lucky Draw Coupon.",
+        pathImage: "assets/slider.png",
+        widthImage: 250.0,
+        heightImage: 300.0,
+        backgroundColor: 0xfff5a623,
+      ),
+    );
+    slides.add(
+      new Slide(
+        title: "WIN AMAZING PRIZES",
         description:
-            "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
-        pathImage: "assets/logo.png",
-        backgroundColor: 0xff9932CC,
+            "Use your earned coupons at JJ-111\n and win Amazing Prizes.",
+        pathImage: "assets/slider2.png",
+        widthImage: 250.0,
+        heightImage: 300.0,
+        backgroundColor: 0xFF135A60,
       ),
     );
   }
 
   void onDonePress() {
-    SharedPreferences.getInstance().then((prefs){
+    SharedPreferences.getInstance().then((prefs) {
       prefs.setBool('isIntroSeen', true);
       Navigator.pushReplacementNamed(context, '/login');
     });
