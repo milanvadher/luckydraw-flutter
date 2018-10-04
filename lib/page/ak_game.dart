@@ -39,7 +39,7 @@ class _AkGamePageState extends State<AkGamePage> {
   }
 
   int _points;
-  int _ak_questionState;
+  int _akQuestionState;
   String _contactNumber;
   String _imgUrl;
 
@@ -61,7 +61,7 @@ class _AkGamePageState extends State<AkGamePage> {
         _points = int.parse(userData['points'].toString());
       });
       _contactNumber = userData['contactNumber'];
-      _ak_questionState = int.parse(userData['ak_ques_st'] != null
+      _akQuestionState = int.parse(userData['ak_ques_st'] != null
           ? userData['ak_ques_st'].toString()
           : '1');
       _getAkQuestionDetails();
@@ -282,10 +282,10 @@ class _AkGamePageState extends State<AkGamePage> {
     _completedPercentage = 0.0;
     _perQuestionPoint = 1.0;
     _userWords = [];
-    if (_ak_questionState < 5) {
+    if (_akQuestionState < 5) {
       _isGameOver = false;
       var data = {
-        'ak_ques_st': _ak_questionState,
+        'ak_ques_st': _akQuestionState,
       };
       appAuth.getAkQuestions(json.encode(data)).then((res) {
           if (res.statusCode == 200) {
@@ -348,7 +348,7 @@ class _AkGamePageState extends State<AkGamePage> {
           },
         );
         _points = _points + 200;
-        _ak_questionState = _ak_questionState + 1;
+        _akQuestionState = _akQuestionState + 1;
         _getAkQuestionDetails();
         _saveUserData();
         _generateTicket();
@@ -357,7 +357,7 @@ class _AkGamePageState extends State<AkGamePage> {
   void _saveUserData() {
     var data = {
       'contactNumber': _contactNumber,
-      'ak_ques_st': _ak_questionState,
+      'ak_ques_st': _akQuestionState,
       'points': _points
     };
     appAuth.saveUserData(json.encode(data)).then((res) {
@@ -400,7 +400,7 @@ class _AkGamePageState extends State<AkGamePage> {
   void _generateTicket() {
     var data = {
       'contactNumber': _contactNumber,
-      'ak_ques_st': _ak_questionState
+      'ak_ques_st': _akQuestionState
     };
     appAuth.generateTicket(json.encode(data)).then((res) {
       if (res.statusCode == 200) {
