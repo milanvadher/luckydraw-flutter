@@ -6,6 +6,7 @@ import 'package:luckydraw/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 ApiService appAuth = new ApiService();
+int rightAns = 0;
 
 class AkGamePage extends StatefulWidget {
   @override
@@ -129,17 +130,22 @@ class _AkGamePageState extends State<AkGamePage> {
                 new Flexible(
                   child: new ListView(
                     children: <Widget>[
+                      new Container(
+                        child: _progressIndicator(),
+                      ),
                       new Column(
                         children: <Widget>[
-                          Container(
-                            child: _progressIndicator(),
-                          ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 25.0),
-                            child: _imgUrl != null ? Image.network(
-                              _imgUrl,
-                              width: 250.0,
-                            ) : new Container(width: 0.0, height: 0.0,),
+                            child: _imgUrl != null
+                                ? Image.network(
+                                    _imgUrl,
+                                    width: 250.0,
+                                  )
+                                : new Container(
+                                    width: 0.0,
+                                    height: 0.0,
+                                  ),
                           )
                         ],
                       ),
@@ -152,15 +158,16 @@ class _AkGamePageState extends State<AkGamePage> {
                                   .map((words) => (new Chip(
                                       label: Text(words),
                                       deleteIcon: Icon(Icons.cancel),
-                                      backgroundColor: isTrue(words)
-                                          ? Colors.lightGreen
-                                          : Colors.redAccent,
+                                      backgroundColor:
+                                          // isTrue(words)
+                                          Colors.lightGreen,
+                                      // : Colors.redAccent,
                                       onDeleted: () {
                                         setState(() {
                                           _userWords.removeAt(
                                               _userWords.indexOf(words));
                                         });
-                                        _checkAns();
+                                        _checkAns(words);
                                       })))
                                   .toList()
                               : new Container(
@@ -186,15 +193,15 @@ class _AkGamePageState extends State<AkGamePage> {
     }
   }
 
-  bool isTrue(words) {
-    bool isAvailable = false;
-    for (var i = 0; i < _answers.length; i++) {
-      if (_answers[i] == words.toString().toUpperCase()) {
-        isAvailable = true;
-      }
-    }
-    return isAvailable;
-  }
+  // bool isTrue(words) {
+  //   bool isAvailable = false;
+  //   for (var i = 0; i < _answers.length; i++) {
+  //     if (_answers[i].contains(words)) {
+  //       isAvailable = true;
+  //     }
+  //   }
+  //   return isAvailable;
+  // }
 
   Widget _progressIndicator() {
     return Container(
@@ -245,25 +252,24 @@ class _AkGamePageState extends State<AkGamePage> {
   void _handleSubmitted(String text) {
     _textController.clear();
     // For hide keyboard
-    FocusScope.of(context).requestFocus(new FocusNode());
+    // FocusScope.of(context).requestFocus(new FocusNode());
     setState(() {
       _isTyping = false;
-      _userWords.add(text.toUpperCase());
+      // _userWords.add(text.toUpperCase());
       _userWords = _userWords.toSet().toList();
     });
-    _checkAns();
+    _checkAns(text);
   }
 
-  void _checkAns() {
-    int rightAns = 0;
+  void _checkAns(word) {
     print(_answers);
-    for (var i = 0; i < _userWords.length; i++) {
-      for (var j = 0; j < _answers.length; j++) {
-        if (_answers[j].toString().toUpperCase() ==
-            _userWords[i].toString().toUpperCase()) {
-          print(_userWords[i]);
-          rightAns = rightAns + 1;
-        }
+    for (var j = 0; j < _answers.length; j++) {
+      if (_answers[j].contains(word.toString().toUpperCase())) {
+        rightAns = rightAns + 1;
+        setState(() {
+          _userWords.add(_answers[j][0].toUpperCase());
+        });
+        _answers.remove(_answers[j]);
       }
     }
     setState(() {
@@ -282,45 +288,47 @@ class _AkGamePageState extends State<AkGamePage> {
     _completedPercentage = 0.0;
     _perQuestionPoint = 1.0;
     _userWords = [];
+    rightAns = 0;
     if (_akQuestionState < 5) {
       _isGameOver = false;
       var data = {
         'ak_ques_st': _akQuestionState,
       };
       appAuth.getAkQuestions(json.encode(data)).then((res) {
-          if (res.statusCode == 200) {
-            Map<String, dynamic> qustionDetails = json.decode(res.body);
-            print(qustionDetails);
-            for (var i = 0; i < qustionDetails['answers'].length; i++) {
-              for (var j = 0; j < qustionDetails['answers'][i].length; j++) {
-                _answers.add(decodeString(qustionDetails['answers'][i][j]));
-              }
+        if (res.statusCode == 200) {
+          Map<String, dynamic> qustionDetails = json.decode(res.body);
+          print(qustionDetails);
+          for (var i = 0; i < qustionDetails['answers'].length; i++) {
+            _answers.add([]);
+            for (var j = 0; j < qustionDetails['answers'][i].length; j++) {
+              _answers[i].add(decodeString(qustionDetails['answers'][i][j]));
             }
-            print(qustionDetails['answers'].length);
-            _perQuestionPoint = 100 / qustionDetails['answers'].length;
-            print(qustionDetails['answers']);
-            setState(() {
-              _imgUrl = qustionDetails['url'];
-            });
-          } else {
-            showDialog(
-              context: context,
-              builder: (BuildContext build) {
-                return AlertDialog(
-                  title: Text('Error'),
-                  content: Text('Check your Internet connection'),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Okay'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                );
-              },
-            );
           }
+          print(qustionDetails['answers'].length);
+          _perQuestionPoint = 100 / qustionDetails['answers'].length;
+          print(qustionDetails['answers']);
+          setState(() {
+            _imgUrl = qustionDetails['url'];
+          });
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext build) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Check your Internet connection'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        }
       });
     } else {
       setState(() {
@@ -331,27 +339,27 @@ class _AkGamePageState extends State<AkGamePage> {
 
   _rightAns() {
     showDialog(
-          context: context,
-          builder: (BuildContext build) {
-            return AlertDialog(
-              title: Text('Congo'),
-              content: Text('Your answer is correct.'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Ok'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            );
-          },
+      context: context,
+      builder: (BuildContext build) {
+        return AlertDialog(
+          title: Text('Congo'),
+          content: Text('Your answer is correct.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
         );
-        _points = _points + 200;
-        _akQuestionState = _akQuestionState + 1;
-        _getAkQuestionDetails();
-        _saveUserData();
-        _generateTicket();
+      },
+    );
+    _points = _points + 200;
+    _akQuestionState = _akQuestionState + 1;
+    _getAkQuestionDetails();
+    _saveUserData();
+    _generateTicket();
   }
 
   void _saveUserData() {
@@ -402,7 +410,7 @@ class _AkGamePageState extends State<AkGamePage> {
       'contactNumber': _contactNumber,
       'ak_ques_st': _akQuestionState
     };
-    appAuth.generateTicket(json.encode(data)).then((res) {
+    appAuth.generateTicketForAK(json.encode(data)).then((res) {
       if (res.statusCode == 200) {
         showDialog(
           context: context,

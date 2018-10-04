@@ -114,6 +114,12 @@ class ApiService {
     return res;
   }
 
+  // Generate Ticket 
+  Future<http.Response> generateTicketForAK(data) async {
+    http.Response res = await http.post(_apiUrl + '/generateTicketForAK', body: data, headers: headers);
+    return res;
+  }
+
   // Get AK Question Detail 
   Future<http.Response> getAkQuestions(data) async {
     http.Response res = await http.post(_apiUrl + '/ak_questionDetails', body: data, headers: headers);
