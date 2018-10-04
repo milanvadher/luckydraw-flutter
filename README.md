@@ -1,4 +1,4 @@
-# learn
+# Lucky Draw
 
 A new Flutter project.
 
