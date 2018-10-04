@@ -47,6 +47,16 @@ class ApiService {
   }
 
   // Check Theme
+  Future<bool> checkIsIntoVisited() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isIntroSeen') != null) {
+      return prefs.getBool('isIntroSeen');
+    } else {
+      return false;
+    }
+  }
+
+  // Check Theme
   Future<bool> checkTheme() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('isDarkTheme') != null) {

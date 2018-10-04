@@ -137,6 +137,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.7"
+  intro_slider:
+    dependency: "direct main"
+    description:
+      name: intro_slider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   io:
     dependency: transitive
     description:
