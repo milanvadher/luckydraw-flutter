@@ -232,9 +232,9 @@ class _CouponsPageState extends State<CouponsPage> {
                                         element['ticketNo'].toString(),
                                         textScaleFactor: 1.3,
                                       ),
-                                      Text(DateFormat.yMd().add_jm().format(
+                                      Text(DateFormat.yMMMd().add_jm().format(
                                           DateTime.parse(
-                                              element['assignDate']))),
+                                              element['assignDate']).add(new Duration(hours: 5, minutes: 30)))),
                                     ],
                                   )
                                 ],
