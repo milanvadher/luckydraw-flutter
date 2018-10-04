@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  // final _apiUrl = 'http://luckydrawapi.dadabhagwan.org';
+  final _apiUrl = 'http://luckydrawapi.dadabhagwan.org';
   // final _apiUrl = 'http://192.168.1.103:3000';
-  final _apiUrl = 'http://192.168.43.23:3000';
+  // final _apiUrl = 'http://192.168.43.23:3000';
 
   var headers = {
     'content-type': 'application/json'
@@ -54,6 +54,12 @@ class ApiService {
     } else {
       return false;
     }
+  }
+
+  // Get Qustion Details 
+  Future<http.Response> getNotification(data) async {
+    http.Response res = await http.post(_apiUrl + '/getNotifications', body: data, headers: headers);
+    return res;
   }
 
   // Get Qustion Details 

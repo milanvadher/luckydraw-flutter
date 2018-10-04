@@ -7,6 +7,7 @@ import 'package:share/share.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 ApiService appAuth = new ApiService();
 bool switchValue = false;
@@ -32,6 +33,9 @@ class _LinkTextSpan extends TextSpan {
 
 class _BackdropPageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  // local notification
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   static const _PANEL_HEADER_HEIGHT = 32.0;
   AnimationController _controller;
 
@@ -90,6 +94,7 @@ class _BackdropPageState extends State<HomePage>
           print('Error Not connect to get user tickets');
         }
       });
+      _getNotification(userData['contactNumber']);
     });
   }
 
@@ -98,6 +103,16 @@ class _BackdropPageState extends State<HomePage>
     super.initState();
     _controller = new AnimationController(
         duration: const Duration(milliseconds: 100), value: 1.0, vsync: this);
+
+    // local notification
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        selectNotification: onSelectNotification);
   }
 
   @override
@@ -482,6 +497,46 @@ class _BackdropPageState extends State<HomePage>
     if (choise == 'Logout') {
       _logOut();
     }
+  }
+
+  void _getNotification(cno) {
+    var data = {'contactNumber': cno};
+    appAuth.getNotification(json.encode(data)).then((res) {
+      if (res.statusCode == 200) {
+        print(json.decode(res.body)['msgs']);
+        for (var i = 0; i < json.decode(res.body)['msgs'].length; i++) {
+          _showNotificationWithDefaultSound(i, json.decode(res.body)['msgs'][i]['title'], json.decode(res.body)['msgs'][i]['msg']);
+        }
+      }
+    });
+  }
+
+  Future _showNotificationWithDefaultSound(id, title, message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'JJ111', 'LuckyDraw', 'JJ111-LuckyDraw',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      title,
+      message,
+      platformChannelSpecifics,
+      payload: message,
+    );
+  }
+
+  Future onSelectNotification(String payload) async {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          title: Text("New Messege"),
+          content: Text("$payload"),
+        );
+      },
+    );
   }
 
   void _logOut() {
