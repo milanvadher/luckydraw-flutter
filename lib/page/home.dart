@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:learn/service/api_service.dart';
+import 'package:luckydraw/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
 import 'package:flutter/gestures.dart';

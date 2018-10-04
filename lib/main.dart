@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:learn/page/ak_game.dart';
-import 'package:learn/page/coupons.dart';
-import 'package:learn/page/editprofile.dart';
-import 'package:learn/page/editusername.dart';
-import 'package:learn/page/profile.dart';
-import 'package:learn/page/resetPassword.dart';
-import 'package:learn/page/start.dart';
-import 'package:learn/page/verifyotp.dart';
-import 'package:learn/page/winners.dart';
-import 'package:learn/service/api_service.dart';
+import 'package:luckydraw/page/ak_game.dart';
+import 'package:luckydraw/page/coupons.dart';
+import 'package:luckydraw/page/editprofile.dart';
+import 'package:luckydraw/page/editusername.dart';
+import 'package:luckydraw/page/profile.dart';
+import 'package:luckydraw/page/resetPassword.dart';
+import 'package:luckydraw/page/start.dart';
+import 'package:luckydraw/page/verifyotp.dart';
+import 'package:luckydraw/page/winners.dart';
+import 'package:luckydraw/service/api_service.dart';
 import './page/login.dart';
 import './page/register.dart';
 import './page/home.dart';
@@ -33,7 +33,7 @@ void main() async {
 
   // Run app!
   runApp(new MaterialApp(
-    title: 'Demo App',
+    title: 'Lucky Draw JJ-111',
     home: _defaultHome,
     theme: _theme
         ? ThemeData(

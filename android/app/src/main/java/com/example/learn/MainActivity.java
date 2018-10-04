@@ -1,4 +1,4 @@
-package com.example.learn;
+package com.jj111.luckydraw;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

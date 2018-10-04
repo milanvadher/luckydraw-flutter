@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:learn/page/verifyotp.dart';
-import 'package:learn/service/api_service.dart';
+import 'package:luckydraw/page/verifyotp.dart';
+import 'package:luckydraw/service/api_service.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:learn/service/api_service.dart';
+import 'package:luckydraw/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 ApiService appAuth = new ApiService();
