@@ -52,7 +52,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       if (value.isEmpty) {
                         return 'Username is required !';
                       }
-                      if (value.isNotEmpty && value.length < 10.0) {
+                      if (value.isNotEmpty && value.length < 5.0) {
                         return 'Enter Valid username !';
                       }
                     },

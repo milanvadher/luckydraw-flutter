@@ -41,6 +41,7 @@ class _BackdropPageState extends State<HomePage>
 
   int _earnedCoupons;
   int _usedCoupons;
+  bool _newGame = false;
 
   Animation<RelativeRect> _getPanelAnimation(BoxConstraints constraints) {
     final double height = constraints.biggest.height;
@@ -87,8 +88,11 @@ class _BackdropPageState extends State<HomePage>
         if (res.statusCode == 200) {
           setState(() {
             print(res.body);
-            _earnedCoupons = json.decode(res.body)['earnedTickets'].length;
-            _usedCoupons = json.decode(res.body)['ticketMapping'].length;
+            _earnedCoupons = json.decode(res.body)['earnedTickets'] != null ? json.decode(res.body)['earnedTickets'].length : 0;
+            _usedCoupons = json.decode(res.body)['ticketMapping'] != null ? json.decode(res.body)['ticketMapping'].length : 0;
+            if (json.decode(res.body)['new_game'] != null) {
+              _newGame = json.decode(res.body)['new_game'];
+            }
           });
         } else {
           print('Error Not connect to get user tickets');
@@ -101,6 +105,7 @@ class _BackdropPageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    // _BackdropPageState();
     _controller = new AnimationController(
         duration: const Duration(milliseconds: 100), value: 1.0, vsync: this);
 
@@ -383,28 +388,35 @@ class _BackdropPageState extends State<HomePage>
                                 ),
                               ),
                               SizedBox(height: 10.0),
-                              MaterialButton(
-                                color: Theme.of(context).primaryColor,
-                                textColor: Colors.black,
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/ak_game');
-                                },
-                                height: 50.0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          0.0, 0.0, 10.0, 0.0),
-                                      child: Icon(Icons.play_arrow),
-                                    ),
-                                    Text(
-                                      'Start Akram Youth Game',
-                                      textScaleFactor: 1.5,
+                              _newGame
+                                  ? MaterialButton(
+                                      color: Theme.of(context).primaryColor,
+                                      textColor: Colors.black,
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, '/ak_game');
+                                      },
+                                      height: 50.0,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0.0, 0.0, 10.0, 0.0),
+                                            child: Icon(Icons.play_arrow),
+                                          ),
+                                          Text(
+                                            'Start Akram Youth Game',
+                                            textScaleFactor: 1.5,
+                                          )
+                                        ],
+                                      ),
                                     )
-                                  ],
-                                ),
-                              )
+                                  : new Container(
+                                      height: 0.0,
+                                      width: 0.0,
+                                    )
                             ],
                           ),
                         ),
@@ -505,7 +517,10 @@ class _BackdropPageState extends State<HomePage>
       if (res.statusCode == 200) {
         print(json.decode(res.body)['msgs']);
         for (var i = 0; i < json.decode(res.body)['msgs'].length; i++) {
-          _showNotificationWithDefaultSound(i, json.decode(res.body)['msgs'][i]['title'], json.decode(res.body)['msgs'][i]['msg']);
+          _showNotificationWithDefaultSound(
+              i,
+              json.decode(res.body)['msgs'][i]['title'],
+              json.decode(res.body)['msgs'][i]['msg']);
         }
       }
     });

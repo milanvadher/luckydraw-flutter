@@ -48,6 +48,7 @@ class _StartPageState extends State<StartPage> {
   int _points;
   int _questionState;
   String _contactNumber;
+  int _akQuestionState;
 
   List _randomString = [];
   List _imagesRow1 = [];
@@ -68,7 +69,13 @@ class _StartPageState extends State<StartPage> {
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
       print(userData);
-      _questionState = int.parse(userData['questionState'].toString());
+      _questionState = userData['questionState'] != null
+          ? int.parse(userData['questionState'].toString())
+          : 0;
+      _akQuestionState =
+          ((userData['ak_ques_st'] != null && userData['ak_ques_st'] != 0)
+              ? userData['ak_ques_st']
+              : 1);
       _points = int.parse(userData['points'].toString());
       _contactNumber = userData['contactNumber'];
       this._getQuestionDetails();
@@ -292,6 +299,17 @@ class _StartPageState extends State<StartPage> {
                       _answer[leftIndices[no]][0] =
                           _checkAnswer[leftIndices[no]];
                     });
+                    for (var i = 0; i < _randomString.length; i++) {
+                      if (_randomString[i][0]
+                          .contains(_checkAnswer[leftIndices[no]])) {
+                        if (_randomString[i][1] != true) {
+                          setState(() {
+                            _randomString[i][1] = true;
+                          });
+                          break;
+                        }
+                      }
+                    }
                     _points = _points - 50;
                     _saveUserData();
                     if (leftIndices.length == 1) {
@@ -318,7 +336,7 @@ class _StartPageState extends State<StartPage> {
   }
 
   _getFullHint() {
-    if (_points < 200) {
+    if (_points < 500) {
       showDialog(
         context: context,
         builder: (BuildContext build) {
@@ -342,7 +360,7 @@ class _StartPageState extends State<StartPage> {
         builder: (BuildContext build) {
           return AlertDialog(
             title: Text('Are you sure?'),
-            content: Text('Do you wat to spend 200 \$ ?'),
+            content: Text('Do you wat to spend 500 \$ ?'),
             actions: <Widget>[
               FlatButton(
                 textColor: Colors.red,
@@ -353,7 +371,7 @@ class _StartPageState extends State<StartPage> {
                       _answer[i][0] = _checkAnswer[i];
                     }
                   });
-                  _points = _points - 200;
+                  _points = _points - 500;
                   _saveUserData();
                   Future.delayed(Duration(seconds: 2), () {
                     _comeFromHint = true;
@@ -394,8 +412,6 @@ class _StartPageState extends State<StartPage> {
                 i < qustionDetails['answer'].toString().length;
                 i++) {
               if (qustionDetails['answer'][i] == ' ') {
-                // _twoWords = true;
-                // secondWord(qustionDetails['answer'].toString());
                 break;
               } else {
                 _answer.add([' ', i]);
@@ -436,21 +452,27 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _pushToAns(rchar) {
+    int temp = 0;
     setState(() {
       _randomString[rchar[2]] = [rchar[0], true, rchar[2]];
-      for (var i = 0; i < _answer.length; i++) {
-        if (_answer[i][0] == ' ') {
-          _answer[i] = [rchar[0], i];
-          if (_answer.length - 1 == i) {
-            _checkAns();
-          }
-          // if (_answer[i][0].indexOf(' ') == -1) {
-          //   _checkAns();
-          // }
-          break;
-        }
-      }
     });
+    for (var i = 0; i < _answer.length; i++) {
+      if (_answer[i][0] == ' ') {
+        setState(() {
+          _answer[i] = [rchar[0], i];
+        });
+        break;
+      }
+    }
+    for (var i = 0; i < _answer.length; i++) {
+      if (_answer[i][0] == ' ') {
+      } else {
+        temp = temp + 1;
+      }
+    }
+    if (temp == _answer.length) {
+      _checkAns();
+    }
   }
 
   void _backToAns(rchar) {
@@ -478,17 +500,63 @@ class _StartPageState extends State<StartPage> {
     print(temp.join() + ' ' + _checkAnswer.split(' ')[0]);
     if (_checkAnswer.split(' ')[0].toLowerCase() == temp.join().toLowerCase()) {
       print('Correct');
-      if (_questionState % 5 == 0 && _questionState != 0) {
-        _generateTicket();
+      if (!_comeFromHint) {
+        _points = _points + 100;
       }
-      _questionState = _questionState + 1;
-      _points = _points + 100;
       _answer = [];
       _randomString = [];
       _imagesRow1 = [];
       _imagesRow2 = [];
       _getQuestionDetails();
-      _saveUserData();
+      _questionState = _questionState + 1;
+      var data = {
+        'contactNumber': _contactNumber,
+        'ak_ques_st': _akQuestionState,
+        'points': _points,
+        'questionState': _questionState,
+      };
+      appAuth.saveUserData(json.encode(data)).then((res) {
+        if (res.statusCode == 200) {
+          print('saveUserData');
+          print(res.body);
+          SharedPreferences.getInstance().then((onValue) {
+            onValue.setString('userData', res.body);
+          });
+          if (_questionState % 5 == 0 && _questionState != 0) {
+            _generateTicket();
+          }
+        } else {
+          setState(() {
+            _answer = [];
+            for (var i = 0; i < _checkAnswer.length; i++) {
+              if (_checkAnswer[i] == ' ') {
+                // _twoWords = true;
+                // secondWord(qustionDetails['answer'].toString());
+                break;
+              } else {
+                _answer.add([' ', i]);
+              }
+            }
+          });
+          showDialog(
+            context: context,
+            builder: (BuildContext build) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Your Internet is not working.'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('okay'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        }
+      });
       if (_comeFromHint) {
         _comeFromHint = false;
         showDialog(
@@ -565,18 +633,12 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  // void secondWord(word) {
-  //   var d = word.split(' ');
-  //   for (var i = 0; i < d[2].length; i++) {
-  //     _secondWord.add(d[2][i]);
-  //   }
-  // }
-
   void _saveUserData() {
     var data = {
       'contactNumber': _contactNumber,
+      'ak_ques_st': _akQuestionState,
+      'points': _points,
       'questionState': _questionState,
-      'points': _points
     };
     appAuth.saveUserData(json.encode(data)).then((res) {
       if (res.statusCode == 200) {
@@ -625,6 +687,7 @@ class _StartPageState extends State<StartPage> {
       'questionState': _questionState
     };
     appAuth.generateTicket(json.encode(data)).then((res) {
+      print(res.body);
       if (res.statusCode == 200) {
         showDialog(
           context: context,

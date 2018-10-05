@@ -43,6 +43,7 @@ class _AkGamePageState extends State<AkGamePage> {
   int _akQuestionState;
   String _contactNumber;
   String _imgUrl;
+  int _questionState;
 
   bool _isGameOver = false;
 
@@ -62,9 +63,10 @@ class _AkGamePageState extends State<AkGamePage> {
         _points = int.parse(userData['points'].toString());
       });
       _contactNumber = userData['contactNumber'];
-      _akQuestionState = int.parse(userData['ak_ques_st'] != null
-          ? userData['ak_ques_st'].toString()
-          : '1');
+      _questionState = userData['questionState'];
+      _akQuestionState = ((userData['ak_ques_st'] != null && userData['ak_ques_st'] != 0)
+          ? userData['ak_ques_st']
+          : 1);
       _getAkQuestionDetails();
       print(_points);
     });
@@ -366,7 +368,8 @@ class _AkGamePageState extends State<AkGamePage> {
     var data = {
       'contactNumber': _contactNumber,
       'ak_ques_st': _akQuestionState,
-      'points': _points
+      'points': _points,
+      'questionState': _questionState,
     };
     appAuth.saveUserData(json.encode(data)).then((res) {
       if (res.statusCode == 200) {
