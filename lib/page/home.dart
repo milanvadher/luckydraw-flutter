@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
+    print('HomePage()');
     return new _BackdropPageState();
   }
 }
@@ -76,35 +77,30 @@ class _BackdropPageState extends State<HomePage>
   }
 
   _BackdropPageState() {
-    SharedPreferences.getInstance().then((onValue) {
-      if (onValue.getBool('isDarkTheme') != null) {
-        switchValue = onValue.getBool('isDarkTheme');
-      }
-      Map<String, dynamic> userData =
-          json.decode(onValue.getString('userData'));
-      print(userData);
-      var data = {"contactNumber": userData['contactNumber']};
-      appAuth.getUserTickets(json.encode(data)).then((res) {
-        if (res.statusCode == 200) {
-          setState(() {
-            print(res.body);
-            _earnedCoupons = json.decode(res.body)['earnedTickets'] != null ? json.decode(res.body)['earnedTickets'].length : 0;
-            _usedCoupons = json.decode(res.body)['ticketMapping'] != null ? json.decode(res.body)['ticketMapping'].length : 0;
-            if (json.decode(res.body)['new_game'] != null) {
-              _newGame = json.decode(res.body)['new_game'];
-            }
-          });
-        } else {
-          print('Error Not connect to get user tickets');
-        }
-      });
-      _getNotification(userData['contactNumber']);
-    });
+    print('_BackdropPageState()');
+    // _initData();
+  }
+
+  @override
+  void didUpdateWidget(HomePage oldWidget) {
+    // TODO: implement didUpdateWidget
+    print('didUpdateWidget()');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    print('didChangeDependencies()');
+    super.didChangeDependencies();
+    _initData();
   }
 
   @override
   void initState() {
     super.initState();
+    print('initState()');
+
     // _BackdropPageState();
     _controller = new AnimationController(
         duration: const Duration(milliseconds: 100), value: 1.0, vsync: this);
@@ -123,7 +119,40 @@ class _BackdropPageState extends State<HomePage>
   @override
   void dispose() {
     super.dispose();
+    print('dispose()');
     _controller.dispose();
+  }
+
+  _initData() {
+    print('_initData()');
+    SharedPreferences.getInstance().then((onValue) {
+      if (onValue.getBool('isDarkTheme') != null) {
+        switchValue = onValue.getBool('isDarkTheme');
+      }
+      Map<String, dynamic> userData =
+          json.decode(onValue.getString('userData'));
+      print(userData);
+      var data = {"contactNumber": userData['contactNumber']};
+      appAuth.getUserTickets(json.encode(data)).then((res) {
+        if (res.statusCode == 200) {
+          setState(() {
+            print(res.body);
+            _earnedCoupons = json.decode(res.body)['earnedTickets'] != null
+                ? json.decode(res.body)['earnedTickets'].length
+                : 0;
+            _usedCoupons = json.decode(res.body)['ticketMapping'] != null
+                ? json.decode(res.body)['ticketMapping'].length
+                : 0;
+            if (json.decode(res.body)['new_game'] != null) {
+              _newGame = json.decode(res.body)['new_game'];
+            }
+          });
+        } else {
+          print('Error Not connect to get user tickets');
+        }
+      });
+      _getNotification(userData['contactNumber']);
+    });
   }
 
   @override
