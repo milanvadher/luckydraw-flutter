@@ -13,6 +13,7 @@ import 'package:luckydraw/service/api_service.dart';
 import './page/login.dart';
 import './page/register.dart';
 import './page/home.dart';
+import './page/ak_status.dart';
 
 ApiService appAuth = new ApiService();
 bool _theme = false;
@@ -31,7 +32,7 @@ void main() async {
   _theme = await appAuth.checkTheme();
   if (_isIntroDone) {
     if (_result) {
-      _defaultHome = new HomePage();
+      _defaultHome = new AkStatus();
     }
   } else {
     _defaultHome = new TutorialPage();
@@ -64,6 +65,7 @@ void main() async {
       '/resetPassword': (BuildContext context) => new ResetPasswordPage(),
       '/editusername': (BuildContext context) => new EditUserPage(),
       '/ak_game': (BuildContext context) => new AkGamePage(),
+      '/ak_status': (BuildContext context) => new AkStatus(),
     },
   ));
 }
