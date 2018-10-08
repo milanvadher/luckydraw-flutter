@@ -64,11 +64,13 @@ class _AkGamePageState extends State<AkGamePage> {
       });
       _contactNumber = userData['contactNumber'];
       _questionState = userData['questionState'];
-      _akQuestionState = ((userData['ak_ques_st'] != null && userData['ak_ques_st'] != 0)
-          ? userData['ak_ques_st']
-          : 1);
+      _akQuestionState =
+          ((userData['ak_ques_st'] != null && userData['ak_ques_st'] != 0)
+              ? userData['ak_ques_st']
+              : 1);
       _getAkQuestionDetails();
       print(_points);
+      _showPopup();
     });
   }
 
@@ -126,56 +128,22 @@ class _AkGamePageState extends State<AkGamePage> {
               ],
             ),
           ),
-          body: new Container(
-            child: new Column(
+          body: Container(
+            child: Column(
               children: <Widget>[
-                new Flexible(
-                  child: new ListView(
+                Expanded(
+                  child: ListView(
                     children: <Widget>[
                       new Container(
                         child: _progressIndicator(),
                       ),
-                      new Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 25.0),
-                            child: _imgUrl != null
-                                ? Image.network(
-                                    _imgUrl,
-                                    width: 250.0,
-                                  )
-                                : new Container(
-                                    width: 0.0,
-                                    height: 0.0,
-                                  ),
-                          )
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: new Wrap(
-                          alignment: WrapAlignment.center,
-                          children: _userWords != null
-                              ? _userWords
-                                  .map((words) => (new Chip(
-                                      label: Text(words),
-                                      deleteIcon: Icon(Icons.cancel),
-                                      backgroundColor:
-                                          // isTrue(words)
-                                          Colors.lightGreen,
-                                      // : Colors.redAccent,
-                                      onDeleted: () {
-                                        setState(() {
-                                          _userWords.removeAt(
-                                              _userWords.indexOf(words));
-                                        });
-                                        _checkAns(words);
-                                      })))
-                                  .toList()
-                              : new Container(
-                                  width: 0.0,
-                                  height: 0.0,
-                                ),
+                      Container(
+                        // color: Colors.lightBlueAccent,
+                        height: 300.0,
+                        width: 200.0,                        
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[_wordCards()],
                         ),
                       ),
                     ],
@@ -204,6 +172,51 @@ class _AkGamePageState extends State<AkGamePage> {
   //   }
   //   return isAvailable;
   // }
+
+  Widget _wordCards() {
+    return Row(
+      children: <Widget>[
+        new Container(
+          height: 300.0,
+          // padding: EdgeInsets.symmetric(horizontal: 1.0),
+          child: _imgUrl != null
+              ? Image.network(
+                  _imgUrl,
+                )
+              : new Container(
+                  width: 0.0,
+                  height: 0.0,
+                ),
+        ),
+        Row(
+          children: _userWords
+              .map(
+                (words) => (Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              words,
+                              textScaleFactor: 1.2,
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            CircleAvatar(
+                              child: Icon(Icons.done),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
+              )
+              .toList(),
+        )
+      ],
+    );
+  }
 
   Widget _progressIndicator() {
     return Container(
@@ -271,6 +284,7 @@ class _AkGamePageState extends State<AkGamePage> {
         setState(() {
           _userWords.add(_answers[j][0].toUpperCase());
         });
+        _showSuccessMsg(_answers[j][0].toUpperCase());
         _answers.remove(_answers[j]);
       }
     }
@@ -399,6 +413,62 @@ class _AkGamePageState extends State<AkGamePage> {
         );
       }
     });
+  }
+
+  _showPopup() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text('What words come to your mind when you see this Picture.'),
+              IconButton(
+                icon: Icon(Icons.done),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  _showSuccessMsg(text) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Correct',
+                textScaleFactor: 1.5,
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Text(text.toString().toUpperCase()),
+              SizedBox(
+                height: 20.0,
+              ),
+              IconButton(
+                icon: Icon(Icons.done),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   decodeString(word) {
