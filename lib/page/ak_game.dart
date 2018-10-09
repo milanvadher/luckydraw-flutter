@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:luckydraw/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_circular_chart/flutter_circular_chart.dart';
+import 'package:photo_view/photo_view.dart';
 
 ApiService appAuth = new ApiService();
 int rightAns = 0;
+final GlobalKey<AnimatedCircularChartState> _chartKey =
+    new GlobalKey<AnimatedCircularChartState>();
 
 class AkGamePage extends StatefulWidget {
   @override
@@ -119,7 +122,7 @@ class _AkGamePageState extends State<AkGamePage> {
                 Expanded(
                   child: Text(''),
                 ),
-                Text(_completedPercentage.toStringAsFixed(2).toString() + ' %'),
+                _circularProgress(),
                 SizedBox(
                   width: 20.0,
                 ),
@@ -134,18 +137,10 @@ class _AkGamePageState extends State<AkGamePage> {
                 Expanded(
                   child: ListView(
                     children: <Widget>[
-                      new Container(
-                        child: _progressIndicator(),
-                      ),
                       Container(
-                        // color: Colors.lightBlueAccent,
                         height: 300.0,
-                        width: 200.0,                        
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[_wordCards()],
-                        ),
-                      ),
+                        child: _wordCards(),
+                      )
                     ],
                   ),
                 ),
@@ -173,46 +168,332 @@ class _AkGamePageState extends State<AkGamePage> {
   //   return isAvailable;
   // }
 
-  Widget _wordCards() {
-    return Row(
-      children: <Widget>[
-        new Container(
-          height: 300.0,
-          // padding: EdgeInsets.symmetric(horizontal: 1.0),
-          child: _imgUrl != null
-              ? Image.network(
+  Widget _circularProgress() {
+    return new AnimatedCircularChart(
+      key: _chartKey,
+      size: const Size(50.0, 50.0),
+      initialChartData: <CircularStackEntry>[
+        new CircularStackEntry(
+          <CircularSegmentEntry>[
+            new CircularSegmentEntry(
+              _completedPercentage.roundToDouble(),
+              Colors.black,
+              rankKey: 'completed',
+            ),
+            new CircularSegmentEntry(
+              100 - _completedPercentage.roundToDouble(),
+              Colors.blueGrey[600],
+              rankKey: 'remaining',
+            ),
+          ],
+          rankKey: 'progress',
+        ),
+      ],
+      chartType: CircularChartType.Radial,
+      holeLabel: _completedPercentage.toStringAsFixed(0),
+      labelStyle: new TextStyle(fontSize: 20.0, color: Colors.black),
+      edgeStyle: SegmentEdgeStyle.round,
+      percentageValues: true,
+    );
+  }
+
+  void _updateGraph() {
+    List<CircularStackEntry> nextData = <CircularStackEntry>[
+      new CircularStackEntry(
+        <CircularSegmentEntry>[
+          new CircularSegmentEntry(
+            double.parse(_completedPercentage.toStringAsFixed(2)),
+            Colors.black,
+            rankKey: 'completed',
+          ),
+          new CircularSegmentEntry(
+            100 - double.parse(_completedPercentage.toStringAsFixed(2)),
+            Colors.blueGrey[600],
+            rankKey: 'remaining',
+          ),
+        ],
+        rankKey: 'Quarterly Profits',
+      ),
+    ];
+    setState(() {
+      _chartKey.currentState.updateData(nextData);
+    });
+  }
+
+  Widget _imgWidget() {
+    return Row(children: <Widget>[
+      new Container(
+        height: 300.0,
+        padding: EdgeInsets.symmetric(horizontal: 1.0),
+        child: _imgUrl != null
+            ? GestureDetector(
+                onTap: () {
+                  _photoView(_imgUrl);
+                },
+                child: Image.network(
                   _imgUrl,
-                )
-              : new Container(
-                  width: 0.0,
-                  height: 0.0,
                 ),
+              )
+            : new Container(
+                width: 0.0,
+                height: 0.0,
+              ),
+      ),
+    ]);
+  }
+
+  Widget _wordCards() {
+    return ListView(
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      children: <Widget>[
+        Column(
+          children: <Widget>[_imgWidget()],
         ),
         Row(
-          children: _userWords
-              .map(
-                (words) => (Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              words,
-                              textScaleFactor: 1.2,
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            CircleAvatar(
-                              child: Icon(Icons.done),
-                            ),
-                          ],
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          "Something Long Word",
+                          textScaleFactor: 1.2,
                         ),
-                      ),
-                    )),
-              )
-              .toList(),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text("Hmmmmmm"),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          "Word1",
+                          textScaleFactor: 1.1,
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text("Word1"),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          "Word1",
+                          textScaleFactor: 1.1,
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text("Word1"),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          "Word1",
+                          textScaleFactor: 1.1,
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text("Word1"),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          "Word1",
+                          textScaleFactor: 1.1,
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text("Word1"),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(
+                          value: 0.2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
         )
       ],
     );
@@ -268,6 +549,7 @@ class _AkGamePageState extends State<AkGamePage> {
     _textController.clear();
     // For hide keyboard
     // FocusScope.of(context).requestFocus(new FocusNode());
+    // _updateGraph();
     setState(() {
       _isTyping = false;
       // _userWords.add(text.toUpperCase());
@@ -291,6 +573,7 @@ class _AkGamePageState extends State<AkGamePage> {
     setState(() {
       _completedPercentage = _perQuestionPoint * rightAns;
     });
+    _updateGraph();
     print(_completedPercentage.toStringAsFixed(2));
     print(100.00.toString());
     if (_completedPercentage.toStringAsFixed(1) == 100.0.toString()) {
@@ -305,6 +588,7 @@ class _AkGamePageState extends State<AkGamePage> {
     _perQuestionPoint = 1.0;
     _userWords = [];
     rightAns = 0;
+    _updateGraph();
     if (_akQuestionState < 5) {
       _isGameOver = false;
       var data = {
@@ -522,5 +806,18 @@ class _AkGamePageState extends State<AkGamePage> {
         );
       }
     });
+  }
+
+  _photoView(img) {
+    showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return Container(
+            child: PhotoView(
+              imageProvider: NetworkImage(img),
+            ),
+          );
+        });
+    print(img);
   }
 }
