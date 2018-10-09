@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:luckydraw/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 
 ApiService appAuth = new ApiService();
 int rightAns = 0;
+final GlobalKey<AnimatedCircularChartState> _chartKey =
+    new GlobalKey<AnimatedCircularChartState>();
 
 class AkGamePage extends StatefulWidget {
   @override
@@ -119,7 +121,7 @@ class _AkGamePageState extends State<AkGamePage> {
                 Expanded(
                   child: Text(''),
                 ),
-                Text(_completedPercentage.toStringAsFixed(2).toString() + ' %'),
+                _circularProgress(),
                 SizedBox(
                   width: 20.0,
                 ),
@@ -140,7 +142,7 @@ class _AkGamePageState extends State<AkGamePage> {
                       Container(
                         // color: Colors.lightBlueAccent,
                         height: 300.0,
-                        width: 200.0,                        
+                        width: 200.0,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[_wordCards()],
@@ -172,6 +174,58 @@ class _AkGamePageState extends State<AkGamePage> {
   //   }
   //   return isAvailable;
   // }
+
+  Widget _circularProgress() {
+    return new AnimatedCircularChart(
+      key: _chartKey,
+      size: const Size(50.0, 50.0),
+      initialChartData: <CircularStackEntry>[
+        new CircularStackEntry(
+          <CircularSegmentEntry>[
+            new CircularSegmentEntry(
+              _completedPercentage.roundToDouble(),
+              Colors.black,
+              rankKey: 'completed',
+            ),
+            new CircularSegmentEntry(
+              100 - _completedPercentage.roundToDouble(),
+              Colors.blueGrey[600],
+              rankKey: 'remaining',
+            ),
+          ],
+          rankKey: 'progress',
+        ),
+      ],
+      chartType: CircularChartType.Radial,
+      holeLabel: _completedPercentage.toStringAsFixed(0),
+      labelStyle: new TextStyle(fontSize: 20.0, color: Colors.black),
+      edgeStyle: SegmentEdgeStyle.round,
+      percentageValues: true,
+    );
+  }
+
+  void _updateGraph() {
+    List<CircularStackEntry> nextData = <CircularStackEntry>[
+      new CircularStackEntry(
+        <CircularSegmentEntry>[
+          new CircularSegmentEntry(
+              double.parse(_completedPercentage.toStringAsFixed(2)),
+              Colors.black,
+              rankKey: 'completed',
+            ),
+            new CircularSegmentEntry(
+              100 - double.parse(_completedPercentage.toStringAsFixed(2)),
+              Colors.blueGrey[600],
+              rankKey: 'remaining',
+            ),
+        ],
+        rankKey: 'Quarterly Profits',
+      ),
+    ];
+    setState(() {
+      _chartKey.currentState.updateData(nextData);
+    });
+  }
 
   Widget _wordCards() {
     return Row(
@@ -268,6 +322,7 @@ class _AkGamePageState extends State<AkGamePage> {
     _textController.clear();
     // For hide keyboard
     // FocusScope.of(context).requestFocus(new FocusNode());
+    // _updateGraph();
     setState(() {
       _isTyping = false;
       // _userWords.add(text.toUpperCase());
@@ -291,6 +346,7 @@ class _AkGamePageState extends State<AkGamePage> {
     setState(() {
       _completedPercentage = _perQuestionPoint * rightAns;
     });
+    _updateGraph();
     print(_completedPercentage.toStringAsFixed(2));
     print(100.00.toString());
     if (_completedPercentage.toStringAsFixed(1) == 100.0.toString()) {
@@ -305,6 +361,7 @@ class _AkGamePageState extends State<AkGamePage> {
     _perQuestionPoint = 1.0;
     _userWords = [];
     rightAns = 0;
+    _updateGraph();
     if (_akQuestionState < 5) {
       _isGameOver = false;
       var data = {
