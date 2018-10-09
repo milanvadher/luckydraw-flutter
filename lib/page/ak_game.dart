@@ -8,8 +8,17 @@ import 'package:photo_view/photo_view.dart';
 
 ApiService appAuth = new ApiService();
 int rightAns = 0;
-final GlobalKey<AnimatedCircularChartState> _chartKey =
-    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _chartKey = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord0 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord1 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord2 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord3 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord4 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord5 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord6 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord7 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord8 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord9 = new GlobalKey<AnimatedCircularChartState>();
 
 class AkGamePage extends StatefulWidget {
   @override
@@ -53,6 +62,7 @@ class _AkGamePageState extends State<AkGamePage> {
   final TextEditingController _textController = new TextEditingController();
   List _userWords = [];
   List _answers = [];
+  List _weight = [];
   bool _isTyping = false;
   double _completedPercentage = 0.0;
   double _perQuestionPoint = 1.0;
@@ -132,24 +142,26 @@ class _AkGamePageState extends State<AkGamePage> {
             ),
           ),
           body: Container(
-            child: Column(
+            child: ListView(
               children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      Container(
-                        height: 300.0,
-                        child: _wordCards(),
-                      )
-                    ],
-                  ),
-                ),
-                new Divider(height: 1.0),
-                new Container(
-                  decoration:
-                      new BoxDecoration(color: Theme.of(context).cardColor),
-                  child: _buildTextComposer(),
-                ),
+                Column(
+                  children: <Widget>[
+                    Container(
+                      height: 290.0,
+                      child: _wordCards(),
+                    ),
+                    Column(
+                      children: <Widget>[
+                        new Divider(height: 1.0),
+                        new Container(
+                          decoration: new BoxDecoration(
+                              color: Theme.of(context).cardColor),
+                          child: _buildTextComposer(),
+                        )
+                      ],
+                    ),
+                  ],
+                )
               ],
             ),
           ),
@@ -197,6 +209,35 @@ class _AkGamePageState extends State<AkGamePage> {
     );
   }
 
+  Widget _userWordProgress(key, completedValue) {
+    return new AnimatedCircularChart(
+      key: key,
+      size: const Size(50.0, 50.0),
+      initialChartData: <CircularStackEntry>[
+        new CircularStackEntry(
+          <CircularSegmentEntry>[
+            new CircularSegmentEntry(
+              completedValue.roundToDouble(),
+              Colors.blue[900],
+              rankKey: 'completed',
+            ),
+            new CircularSegmentEntry(
+              100 - completedValue.roundToDouble(),
+              Colors.blue[100],
+              rankKey: 'remaining',
+            ),
+          ],
+          rankKey: 'progress',
+        ),
+      ],
+      chartType: CircularChartType.Radial,
+      holeLabel: completedValue.toStringAsFixed(0),
+      labelStyle: new TextStyle(fontSize: 20.0, color: Colors.black),
+      edgeStyle: SegmentEdgeStyle.round,
+      percentageValues: true,
+    );
+  }
+
   void _updateGraph() {
     List<CircularStackEntry> nextData = <CircularStackEntry>[
       new CircularStackEntry(
@@ -223,7 +264,7 @@ class _AkGamePageState extends State<AkGamePage> {
   Widget _imgWidget() {
     return Row(children: <Widget>[
       new Container(
-        height: 300.0,
+        height: 290.0,
         padding: EdgeInsets.symmetric(horizontal: 1.0),
         child: _imgUrl != null
             ? GestureDetector(
@@ -258,20 +299,18 @@ class _AkGamePageState extends State<AkGamePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text(
-                          "Something Long Word",
-                          textScaleFactor: 1.2,
-                        ),
+                        _userWords.length != 0 && _userWords[0] != null ? Text(
+                          _userWords[0],
+                          textScaleFactor: 1.1,
+                        ) : Container(height: 0.0, width: 0.0,),
                         SizedBox(
                           height: 20.0,
                         ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
+                        _userWordProgress(_userWord0, 20)
                       ],
                     ),
                   ),
@@ -280,17 +319,18 @@ class _AkGamePageState extends State<AkGamePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text("Hmmmmmm"),
+                        _userWords.length >= 2  && _userWords[1] != null ? Text(
+                          _userWords[1],
+                          textScaleFactor: 1.1,
+                        ) : Container(height: 0.0, width: 0.0,),
                         SizedBox(
                           height: 20.0,
                         ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
+                        _userWordProgress(_userWord1, 30)
                       ],
                     ),
                   ),
@@ -307,20 +347,23 @@ class _AkGamePageState extends State<AkGamePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text(
-                          "Word1",
-                          textScaleFactor: 1.1,
-                        ),
+                        _userWords.length >= 3 && _userWords[2] != null
+                            ? Text(
+                                _userWords[2],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
+                        _userWordProgress(_userWord2, 20)
                       ],
                     ),
                   ),
@@ -329,66 +372,23 @@ class _AkGamePageState extends State<AkGamePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text("Word1"),
+                        _userWords.length >= 4 && _userWords[3] != null
+                            ? Text(
+                                _userWords[3],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: Padding(
-                    padding: EdgeInsets.all(30.0),
-                    child: Column(
-                      // mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          "Word1",
-                          textScaleFactor: 1.1,
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: Padding(
-                    padding: EdgeInsets.all(30.0),
-                    child: Column(
-                      // mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text("Word1"),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
+                        _userWordProgress(_userWord3, 20)
                       ],
                     ),
                   ),
@@ -405,20 +405,18 @@ class _AkGamePageState extends State<AkGamePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text(
-                          "Word1",
+                        _userWords.length >= 5 && _userWords[4] != null ? Text(
+                          _userWords[4],
                           textScaleFactor: 1.1,
-                        ),
+                        ) : Container(height: 0.0, width: 0.0,),
                         SizedBox(
                           height: 20.0,
                         ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
+                        _userWordProgress(_userWord4, 20)
                       ],
                     ),
                   ),
@@ -427,17 +425,18 @@ class _AkGamePageState extends State<AkGamePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text("Word1"),
+                        _userWords.length >= 6 && _userWords[5] != null ? Text(
+                          _userWords[5],
+                          textScaleFactor: 1.1,
+                        ) : Container(height: 0.0, width: 0.0,),
                         SizedBox(
                           height: 20.0,
                         ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
+                        _userWordProgress(_userWord5, 20)
                       ],
                     ),
                   ),
@@ -454,20 +453,18 @@ class _AkGamePageState extends State<AkGamePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text(
-                          "Word1",
+                        _userWords.length >= 7 && _userWords[6] != null ? Text(
+                          _userWords[6],
                           textScaleFactor: 1.1,
-                        ),
+                        ) : Container(height: 0.0, width: 0.0,),
                         SizedBox(
                           height: 20.0,
                         ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
+                        _userWordProgress(_userWord6, 20)
                       ],
                     ),
                   ),
@@ -476,17 +473,66 @@ class _AkGamePageState extends State<AkGamePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text("Word1"),
+                        _userWords.length >= 8 && _userWords[7] != null ? Text(
+                          _userWords[7],
+                          textScaleFactor: 1.1,
+                        ) : Container(height: 0.0, width: 0.0,),
                         SizedBox(
                           height: 20.0,
                         ),
-                        CircularProgressIndicator(
-                          value: 0.2,
-                        )
+                        _userWordProgress(_userWord7, 20)
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        _userWords.length >= 9 && _userWords[8] != null ? Text(
+                          _userWords[8],
+                          textScaleFactor: 1.1,
+                        ) : Container(height: 0.0, width: 0.0,),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _userWordProgress(_userWord8, 20)
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        _userWords.length >= 10 && _userWords[9] != null ? Text(
+                          _userWords[9],
+                          textScaleFactor: 1.1,
+                        ) : Container(height: 0.0, width: 0.0,),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _userWordProgress(_userWord9, 20)
                       ],
                     ),
                   ),
@@ -496,17 +542,6 @@ class _AkGamePageState extends State<AkGamePage> {
           ],
         )
       ],
-    );
-  }
-
-  Widget _progressIndicator() {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.all(5.0),
-        child: new LinearProgressIndicator(
-          value: _completedPercentage / 100,
-        ),
-      ),
     );
   }
 
@@ -604,6 +639,7 @@ class _AkGamePageState extends State<AkGamePage> {
               _answers[i].add(decodeString(qustionDetails['answers'][i][j]));
             }
           }
+          _weight = qustionDetails['weight'];
           print(qustionDetails['answers'].length);
           _perQuestionPoint = 100 / qustionDetails['answers'].length;
           print(qustionDetails['answers']);

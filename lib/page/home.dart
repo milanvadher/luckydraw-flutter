@@ -417,7 +417,7 @@ class _BackdropPageState extends State<HomePage>
                                 ),
                               ),
                               SizedBox(height: 10.0),
-                              _newGame
+                              !_newGame
                                   ? MaterialButton(
                                       color: Theme.of(context).primaryColor,
                                       textColor: Colors.black,
