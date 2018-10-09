@@ -394,6 +394,7 @@ class _StartPageState extends State<StartPage> {
   }
 
   _getQuestionDetails() async {
+    print(_questionState);
     if (_questionState < 100) {
       _isGameOver = false;
       var data = {
@@ -507,8 +508,8 @@ class _StartPageState extends State<StartPage> {
       _randomString = [];
       _imagesRow1 = [];
       _imagesRow2 = [];
-      _getQuestionDetails();
       _questionState = _questionState + 1;
+      _getQuestionDetails();
       var data = {
         'contactNumber': _contactNumber,
         'ak_ques_st': _akQuestionState,
