@@ -423,7 +423,7 @@ class _BackdropPageState extends State<HomePage>
                                       textColor: Colors.black,
                                       onPressed: () {
                                         Navigator.pushNamed(
-                                            context, '/ak_game');
+                                            context, '/ak_status');
                                       },
                                       height: 50.0,
                                       child: Row(

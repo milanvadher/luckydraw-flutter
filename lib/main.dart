@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luckydraw/page/ak_game.dart';
+import 'package:luckydraw/page/ak_status.dart';
 import 'package:luckydraw/page/coupons.dart';
 import 'package:luckydraw/page/editprofile.dart';
 import 'package:luckydraw/page/editusername.dart';
@@ -63,7 +64,8 @@ void main() async {
       '/editprofile': (BuildContext context) => new EditProfilePage(),
       '/resetPassword': (BuildContext context) => new ResetPasswordPage(),
       '/editusername': (BuildContext context) => new EditUserPage(),
-      '/ak_game': (BuildContext context) => new AkGamePage(),
+      // '/ak_game': (BuildContext context) => new AkGamePage(),
+      '/ak_status': (BuildContext context) => new AkStatusPage()
     },
   ));
 }

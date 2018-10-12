@@ -7,25 +7,26 @@ class ApiService {
   // final _apiUrl = 'http://192.168.1.103:3000';
   // final _apiUrl = 'http://192.168.43.23:3000';
 
-  var headers = {
-    'content-type': 'application/json'
-  };
+  var headers = {'content-type': 'application/json'};
 
   // Login
   Future<http.Response> login(data) async {
-    http.Response res = await http.post(_apiUrl + '/login', body: data, headers: headers);
+    http.Response res =
+        await http.post(_apiUrl + '/login', body: data, headers: headers);
     return res;
   }
 
   // Register
   Future<http.Response> register(data) async {
-    http.Response res = await http.post(_apiUrl + '/register', body: data, headers: headers);
+    http.Response res =
+        await http.post(_apiUrl + '/register', body: data, headers: headers);
     return res;
   }
 
   // Edit Profile
   Future<http.Response> profileUpdate(data) async {
-    http.Response res = await http.post(_apiUrl + '/profileUpdate', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/profileUpdate',
+        body: data, headers: headers);
     return res;
   }
 
@@ -66,64 +67,80 @@ class ApiService {
     }
   }
 
-  // Get Qustion Details 
+  // Get Qustion Details
   Future<http.Response> getNotification(data) async {
-    http.Response res = await http.post(_apiUrl + '/getNotifications', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/getNotifications',
+        body: data, headers: headers);
     return res;
   }
 
-  // Get Qustion Details 
+  // Get Qustion Details
   Future<http.Response> qustionDetails(data) async {
-    http.Response res = await http.post(_apiUrl + '/questionDetails', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/questionDetails',
+        body: data, headers: headers);
     return res;
   }
 
-  // Save User Data 
+  // Save User Data
   Future<http.Response> saveUserData(data) async {
-    http.Response res = await http.post(_apiUrl + '/saveUserData', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/saveUserData',
+        body: data, headers: headers);
     return res;
   }
 
-  // Get User Tickets 
+  // Get User Tickets
   Future<http.Response> getUserTickets(data) async {
-    http.Response res = await http.post(_apiUrl + '/getUserTickets', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/getUserTickets',
+        body: data, headers: headers);
     return res;
   }
 
-  // Map User Tickets 
+  // Map User Tickets
   Future<http.Response> mapTickets(data) async {
-    http.Response res = await http.post(_apiUrl + '/mapTicket', body: data, headers: headers);
+    http.Response res =
+        await http.post(_apiUrl + '/mapTicket', body: data, headers: headers);
     return res;
   }
 
-  // Send OTP 
+  // Send OTP
   Future<http.Response> sendOtp(data) async {
-    http.Response res = await http.post(_apiUrl + '/otp', body: data, headers: headers);
+    http.Response res =
+        await http.post(_apiUrl + '/otp', body: data, headers: headers);
     return res;
   }
 
-  // Forgot Password 
+  // Forgot Password
   Future<http.Response> forgotPassword(data) async {
-    http.Response res = await http.post(_apiUrl + '/forgotPassword', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/forgotPassword',
+        body: data, headers: headers);
     return res;
   }
 
-  // Generate Ticket 
+  // Generate Ticket
   Future<http.Response> generateTicket(data) async {
-    http.Response res = await http.post(_apiUrl + '/generateTicket', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/generateTicket',
+        body: data, headers: headers);
     return res;
   }
 
-  // Generate Ticket 
+  // Generate Ticket
   Future<http.Response> generateTicketForAK(data) async {
-    http.Response res = await http.post(_apiUrl + '/generateTicketForAK', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/generateTicketForAK',
+        body: data, headers: headers);
     return res;
   }
 
-  // Get AK Question Detail 
+  // Get AK Question Detail
   Future<http.Response> getAkQuestions(data) async {
-    http.Response res = await http.post(_apiUrl + '/ak_questionDetails', body: data, headers: headers);
+    http.Response res = await http.post(_apiUrl + '/ak_questionDetails',
+        body: data, headers: headers);
     return res;
   }
 
+  // Get AK User state Detail
+  Future<http.Response> getAKUserState(data) async {
+    http.Response res = await http.post(_apiUrl + '/getAKUserState',
+        body: data, headers: headers);
+    return res;
+  }
 }

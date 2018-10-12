@@ -8,23 +8,45 @@ import 'package:photo_view/photo_view.dart';
 
 ApiService appAuth = new ApiService();
 int rightAns = 0;
-final GlobalKey<AnimatedCircularChartState> _chartKey = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord0 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord1 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord2 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord3 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord4 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord5 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord6 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord7 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord8 = new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord9 = new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _chartKey =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord0 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord1 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord2 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord3 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord4 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord5 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord6 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord7 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord8 =
+    new GlobalKey<AnimatedCircularChartState>();
+final GlobalKey<AnimatedCircularChartState> _userWord9 =
+    new GlobalKey<AnimatedCircularChartState>();
+
+int _points;
+int _akQuestionState;
+String _contactNumber;
+String _imgUrl;
+int _qst;
+
+bool _isGameOver = false;
 
 class AkGamePage extends StatefulWidget {
+  final int questionState;
+  AkGamePage({this.questionState}) {
+    _akQuestionState = questionState;
+  }
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return new _AkGamePageState();
+    return new _AkGamePageState(questionState);
   }
 }
 
@@ -51,14 +73,6 @@ class _AkGamePageState extends State<AkGamePage> {
         false;
   }
 
-  int _points;
-  int _akQuestionState;
-  String _contactNumber;
-  String _imgUrl;
-  int _questionState;
-
-  bool _isGameOver = false;
-
   final TextEditingController _textController = new TextEditingController();
   List _userWords = [];
   List _answers = [];
@@ -67,7 +81,7 @@ class _AkGamePageState extends State<AkGamePage> {
   double _completedPercentage = 0.0;
   double _perQuestionPoint = 1.0;
 
-  _AkGamePageState() {
+  _AkGamePageState(qst) {
     SharedPreferences.getInstance().then((onValue) {
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
@@ -76,11 +90,11 @@ class _AkGamePageState extends State<AkGamePage> {
         _points = int.parse(userData['points'].toString());
       });
       _contactNumber = userData['contactNumber'];
-      _questionState = userData['questionState'];
-      _akQuestionState =
-          ((userData['ak_ques_st'] != null && userData['ak_ques_st'] != 0)
-              ? userData['ak_ques_st']
-              : 1);
+      _qst = qst;
+      // _akQuestionState =
+      //     ((userData['ak_ques_st'] != null && userData['ak_ques_st'] != 0)
+      //         ? userData['ak_ques_st']
+      //         : 1);
       _getAkQuestionDetails();
       print(_points);
       _showPopup();
@@ -303,10 +317,15 @@ class _AkGamePageState extends State<AkGamePage> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _userWords.length != 0 && _userWords[0] != null ? Text(
-                          _userWords[0],
-                          textScaleFactor: 1.1,
-                        ) : Container(height: 0.0, width: 0.0,),
+                        _userWords.length != 0 && _userWords[0] != null
+                            ? Text(
+                                _userWords[0],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -323,10 +342,15 @@ class _AkGamePageState extends State<AkGamePage> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _userWords.length >= 2  && _userWords[1] != null ? Text(
-                          _userWords[1],
-                          textScaleFactor: 1.1,
-                        ) : Container(height: 0.0, width: 0.0,),
+                        _userWords.length >= 2 && _userWords[1] != null
+                            ? Text(
+                                _userWords[1],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -409,10 +433,15 @@ class _AkGamePageState extends State<AkGamePage> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _userWords.length >= 5 && _userWords[4] != null ? Text(
-                          _userWords[4],
-                          textScaleFactor: 1.1,
-                        ) : Container(height: 0.0, width: 0.0,),
+                        _userWords.length >= 5 && _userWords[4] != null
+                            ? Text(
+                                _userWords[4],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -429,10 +458,15 @@ class _AkGamePageState extends State<AkGamePage> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _userWords.length >= 6 && _userWords[5] != null ? Text(
-                          _userWords[5],
-                          textScaleFactor: 1.1,
-                        ) : Container(height: 0.0, width: 0.0,),
+                        _userWords.length >= 6 && _userWords[5] != null
+                            ? Text(
+                                _userWords[5],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -457,10 +491,15 @@ class _AkGamePageState extends State<AkGamePage> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _userWords.length >= 7 && _userWords[6] != null ? Text(
-                          _userWords[6],
-                          textScaleFactor: 1.1,
-                        ) : Container(height: 0.0, width: 0.0,),
+                        _userWords.length >= 7 && _userWords[6] != null
+                            ? Text(
+                                _userWords[6],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -477,10 +516,15 @@ class _AkGamePageState extends State<AkGamePage> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _userWords.length >= 8 && _userWords[7] != null ? Text(
-                          _userWords[7],
-                          textScaleFactor: 1.1,
-                        ) : Container(height: 0.0, width: 0.0,),
+                        _userWords.length >= 8 && _userWords[7] != null
+                            ? Text(
+                                _userWords[7],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -505,10 +549,15 @@ class _AkGamePageState extends State<AkGamePage> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _userWords.length >= 9 && _userWords[8] != null ? Text(
-                          _userWords[8],
-                          textScaleFactor: 1.1,
-                        ) : Container(height: 0.0, width: 0.0,),
+                        _userWords.length >= 9 && _userWords[8] != null
+                            ? Text(
+                                _userWords[8],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -525,10 +574,15 @@ class _AkGamePageState extends State<AkGamePage> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        _userWords.length >= 10 && _userWords[9] != null ? Text(
-                          _userWords[9],
-                          textScaleFactor: 1.1,
-                        ) : Container(height: 0.0, width: 0.0,),
+                        _userWords.length >= 10 && _userWords[9] != null
+                            ? Text(
+                                _userWords[9],
+                                textScaleFactor: 1.1,
+                              )
+                            : Container(
+                                height: 0.0,
+                                width: 0.0,
+                              ),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -552,6 +606,13 @@ class _AkGamePageState extends State<AkGamePage> {
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: new Row(
           children: <Widget>[
+            new Container(
+              margin: new EdgeInsets.symmetric(horizontal: 4.0),
+              child: new IconButton(
+                icon: new Icon(Icons.help_outline, color: Colors.blue),
+                onPressed: () => _getHint(),
+              ),
+            ),
             new Flexible(
               child: new TextField(
                 controller: _textController,
@@ -591,6 +652,54 @@ class _AkGamePageState extends State<AkGamePage> {
       _userWords = _userWords.toSet().toList();
     });
     _checkAns(text);
+  }
+
+  void _getHint() {
+    showDialog(
+      context: context,
+      builder: (BuildContext build) {
+        return AlertDialog(
+          title: Text(
+            'Are you sure ???',
+            textScaleFactor: 1.2,
+          ),
+          content: Text(
+              'You will have to pay 50\$ to only view some character of the answer !!'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.pop(context);
+                _showHint();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void _showHint() {
+    showDialog(
+      context: context,
+      builder: (BuildContext build) {
+        return AlertDialog(
+          title: Text(
+            'Hint!',
+            textScaleFactor: 1.2,
+          ),
+          content: Text('* Answer will disappear after you press okay.\n\n '),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   void _checkAns(word) {
@@ -703,7 +812,7 @@ class _AkGamePageState extends State<AkGamePage> {
       'contactNumber': _contactNumber,
       'ak_ques_st': _akQuestionState,
       'points': _points,
-      'questionState': _questionState,
+      'questionState': _qst,
     };
     appAuth.saveUserData(json.encode(data)).then((res) {
       if (res.statusCode == 200) {
