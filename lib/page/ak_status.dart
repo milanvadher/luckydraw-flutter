@@ -18,7 +18,15 @@ class AkStatusPage extends StatefulWidget {
 }
 
 class _AkStatusPage extends State<AkStatusPage> {
-  _AkStatusPage() {
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    print('didChangeDependencies()');
+    super.didChangeDependencies();
+    _initData();
+  }
+
+  _initData() {
     SharedPreferences.getInstance().then((onValue) {
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
@@ -413,9 +421,15 @@ class _AkStatusPage extends State<AkStatusPage> {
   }
 
   void _getQuestionState(qst) {
-    print(qst);
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> AkGamePage(questionState:int.parse(qst))));
-    Navigator.of(context).pushNamed('/ak_game');
+    print(qst.runtimeType);
+    if (qst.runtimeType != int) {
+      qst = int.parse(qst);
+    }
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AkGamePage(questionState: qst)));
+    // Navigator.of(context).pushNamed('/ak_game');
   }
 
   void _showError() {

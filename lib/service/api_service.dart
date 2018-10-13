@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final _apiUrl = 'http://luckydrawapi.dadabhagwan.org';
-  // final _apiUrl = 'http://192.168.1.103:3000';
+  // final _apiUrl = 'http://luckydrawapi.dadabhagwan.org';
+  final _apiUrl = 'http://192.168.1.103:3000';
   // final _apiUrl = 'http://192.168.43.23:3000';
 
   var headers = {'content-type': 'application/json'};
@@ -140,6 +140,13 @@ class ApiService {
   // Get AK User state Detail
   Future<http.Response> getAKUserState(data) async {
     http.Response res = await http.post(_apiUrl + '/getAKUserState',
+        body: data, headers: headers);
+    return res;
+  }
+
+  // Get AK User state Detail
+  Future<http.Response> saveAKUserWords(data) async {
+    http.Response res = await http.post(_apiUrl + '/save_user_answers',
         body: data, headers: headers);
     return res;
   }

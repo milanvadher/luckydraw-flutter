@@ -74,9 +74,10 @@ class _AkGamePageState extends State<AkGamePage> {
   }
 
   final TextEditingController _textController = new TextEditingController();
-  List _userWords = [];
+  List _userWords = ["", "", "", "", "", "", "", "", "", ""];
   List _answers = [];
-  List _weight = [];
+  List _checkedAnswer = [];
+  List _weight = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   bool _isTyping = false;
   double _completedPercentage = 0.0;
   double _perQuestionPoint = 1.0;
@@ -329,7 +330,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord0, 20)
+                        _userWordProgress(_userWord0, _weight[0])
                       ],
                     ),
                   ),
@@ -354,7 +355,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord1, 30)
+                        _userWordProgress(_userWord1, _weight[1])
                       ],
                     ),
                   ),
@@ -387,7 +388,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord2, 20)
+                        _userWordProgress(_userWord2, _weight[2])
                       ],
                     ),
                   ),
@@ -412,7 +413,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord3, 20)
+                        _userWordProgress(_userWord3, _weight[3])
                       ],
                     ),
                   ),
@@ -445,7 +446,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord4, 20)
+                        _userWordProgress(_userWord4, _weight[4])
                       ],
                     ),
                   ),
@@ -470,7 +471,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord5, 20)
+                        _userWordProgress(_userWord5, _weight[5])
                       ],
                     ),
                   ),
@@ -503,7 +504,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord6, 20)
+                        _userWordProgress(_userWord6, _weight[6])
                       ],
                     ),
                   ),
@@ -528,7 +529,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord7, 20)
+                        _userWordProgress(_userWord7, _weight[7])
                       ],
                     ),
                   ),
@@ -561,7 +562,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord8, 20)
+                        _userWordProgress(_userWord8, _weight[8])
                       ],
                     ),
                   ),
@@ -586,7 +587,7 @@ class _AkGamePageState extends State<AkGamePage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        _userWordProgress(_userWord9, 20)
+                        _userWordProgress(_userWord9, _weight[9])
                       ],
                     ),
                   ),
@@ -649,7 +650,7 @@ class _AkGamePageState extends State<AkGamePage> {
     setState(() {
       _isTyping = false;
       // _userWords.add(text.toUpperCase());
-      _userWords = _userWords.toSet().toList();
+      // _userWords = _userWords.toSet().toList();
     });
     _checkAns(text);
   }
@@ -705,18 +706,24 @@ class _AkGamePageState extends State<AkGamePage> {
   void _checkAns(word) {
     print(_answers);
     for (var j = 0; j < _answers.length; j++) {
-      if (_answers[j].contains(word.toString().toUpperCase())) {
-        rightAns = rightAns + 1;
-        setState(() {
-          _userWords.add(_answers[j][0].toUpperCase());
-        });
-        _showSuccessMsg(_answers[j][0].toUpperCase());
-        _answers.remove(_answers[j]);
+      if (_checkedAnswer[j] == false) {
+        if (_answers[j].contains(word.toString().toUpperCase())) {
+          rightAns = rightAns + 1;
+          print(_answers[j]);
+          print(_weight[_answers.indexOf(_answers[j])]);
+          if (_userWords[_answers.indexOf(_answers[j])] == "") {
+            setState(() {
+              _userWords[_answers.indexOf(_answers[j])] =
+                  _answers[j][0].toUpperCase();
+              _completedPercentage += _weight[_answers.indexOf(_answers[j])];
+            });
+          }
+          _showSuccessMsg(_answers[j][0].toUpperCase());
+          _checkedAnswer[_answers.indexOf(_answers[j])] = true;
+          _saveUserWord();
+        }
       }
     }
-    setState(() {
-      _completedPercentage = _perQuestionPoint * rightAns;
-    });
     _updateGraph();
     print(_completedPercentage.toStringAsFixed(2));
     print(100.00.toString());
@@ -730,13 +737,15 @@ class _AkGamePageState extends State<AkGamePage> {
     _answers = [];
     _completedPercentage = 0.0;
     _perQuestionPoint = 1.0;
-    _userWords = [];
+    _userWords = ["", "", "", "", "", "", "", "", "", ""];
+    _checkedAnswer = [];
     rightAns = 0;
     _updateGraph();
     if (_akQuestionState < 5) {
       _isGameOver = false;
       var data = {
         'ak_ques_st': _akQuestionState,
+        'contactNumber': _contactNumber
       };
       appAuth.getAkQuestions(json.encode(data)).then((res) {
         if (res.statusCode == 200) {
@@ -744,17 +753,52 @@ class _AkGamePageState extends State<AkGamePage> {
           print(qustionDetails);
           for (var i = 0; i < qustionDetails['answers'].length; i++) {
             _answers.add([]);
+            _checkedAnswer.add(false);
             for (var j = 0; j < qustionDetails['answers'][i].length; j++) {
               _answers[i].add(decodeString(qustionDetails['answers'][i][j]));
             }
           }
-          _weight = qustionDetails['weight'];
+          print(_weight);
           print(qustionDetails['answers'].length);
-          _perQuestionPoint = 100 / qustionDetails['answers'].length;
+          // _perQuestionPoint = 100 / qustionDetails['answers'].length;
           print(qustionDetails['answers']);
           setState(() {
             _imgUrl = qustionDetails['url'];
+            _weight = qustionDetails['weight'];
           });
+          _updateUserWordGraph(_userWord0, _weight[0]);
+          _updateUserWordGraph(_userWord1, _weight[1]);
+          _updateUserWordGraph(_userWord2, _weight[2]);
+          _updateUserWordGraph(_userWord3, _weight[3]);
+          _updateUserWordGraph(_userWord4, _weight[4]);
+          _updateUserWordGraph(_userWord5, _weight[5]);
+          _updateUserWordGraph(_userWord5, _weight[5]);
+          _updateUserWordGraph(_userWord6, _weight[6]);
+          _updateUserWordGraph(_userWord7, _weight[7]);
+          _updateUserWordGraph(_userWord8, _weight[8]);
+          _updateUserWordGraph(_userWord9, _weight[9]);
+          for (var i = 0; i < qustionDetails['answered'].length; i++) {
+            for (var j = 0; j < _answers.length; j++) {
+              if (_checkedAnswer[j] == false) {
+                if (_answers[j]
+                    .contains(qustionDetails['answered'][i].toString())) {
+                  rightAns = rightAns + 1;
+                  print(_answers[j]);
+                  print(_weight[_answers.indexOf(_answers[j])]);
+                  if (_userWords[_answers.indexOf(_answers[j])] == "") {
+                    setState(() {
+                      _userWords[_answers.indexOf(_answers[j])] =
+                          _answers[j][0].toUpperCase();
+                      _completedPercentage +=
+                          _weight[_answers.indexOf(_answers[j])];
+                    });
+                  }
+                  _checkedAnswer[_answers.indexOf(_answers[j])] = true;
+                }
+              }
+            }
+          }
+          _updateGraph();
         } else {
           showDialog(
             context: context,
@@ -840,6 +884,26 @@ class _AkGamePageState extends State<AkGamePage> {
             );
           },
         );
+      }
+    });
+  }
+
+  _saveUserWord() {
+    List temp = _userWords.toSet().toList();
+    temp.remove("");
+    print(temp);
+    var data = {
+      "contactNumber": _contactNumber,
+      "ak_ques_st": _akQuestionState,
+      "answer": temp
+    };
+    appAuth.saveAKUserWords(json.encode(data)).then((res) {
+      if (res.statusCode == 200) {
+        print('success user word save');
+        print(res.body);
+      } else {
+        print('error user word save');
+        print(res.body);
       }
     });
   }
@@ -964,5 +1028,28 @@ class _AkGamePageState extends State<AkGamePage> {
           );
         });
     print(img);
+  }
+
+  void _updateUserWordGraph(key, value) {
+    List<CircularStackEntry> nextData = <CircularStackEntry>[
+      new CircularStackEntry(
+        <CircularSegmentEntry>[
+          new CircularSegmentEntry(
+            value.roundToDouble(),
+            Colors.blue[900],
+            rankKey: 'completed',
+          ),
+          new CircularSegmentEntry(
+            100 - value.roundToDouble(),
+            Colors.blue[100],
+            rankKey: 'remaining',
+          ),
+        ],
+        rankKey: 'progress',
+      ),
+    ];
+    setState(() {
+      key.currentState.updateData(nextData);
+    });
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:luckydraw/page/ak_game.dart';
 import 'package:luckydraw/page/ak_status.dart';
 import 'package:luckydraw/page/coupons.dart';
 import 'package:luckydraw/page/editprofile.dart';
