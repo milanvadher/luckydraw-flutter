@@ -7,7 +7,6 @@ import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:photo_view/photo_view.dart';
 
 ApiService appAuth = new ApiService();
-int rightAns = 0;
 final GlobalKey<AnimatedCircularChartState> _chartKey =
     new GlobalKey<AnimatedCircularChartState>();
 final GlobalKey<AnimatedCircularChartState> _userWord0 =
@@ -37,8 +36,6 @@ String _contactNumber;
 String _imgUrl;
 int _qst;
 
-bool _isGameOver = false;
-
 class AkGamePage extends StatefulWidget {
   final int questionState;
   AkGamePage({this.questionState}) {
@@ -51,6 +48,7 @@ class AkGamePage extends StatefulWidget {
 }
 
 class _AkGamePageState extends State<AkGamePage> {
+  
   Future<bool> _onWillPop() {
     return showDialog(
           context: context,
@@ -80,7 +78,6 @@ class _AkGamePageState extends State<AkGamePage> {
   List _weight = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   bool _isTyping = false;
   double _completedPercentage = 0.0;
-  double _perQuestionPoint = 1.0;
 
   _AkGamePageState(qst) {
     SharedPreferences.getInstance().then((onValue) {
@@ -92,10 +89,6 @@ class _AkGamePageState extends State<AkGamePage> {
       });
       _contactNumber = userData['contactNumber'];
       _qst = qst;
-      // _akQuestionState =
-      //     ((userData['ak_ques_st'] != null && userData['ak_ques_st'] != 0)
-      //         ? userData['ak_ques_st']
-      //         : 1);
       _getAkQuestionDetails();
       print(_points);
       _showPopup();
@@ -105,95 +98,51 @@ class _AkGamePageState extends State<AkGamePage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    if (_isGameOver) {
-      return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('Akram Youth'),
-          ),
-          body: Center(
-            child: Card(
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(
-                      Icons.done_all,
-                      color: Colors.green,
-                      size: 60.0,
-                    ),
-                    Text(
-                      'Congratulations! \n',
-                      textScaleFactor: 2.0,
-                    ),
-                    Text(
-                        'You Solved all the questons.\nWait for Next Update.\n'),
-                  ],
-                ),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(''),
               ),
-            ),
+              _circularProgress(),
+              SizedBox(
+                width: 20.0,
+              ),
+              Icon(Icons.monetization_on),
+              Text(_points.toString())
+            ],
           ),
         ),
-      );
-    } else {
-      return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(''),
-                ),
-                _circularProgress(),
-                SizedBox(
-                  width: 20.0,
-                ),
-                Icon(Icons.monetization_on),
-                Text(_points.toString())
-              ],
-            ),
-          ),
-          body: Container(
-            child: ListView(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Container(
-                      height: 290.0,
-                      child: _wordCards(),
-                    ),
-                    Column(
-                      children: <Widget>[
-                        new Divider(height: 1.0),
-                        new Container(
-                          decoration: new BoxDecoration(
-                              color: Theme.of(context).cardColor),
-                          child: _buildTextComposer(),
-                        )
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
+        body: Container(
+          child: ListView(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Container(
+                    height: 290.0,
+                    child: _wordCards(),
+                  ),
+                  Column(
+                    children: <Widget>[
+                      new Divider(height: 1.0),
+                      new Container(
+                        decoration: new BoxDecoration(
+                            color: Theme.of(context).cardColor),
+                        child: _buildTextComposer(),
+                      )
+                    ],
+                  ),
+                ],
+              )
+            ],
           ),
         ),
-      );
-    }
+      ),
+    );
   }
-
-  // bool isTrue(words) {
-  //   bool isAvailable = false;
-  //   for (var i = 0; i < _answers.length; i++) {
-  //     if (_answers[i].contains(words)) {
-  //       isAvailable = true;
-  //     }
-  //   }
-  //   return isAvailable;
-  // }
 
   Widget _circularProgress() {
     return new AnimatedCircularChart(
@@ -644,13 +593,8 @@ class _AkGamePageState extends State<AkGamePage> {
 
   void _handleSubmitted(String text) {
     _textController.clear();
-    // For hide keyboard
-    // FocusScope.of(context).requestFocus(new FocusNode());
-    // _updateGraph();
     setState(() {
       _isTyping = false;
-      // _userWords.add(text.toUpperCase());
-      // _userWords = _userWords.toSet().toList();
     });
     _checkAns(text);
   }
@@ -708,7 +652,6 @@ class _AkGamePageState extends State<AkGamePage> {
     for (var j = 0; j < _answers.length; j++) {
       if (_checkedAnswer[j] == false) {
         if (_answers[j].contains(word.toString().toUpperCase())) {
-          rightAns = rightAns + 1;
           print(_answers[j]);
           print(_weight[_answers.indexOf(_answers[j])]);
           if (_userWords[_answers.indexOf(_answers[j])] == "") {
@@ -736,94 +679,84 @@ class _AkGamePageState extends State<AkGamePage> {
     _imgUrl = null;
     _answers = [];
     _completedPercentage = 0.0;
-    _perQuestionPoint = 1.0;
     _userWords = ["", "", "", "", "", "", "", "", "", ""];
     _checkedAnswer = [];
-    rightAns = 0;
     _updateGraph();
-    if (_akQuestionState < 5) {
-      _isGameOver = false;
-      var data = {
-        'ak_ques_st': _akQuestionState,
-        'contactNumber': _contactNumber
-      };
-      appAuth.getAkQuestions(json.encode(data)).then((res) {
-        if (res.statusCode == 200) {
-          Map<String, dynamic> qustionDetails = json.decode(res.body);
-          print(qustionDetails);
-          for (var i = 0; i < qustionDetails['answers'].length; i++) {
-            _answers.add([]);
-            _checkedAnswer.add(false);
-            for (var j = 0; j < qustionDetails['answers'][i].length; j++) {
-              _answers[i].add(decodeString(qustionDetails['answers'][i][j]));
-            }
+    var data = {
+      'ak_ques_st': _akQuestionState,
+      'contactNumber': _contactNumber
+    };
+    appAuth.getAkQuestions(json.encode(data)).then((res) {
+      if (res.statusCode == 200) {
+        Map<String, dynamic> qustionDetails = json.decode(res.body);
+        print(qustionDetails);
+        for (var i = 0; i < qustionDetails['answers'].length; i++) {
+          _answers.add([]);
+          _checkedAnswer.add(false);
+          for (var j = 0; j < qustionDetails['answers'][i].length; j++) {
+            _answers[i].add(decodeString(qustionDetails['answers'][i][j]));
           }
-          print(_weight);
-          print(qustionDetails['answers'].length);
-          // _perQuestionPoint = 100 / qustionDetails['answers'].length;
-          print(qustionDetails['answers']);
-          setState(() {
-            _imgUrl = qustionDetails['url'];
-            _weight = qustionDetails['weight'];
-          });
-          _updateUserWordGraph(_userWord0, _weight[0]);
-          _updateUserWordGraph(_userWord1, _weight[1]);
-          _updateUserWordGraph(_userWord2, _weight[2]);
-          _updateUserWordGraph(_userWord3, _weight[3]);
-          _updateUserWordGraph(_userWord4, _weight[4]);
-          _updateUserWordGraph(_userWord5, _weight[5]);
-          _updateUserWordGraph(_userWord5, _weight[5]);
-          _updateUserWordGraph(_userWord6, _weight[6]);
-          _updateUserWordGraph(_userWord7, _weight[7]);
-          _updateUserWordGraph(_userWord8, _weight[8]);
-          _updateUserWordGraph(_userWord9, _weight[9]);
-          for (var i = 0; i < qustionDetails['answered'].length; i++) {
-            for (var j = 0; j < _answers.length; j++) {
-              if (_checkedAnswer[j] == false) {
-                if (_answers[j]
-                    .contains(qustionDetails['answered'][i].toString())) {
-                  rightAns = rightAns + 1;
-                  print(_answers[j]);
-                  print(_weight[_answers.indexOf(_answers[j])]);
-                  if (_userWords[_answers.indexOf(_answers[j])] == "") {
-                    setState(() {
-                      _userWords[_answers.indexOf(_answers[j])] =
-                          _answers[j][0].toUpperCase();
-                      _completedPercentage +=
-                          _weight[_answers.indexOf(_answers[j])];
-                    });
-                  }
-                  _checkedAnswer[_answers.indexOf(_answers[j])] = true;
+        }
+        print(_weight);
+        print(qustionDetails['answers'].length);
+        // _perQuestionPoint = 100 / qustionDetails['answers'].length;
+        print(qustionDetails['answers']);
+        setState(() {
+          _imgUrl = qustionDetails['url'];
+          _weight = qustionDetails['weight'];
+        });
+        _updateUserWordGraph(_userWord0, _weight[0]);
+        _updateUserWordGraph(_userWord1, _weight[1]);
+        _updateUserWordGraph(_userWord2, _weight[2]);
+        _updateUserWordGraph(_userWord3, _weight[3]);
+        _updateUserWordGraph(_userWord4, _weight[4]);
+        _updateUserWordGraph(_userWord5, _weight[5]);
+        _updateUserWordGraph(_userWord5, _weight[5]);
+        _updateUserWordGraph(_userWord6, _weight[6]);
+        _updateUserWordGraph(_userWord7, _weight[7]);
+        _updateUserWordGraph(_userWord8, _weight[8]);
+        _updateUserWordGraph(_userWord9, _weight[9]);
+        for (var i = 0; i < qustionDetails['answered'].length; i++) {
+          for (var j = 0; j < _answers.length; j++) {
+            if (_checkedAnswer[j] == false) {
+              if (_answers[j]
+                  .contains(qustionDetails['answered'][i].toString())) {
+                print(_answers[j]);
+                print(_weight[_answers.indexOf(_answers[j])]);
+                if (_userWords[_answers.indexOf(_answers[j])] == "") {
+                  setState(() {
+                    _userWords[_answers.indexOf(_answers[j])] =
+                        _answers[j][0].toUpperCase();
+                    _completedPercentage +=
+                        _weight[_answers.indexOf(_answers[j])];
+                  });
                 }
+                _checkedAnswer[_answers.indexOf(_answers[j])] = true;
               }
             }
           }
-          _updateGraph();
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext build) {
-              return AlertDialog(
-                title: Text('Error'),
-                content: Text('Check your Internet connection'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              );
-            },
-          );
         }
-      });
-    } else {
-      setState(() {
-        _isGameOver = true;
-      });
-    }
+        _updateGraph();
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext build) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Check your Internet connection'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
+    });
   }
 
   _rightAns() {
@@ -845,8 +778,6 @@ class _AkGamePageState extends State<AkGamePage> {
       },
     );
     _points = _points + 200;
-    _akQuestionState = _akQuestionState + 1;
-    _getAkQuestionDetails();
     _saveUserData();
     _generateTicket();
   }
@@ -854,7 +785,7 @@ class _AkGamePageState extends State<AkGamePage> {
   void _saveUserData() {
     var data = {
       'contactNumber': _contactNumber,
-      'ak_ques_st': _akQuestionState,
+      // 'ak_ques_st': _akQuestionState,
       'points': _points,
       'questionState': _qst,
     };
@@ -984,24 +915,6 @@ class _AkGamePageState extends State<AkGamePage> {
             return AlertDialog(
               title: Text('Congratulation'),
               content: Text('You got one Lucky draw Coupon.'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Okay'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            );
-          },
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext build) {
-            return AlertDialog(
-              title: Text('Error'),
-              content: Text('Check your Internet connection'),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Okay'),
