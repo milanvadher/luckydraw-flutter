@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:luckydraw/page/ak_game.dart';
 import 'package:luckydraw/service/api_service.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +16,12 @@ class AkStatusPage extends StatefulWidget {
   }
 }
 
+enum AppBarBehavior { normal, pinned, floating, snapping }
+
 class _AkStatusPage extends State<AkStatusPage> {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    print('didChangeDependencies()');
     super.didChangeDependencies();
     _initData();
   }
@@ -47,376 +47,61 @@ class _AkStatusPage extends State<AkStatusPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
-            children: <Widget>[
-              SizedBox(height: 10.0),
-              Center(
-                child: Text('Akram Youth Game', textScaleFactor: 2.0),
-              ),
-              SizedBox(height: 10.0),
-              Column(
-                children: <Widget>[
-                  Image.asset(
-                    'assets/logo.png',
-                    height: 120.0,
-                  ),
-                  SizedBox(height: 8.0),
-                  Text('LUCKY DRAW', textScaleFactor: 1.5),
-                  SizedBox(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new GestureDetector(
-                        onTap: () {
-                          _getQuestionState(_resultStats[0]['ak_ques_st']);
-                        },
-                        child: Card(
-                          color: Theme.of(context).primaryColor,
-                          margin: EdgeInsets.all(10.0),
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[0] != null
-                                      ? _resultStats[0]['ak_ques_st'].toString()
-                                      : "",
-                                  textScaleFactor: 1.5,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[0] != null
-                                      ? _resultStats[0]['answered'].toString() +
-                                          '/' +
-                                          _resultStats[0]['total'].toString()
-                                      : "",
-                                  textScaleFactor: 0.8,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      new GestureDetector(
-                          onTap: () {
-                            _getQuestionState(_resultStats[1]['ak_ques_st']);
-                          },
-                          child: Card(
-                            color: Theme.of(context).primaryColor,
-                            margin: EdgeInsets.all(10.0),
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    _resultStats != null &&
-                                            _resultStats[1] != null
-                                        ? _resultStats[1]['ak_ques_st']
-                                            .toString()
-                                        : "",
-                                    textScaleFactor: 1.5,
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Text(
-                                    _resultStats != null &&
-                                            _resultStats[1] != null
-                                        ? _resultStats[1]['answered']
-                                                .toString() +
-                                            '/' +
-                                            _resultStats[1]['total'].toString()
-                                        : "",
-                                    textScaleFactor: 0.8,
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new GestureDetector(
-                        onTap: () {
-                          _getQuestionState(_resultStats[2]['ak_ques_st']);
-                        },
-                        child: Card(
-                          color: Theme.of(context).primaryColor,
-                          margin: EdgeInsets.all(10.0),
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[2] != null
-                                      ? _resultStats[2]['ak_ques_st'].toString()
-                                      : "",
-                                  textScaleFactor: 1.5,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[2] != null
-                                      ? _resultStats[2]['answered'].toString() +
-                                          '/' +
-                                          _resultStats[2]['total'].toString()
-                                      : "",
-                                  textScaleFactor: 0.8,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      new GestureDetector(
-                          onTap: () {
-                            _getQuestionState(_resultStats[3]['ak_ques_st']);
-                          },
-                          child: Card(
-                            color: Theme.of(context).primaryColor,
-                            margin: EdgeInsets.all(10.0),
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    _resultStats != null &&
-                                            _resultStats[3] != null
-                                        ? _resultStats[3]['ak_ques_st']
-                                            .toString()
-                                        : "",
-                                    textScaleFactor: 1.5,
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Text(
-                                    _resultStats != null &&
-                                            _resultStats[3] != null
-                                        ? _resultStats[3]['answered']
-                                                .toString() +
-                                            '/' +
-                                            _resultStats[3]['total'].toString()
-                                        : "",
-                                    textScaleFactor: 0.8,
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new GestureDetector(
-                        onTap: () {
-                          _getQuestionState(_resultStats[4]['ak_ques_st']);
-                        },
-                        child: Card(
-                          color: Theme.of(context).primaryColor,
-                          margin: EdgeInsets.all(10.0),
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[4] != null
-                                      ? _resultStats[4]['ak_ques_st'].toString()
-                                      : "",
-                                  textScaleFactor: 1.5,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[4] != null
-                                      ? _resultStats[4]['answered'].toString() +
-                                          '/' +
-                                          _resultStats[4]['total'].toString()
-                                      : "",
-                                  textScaleFactor: 0.8,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      new GestureDetector(
-                          onTap: () {
-                            _getQuestionState(_resultStats[5]['ak_ques_st']);
-                          },
-                          child: Card(
-                            color: Theme.of(context).primaryColor,
-                            margin: EdgeInsets.all(10.0),
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    _resultStats != null &&
-                                            _resultStats[5] != null
-                                        ? _resultStats[5]['ak_ques_st']
-                                            .toString()
-                                        : "",
-                                    textScaleFactor: 1.5,
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Text(
-                                    _resultStats != null &&
-                                            _resultStats[5] != null
-                                        ? _resultStats[5]['answered']
-                                                .toString() +
-                                            '/' +
-                                            _resultStats[5]['total'].toString()
-                                        : "",
-                                    textScaleFactor: 0.8,
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new GestureDetector(
-                        onTap: () {
-                          _getQuestionState(_resultStats[6]['ak_ques_st']);
-                        },
-                        child: Card(
-                          color: Theme.of(context).primaryColor,
-                          margin: EdgeInsets.all(10.0),
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[6] != null
-                                      ? _resultStats[6]['ak_ques_st'].toString()
-                                      : "",
-                                  textScaleFactor: 1.5,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[6] != null
-                                      ? _resultStats[6]['answered'].toString() +
-                                          '/' +
-                                          _resultStats[6]['total'].toString()
-                                      : "",
-                                  textScaleFactor: 0.8,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      new GestureDetector(
-                          onTap: () {
-                            _getQuestionState(_resultStats[7]['ak_ques_st']);
-                          },
-                          child: Card(
-                            color: Theme.of(context).primaryColor,
-                            margin: EdgeInsets.all(10.0),
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    _resultStats != null &&
-                                            _resultStats[7] != null
-                                        ? _resultStats[7]['ak_ques_st']
-                                            .toString()
-                                        : "",
-                                    textScaleFactor: 1.5,
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Text(
-                                    _resultStats != null &&
-                                            _resultStats[7] != null
-                                        ? _resultStats[7]['answered']
-                                                .toString() +
-                                            '/' +
-                                            _resultStats[7]['total'].toString()
-                                        : "",
-                                    textScaleFactor: 0.8,
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new GestureDetector(
-                        onTap: () {
-                          _getQuestionState(_resultStats[8]['ak_ques_st']);
-                        },
-                        child: Card(
-                          color: Theme.of(context).primaryColor,
-                          margin: EdgeInsets.all(10.0),
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[8] != null
-                                      ? _resultStats[8]['ak_ques_st'].toString()
-                                      : "",
-                                  textScaleFactor: 1.5,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  _resultStats != null &&
-                                          _resultStats[8] != null
-                                      ? _resultStats[8]['answered'].toString() +
-                                          '/' +
-                                          _resultStats[8]['total'].toString()
-                                      : "",
-                                  textScaleFactor: 0.8,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Akram Youth Game'),
       ),
+      body: _resultStats != null
+          ? _cardGridView()
+          : new Center(
+              child: CircularProgressIndicator(),
+            ),
+    );
+  }
+
+  Widget _cardGridView() {
+    return GridView.count(
+      childAspectRatio: (2 / 1),
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      children: List.generate(_resultStats.length, (index) {
+        return new GestureDetector(
+          onTap: () {
+            _getQuestionState(_resultStats[index]['ak_ques_st']);
+          },
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Card(
+              color: Theme.of(context).primaryColor,
+              margin: EdgeInsets.all(10.0),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      _resultStats != null && _resultStats[index] != null
+                          ? _resultStats[index]['ak_ques_st'].toString()
+                          : "",
+                      textScaleFactor: 2.0,
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Text(
+                      _resultStats != null && _resultStats[index] != null
+                          ? _resultStats[index]['answered'].toString() +
+                              '/' +
+                              _resultStats[index]['total'].toString()
+                          : "",
+                      textScaleFactor: 1.5,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
     );
   }
 
@@ -429,25 +114,5 @@ class _AkStatusPage extends State<AkStatusPage> {
         context,
         MaterialPageRoute(
             builder: (context) => AkGamePage(questionState: qst)));
-    // Navigator.of(context).pushNamed('/ak_game');
-  }
-
-  void _showError() {
-    showDialog(
-        context: context,
-        builder: (BuildContext build) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('User not available or Wrong credentials'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Try Again'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          );
-        });
   }
 }

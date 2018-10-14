@@ -27,7 +27,7 @@ final GlobalKey<AnimatedCircularChartState> _userWord7 =
     new GlobalKey<AnimatedCircularChartState>();
 final GlobalKey<AnimatedCircularChartState> _userWord8 =
     new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord9 =
+final GlobalKey<AnimatedCircularChartState> _userWord9 = 
     new GlobalKey<AnimatedCircularChartState>();
 
 int _points;
@@ -48,7 +48,6 @@ class AkGamePage extends StatefulWidget {
 }
 
 class _AkGamePageState extends State<AkGamePage> {
-  
   Future<bool> _onWillPop() {
     return showDialog(
           context: context,
@@ -196,7 +195,7 @@ class _AkGamePageState extends State<AkGamePage> {
       ],
       chartType: CircularChartType.Radial,
       holeLabel: completedValue.toStringAsFixed(0),
-      labelStyle: new TextStyle(fontSize: 20.0, color: Colors.black),
+      labelStyle: new TextStyle(fontSize: 20.0, color: Theme.of(context).accentColor),
       edgeStyle: SegmentEdgeStyle.round,
       percentageValues: true,
     );
