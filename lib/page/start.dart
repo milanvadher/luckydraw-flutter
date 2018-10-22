@@ -48,7 +48,6 @@ class _StartPageState extends State<StartPage> {
   int _points;
   int _questionState;
   String _contactNumber;
-  int _akQuestionState;
 
   List _randomString = [];
   List _imagesRow1 = [];
@@ -69,13 +68,7 @@ class _StartPageState extends State<StartPage> {
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
       print(userData);
-      _questionState = userData['questionState'] != null
-          ? int.parse(userData['questionState'].toString())
-          : 0;
-      _akQuestionState =
-          ((userData['ak_ques_st'] != null && userData['ak_ques_st'] != 0)
-              ? userData['ak_ques_st']
-              : 1);
+      _questionState = int.parse(userData['questionState'].toString());
       _points = int.parse(userData['points'].toString());
       _contactNumber = userData['contactNumber'];
       this._getQuestionDetails();
@@ -512,7 +505,6 @@ class _StartPageState extends State<StartPage> {
       _getQuestionDetails();
       var data = {
         'contactNumber': _contactNumber,
-        'ak_ques_st': _akQuestionState,
         'points': _points,
         'questionState': _questionState,
       };
@@ -637,7 +629,6 @@ class _StartPageState extends State<StartPage> {
   void _saveUserData() {
     var data = {
       'contactNumber': _contactNumber,
-      'ak_ques_st': _akQuestionState,
       'points': _points,
       'questionState': _questionState,
     };

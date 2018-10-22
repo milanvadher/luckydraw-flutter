@@ -410,42 +410,35 @@ class _BackdropPageState extends State<HomePage>
                                       child: Icon(Icons.play_arrow),
                                     ),
                                     Text(
-                                      'Start Game',
-                                      textScaleFactor: 1.5,
+                                      'Play Pikachar',
+                                      textScaleFactor: 1.2,
                                     )
                                   ],
                                 ),
                               ),
                               SizedBox(height: 10.0),
-                              !_newGame
-                                  ? MaterialButton(
-                                      color: Theme.of(context).primaryColor,
-                                      textColor: Colors.black,
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, '/ak_status');
-                                      },
-                                      height: 50.0,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                0.0, 0.0, 10.0, 0.0),
-                                            child: Icon(Icons.play_arrow),
-                                          ),
-                                          Text(
-                                            'Start Akram Youth Game',
-                                            textScaleFactor: 1.5,
-                                          )
-                                        ],
-                                      ),
+                              MaterialButton(
+                                color: Theme.of(context).primaryColor,
+                                textColor: Colors.black,
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/ak_status');
+                                },
+                                height: 50.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          0.0, 0.0, 10.0, 0.0),
+                                      child: Icon(Icons.play_arrow),
+                                    ),
+                                    Text(
+                                      'Akram Youth Quiz',
+                                      textScaleFactor: 1.2,
                                     )
-                                  : new Container(
-                                      height: 0.0,
-                                      width: 0.0,
-                                    )
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         ),

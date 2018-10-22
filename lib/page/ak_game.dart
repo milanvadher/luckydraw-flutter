@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:luckydraw/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,7 @@ final GlobalKey<AnimatedCircularChartState> _userWord7 =
     new GlobalKey<AnimatedCircularChartState>();
 final GlobalKey<AnimatedCircularChartState> _userWord8 =
     new GlobalKey<AnimatedCircularChartState>();
-final GlobalKey<AnimatedCircularChartState> _userWord9 = 
+final GlobalKey<AnimatedCircularChartState> _userWord9 =
     new GlobalKey<AnimatedCircularChartState>();
 
 int _points;
@@ -90,7 +91,6 @@ class _AkGamePageState extends State<AkGamePage> {
       _qst = qst;
       _getAkQuestionDetails();
       print(_points);
-      _showPopup();
     });
   }
 
@@ -130,7 +130,12 @@ class _AkGamePageState extends State<AkGamePage> {
                       new Container(
                         decoration: new BoxDecoration(
                             color: Theme.of(context).cardColor),
-                        child: _buildTextComposer(),
+                        child: _completedPercentage == 100
+                            ? new Container(
+                                width: 0.0,
+                                height: 0.0,
+                              )
+                            : _buildTextComposer(),
                       )
                     ],
                   ),
@@ -195,7 +200,8 @@ class _AkGamePageState extends State<AkGamePage> {
       ],
       chartType: CircularChartType.Radial,
       holeLabel: completedValue.toStringAsFixed(0),
-      labelStyle: new TextStyle(fontSize: 20.0, color: Theme.of(context).accentColor),
+      labelStyle:
+          new TextStyle(fontSize: 20.0, color: Theme.of(context).accentColor),
       edgeStyle: SegmentEdgeStyle.round,
       percentageValues: true,
     );
@@ -624,6 +630,43 @@ class _AkGamePageState extends State<AkGamePage> {
   }
 
   void _showHint() {
+    if (_points < 50) {
+      showDialog(
+        context: context,
+        builder: (BuildContext build) {
+          return AlertDialog(
+            title: Text(
+              'Warning',
+              textScaleFactor: 1.2,
+            ),
+            content: Text('You don\'t have sufficient balance.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _showHint();
+                },
+              )
+            ],
+          );
+        },
+      );
+      return;
+    }
+    setState(() {
+      _points -= 50;
+    });
+    _saveUserData();
+    List tempAns = [];
+    for (var i = 0; i < _checkedAnswer.length; i++) {
+      if (_checkedAnswer[i] == false) {
+        tempAns.add(_answers[i][0]);
+      }
+    }
+    var randomNumber = new Random().nextInt(tempAns.length);
+    String answer = tempAns[randomNumber];
+    print(answer);
     showDialog(
       context: context,
       builder: (BuildContext build) {
@@ -632,7 +675,13 @@ class _AkGamePageState extends State<AkGamePage> {
             'Hint!',
             textScaleFactor: 1.2,
           ),
-          content: Text('* Answer will disappear after you press okay.\n\n '),
+          content: Text('* Answer will disappear after you press okay.\n\n' +
+              answer[0] +
+              '_ ' * (answer.length - 2) +
+              answer[answer.length - 1] +
+              '. (' +
+              answer.length.toString() +
+              ' letter word)'),
           actions: <Widget>[
             FlatButton(
               child: Text('Ok'),
@@ -661,7 +710,18 @@ class _AkGamePageState extends State<AkGamePage> {
             });
           }
           _showSuccessMsg(_answers[j][0].toUpperCase());
+          _points += 10;
+          _saveUserData();
           _checkedAnswer[_answers.indexOf(_answers[j])] = true;
+          int count = 0;
+          for (var i = 0; i < _checkedAnswer.length; i++) {
+            if (_checkedAnswer[i] == true) {
+              count += 1;
+            }
+          }
+          if (count == 5) {
+            _generateTicket();
+          }
           _saveUserWord();
         }
       }
@@ -736,6 +796,9 @@ class _AkGamePageState extends State<AkGamePage> {
           }
         }
         _updateGraph();
+        if (_completedPercentage != 100) {
+          _showPopup();
+        }
       } else {
         showDialog(
           context: context,
@@ -759,6 +822,9 @@ class _AkGamePageState extends State<AkGamePage> {
   }
 
   _rightAns() {
+    _points = _points + 200;
+    _saveUserData();
+    _generateTicket();
     showDialog(
       context: context,
       builder: (BuildContext build) {
@@ -776,15 +842,11 @@ class _AkGamePageState extends State<AkGamePage> {
         );
       },
     );
-    _points = _points + 200;
-    _saveUserData();
-    _generateTicket();
   }
 
   void _saveUserData() {
     var data = {
       'contactNumber': _contactNumber,
-      // 'ak_ques_st': _akQuestionState,
       'points': _points,
       'questionState': _qst,
     };
@@ -796,7 +858,6 @@ class _AkGamePageState extends State<AkGamePage> {
           onValue.setString('userData', res.body);
         });
       } else {
-        setState(() {});
         showDialog(
           context: context,
           builder: (BuildContext build) {
@@ -902,6 +963,7 @@ class _AkGamePageState extends State<AkGamePage> {
   }
 
   void _generateTicket() {
+    print('Yehhh');
     var data = {
       'contactNumber': _contactNumber,
       'ak_ques_st': _akQuestionState
@@ -925,6 +987,8 @@ class _AkGamePageState extends State<AkGamePage> {
             );
           },
         );
+      } else {
+        print(res.body);
       }
     });
   }
