@@ -150,4 +150,11 @@ class ApiService {
         body: data, headers: headers);
     return res;
   }
+
+  // Get AK User state Detail
+  Future<http.Response> getWinnerList() async {
+    http.Response res =
+        await http.post(_apiUrl + '/winnerlist', headers: headers);
+    return res;
+  }
 }

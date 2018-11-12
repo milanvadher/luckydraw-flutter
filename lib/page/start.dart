@@ -68,7 +68,9 @@ class _StartPageState extends State<StartPage> {
       Map<String, dynamic> userData =
           json.decode(onValue.getString('userData'));
       print(userData);
-      _questionState = int.parse(userData['questionState'].toString());
+      _questionState = int.parse(userData['questionState'].toString()) != null
+          ? int.parse(userData['questionState'].toString())
+          : 0;
       _points = int.parse(userData['points'].toString());
       _contactNumber = userData['contactNumber'];
       this._getQuestionDetails();
@@ -394,6 +396,7 @@ class _StartPageState extends State<StartPage> {
         'questionState': _questionState,
       };
       appAuth.qustionDetails(json.encode(data)).then((res) {
+        print(res.body);
         setState(() {
           if (res.statusCode == 200) {
             Map<String, dynamic> qustionDetails = json.decode(res.body);

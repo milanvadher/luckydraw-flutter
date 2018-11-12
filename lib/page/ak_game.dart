@@ -88,7 +88,7 @@ class _AkGamePageState extends State<AkGamePage> {
         _points = int.parse(userData['points'].toString());
       });
       _contactNumber = userData['contactNumber'];
-      _qst = qst;
+      _qst = userData['questionState'];
       _getAkQuestionDetails();
       print(_points);
     });
